@@ -1,8 +1,11 @@
 import { Flex, Button, Drawer, Typography } from "antd";
 import { useState } from "react";
 import { MenuOutlined } from "@ant-design/icons";
+import { useNavigate } from "react-router-dom";
 
 const Landing = () => {
+  const navigate = useNavigate();
+
   const [visible, setVisible] = useState(false);
   const showDrawer = () => {
     setVisible(!visible);
@@ -56,8 +59,14 @@ const Landing = () => {
           justify="space-between"
           className="hidden md:flex gap-4"
         >
-          <Button size="large">Login</Button>
-          <Button type="primary" size="large">
+          <Button size="large" onClick={() => navigate("/login")}>
+            Login
+          </Button>
+          <Button
+            type="primary"
+            size="large"
+            onClick={() => navigate("/signup")}
+          >
             Sign up
           </Button>
         </Flex>
