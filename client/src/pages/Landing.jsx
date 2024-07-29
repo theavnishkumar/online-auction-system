@@ -2,6 +2,7 @@ import { Flex, Button, Drawer, Typography } from "antd";
 import { useState } from "react";
 import { MenuOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
+import Footer from "../components/Footer";
 
 const Landing = () => {
   const navigate = useNavigate();
@@ -33,7 +34,7 @@ const Landing = () => {
   return (
     <>
       {/* Navbar section */}
-      <nav className="border-b border">
+      <nav className="border-b border sticky top-0 bg-white z-50 md:px-10 px-4">
         <Flex
           align="center"
           justify="space-between"
@@ -64,14 +65,8 @@ const Landing = () => {
             justify="space-between"
             className="hidden md:flex gap-4"
           >
-            <Button size="large" onClick={() => navigate("/login")}>
-              Login
-            </Button>
-            <Button
-              type="primary"
-              size="large"
-              onClick={() => navigate("/signup")}
-            >
+            <Button onClick={() => navigate("/login")}>Login</Button>
+            <Button type="primary" onClick={() => navigate("/signup")}>
               Sign up
             </Button>
           </Flex>
@@ -109,19 +104,25 @@ const Landing = () => {
 
       {/* Hero Section */}
 
-      <div className="container px-6 py-16 mx-auto">
+      <div className="container px-6 py-6 mx-auto lg:px-12 min-h-[calc(100svh-4.1rem)]">
         <div className="items-center lg:flex">
           <div className="w-full lg:w-1/2">
             <div className="lg:max-w-lg">
               <h1 className="text-3xl font-semibold text-gray-800 lg:text-4xl">
-                Best place to sell <br /> your{" "}
-                <span className="text-blue-500 ">items</span>
+                Bid Smart, Win Big: <br />
+                Your Gateway to <br />
+                <span className="text-blue-500 ">Online Auctions</span>
               </h1>
 
               <p className="mt-3 text-gray-600 dark:text-gray-400">
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Porro
-                beatae error laborum ab amet sunt recusandae? Reiciendis natus
-                perspiciatis optio.
+                Discover a new era of online auctions with our cutting-edge
+                platform designed to bring buyers and sellers together in a
+                seamless, secure, and engaging environment. Whether you are
+                looking to find great deals or sell unique items, our system
+                provides real-time bidding, transparent transactions, and a wide
+                array of categories to explore. Join our community today and
+                experience the excitement of winning big in the world of online
+                auctions!
               </p>
 
               <button
@@ -145,6 +146,9 @@ const Landing = () => {
           </div>
         </div>
       </div>
+
+      {/* Footer */}
+      <Footer />
     </>
   );
 };
