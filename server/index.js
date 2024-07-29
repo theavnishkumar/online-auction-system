@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 dotenv.config().parsed;
 import connectDB from './connection.js'
+import userRouter from './routes/user.js';
 
 const port = process.env.PORT || 5000;
 
@@ -15,6 +16,7 @@ connectDB();
 app.get('/', async (req, res) => {
     res.json({ msg: 'Welcome to Online Auction System API' });
 });
+app.use('/api', userRouter);
 
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
