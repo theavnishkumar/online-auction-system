@@ -1,10 +1,26 @@
-import Landing from "./pages/Landing";
+import { Navigate, Outlet } from "react-router-dom";
+import Navbar from "./components/Navbar";
+import Footer from "./components/Footer";
+import { useContext } from "react";
+import AuthContext from "./context/authContext";
 
 function App() {
-  return (
+  const { user, loading } = useContext(AuthContext);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  return user ? (
     <>
-      <Landing />
+      <Navbar />
+      <main>
+        <Outlet />
+      </main>
+      <Footer />
     </>
+  ) : (
+    <Navigate to="/login" replace />
   );
 }
 

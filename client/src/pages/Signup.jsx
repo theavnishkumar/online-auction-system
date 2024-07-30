@@ -2,13 +2,12 @@ import { Button, Card, Checkbox, Form, Input } from "antd";
 import { FiHome } from "react-icons/fi";
 import { IoArrowBackSharp } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
-import axios from "axios";
-
-const VITE_API = `${import.meta.env.VITE_API}`;
+import { useContext, useState } from "react";
+import AuthContext from "../context/authContext";
 
 const Signup = () => {
   const navigate = useNavigate();
+  const { signup } = useContext(AuthContext);
 
   const [formData, setformData] = useState({
     name: "",
@@ -27,12 +26,15 @@ const Signup = () => {
       return alert("All fields are required");
     }
     try {
-      await axios.post(`${VITE_API}/api/signup`, formData);
-      navigate("/login");
+      await signup(formData.name, formData.email, formData.password);
+      navigate("/dsahboard");
     } catch (error) {
-      if (error.response && error.response.status === 409) {
-        setError(error.response.data.error);
+      if (error.response) {
+        setError(
+          error.response.data.error || "Signup failed. Please try again."
+        );
       } else {
+        setError("An unexpected error occurred. Please try again.");
         console.log(error);
       }
     }

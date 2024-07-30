@@ -1,9 +1,26 @@
 import { Flex, Button, Drawer, Typography } from "antd";
 import { useState } from "react";
 import { MenuOutlined } from "@ant-design/icons";
+import { useContext } from "react";
+import { useNavigate } from "react-router-dom";
+import AuthContext from "../context/authContext";
 
 const Navbar = () => {
   const [visible, setVisible] = useState(false);
+
+  const { user, logout, deleteAccount } = useContext(AuthContext);
+
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate("/");
+  };
+  const handleDeleteAccount = async () => {
+    await deleteAccount(user.email);
+    navigate("/");
+  };
+
   const showDrawer = () => {
     setVisible(!visible);
   };
@@ -55,10 +72,13 @@ const Navbar = () => {
           justify="space-between"
           className="hidden md:flex gap-4"
         >
-          <Button size="large">Login</Button>
+          {/* <Button size="large">Login</Button>
           <Button type="primary" size="large">
             Sign up
-          </Button>
+          </Button> */}
+          <Typography>
+            Hi, <b>{user.name}</b>
+          </Typography>
         </Flex>
         <Typography.Text className="text-gray-900 md:hidden">
           <Button type="default" onClick={showDrawer}>
@@ -72,8 +92,8 @@ const Navbar = () => {
           onClose={showDrawer}
           open={visible}
           footer={
-            <Button onClick={showDrawer} type="primary">
-              Close
+            <Button onClick={handleLogout} type="primary" danger>
+              Logout
             </Button>
           }
         >
@@ -88,6 +108,9 @@ const Navbar = () => {
               {menu.title}
             </Button>
           ))}
+          <Button onClick={handleDeleteAccount} danger block>
+            Delete my account
+          </Button>
         </Drawer>
       </Flex>
     </nav>
