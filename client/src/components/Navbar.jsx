@@ -1,24 +1,31 @@
 import { Flex, Button, Drawer, Typography } from "antd";
 import { useState } from "react";
 import { MenuOutlined } from "@ant-design/icons";
-import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import AuthContext from "../context/authContext";
+import { useDispatch, useSelector } from "react-redux";
+import { logout, deleteAccount } from "../store/auth/authSlice";
 
 const Navbar = () => {
   const [visible, setVisible] = useState(false);
+  const dispatch = useDispatch();
 
-  const { user, logout, deleteAccount } = useContext(AuthContext);
+  const { user } = useSelector((state) => state.auth);
 
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    logout();
+    dispatch(logout());
     navigate("/");
   };
   const handleDeleteAccount = async () => {
-    await deleteAccount(user.email);
-    navigate("/");
+    if (user) {
+      try {
+        await dispatch(deleteAccount(user.email)).unwrap();
+        navigate("/");
+      } catch (error) {
+        console.error("Failed to delete account:", error);
+      }
+    }
   };
 
   const showDrawer = () => {

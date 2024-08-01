@@ -8,7 +8,8 @@ import Signup from "./pages/Signup.jsx";
 import Error from "./Error.jsx";
 import Dashboard from "./pages/Dashboard.jsx";
 import Landing from "./pages/Landing.jsx";
-import { AuthProvider } from "./context/authContext.jsx";
+import { store } from "./store/store.js";
+import { Provider } from "react-redux";
 
 const router = createBrowserRouter([
   {
@@ -39,8 +40,8 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <AuthProvider>
+    <Provider store={store}>
       <RouterProvider router={router} />
-    </AuthProvider>
+    </Provider>
   </React.StrictMode>
 );

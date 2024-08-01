@@ -1,11 +1,21 @@
 import { Navigate, Outlet } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
-import { useContext } from "react";
-import AuthContext from "./context/authContext";
+import { useSelector, useDispatch } from "react-redux";
+import { useEffect } from "react";
+import { checkAuth } from "./store/auth/authSlice";
 
 function App() {
-  const { user, loading } = useContext(AuthContext);
+  const dispatch = useDispatch();
+  const { user, loading, error } = useSelector((state) => state.auth);
+
+  useEffect(() => {
+    dispatch(checkAuth());
+  }, [dispatch]);
+
+  useEffect(() => {
+    console.log("Token validation status:", { user, loading, error });
+  }, [user, loading, error]);
 
   if (loading) {
     return <div>Loading...</div>;

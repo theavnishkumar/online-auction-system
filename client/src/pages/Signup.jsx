@@ -2,19 +2,22 @@ import { Button, Card, Checkbox, Form, Input } from "antd";
 import { FiHome } from "react-icons/fi";
 import { IoArrowBackSharp } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
-import { useContext, useState } from "react";
-import AuthContext from "../context/authContext";
+import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { signup } from "../store/auth/authSlice";
 
 const Signup = () => {
   const navigate = useNavigate();
-  const { signup } = useContext(AuthContext);
+  const dispatch = useDispatch();
+
+  const { errorData } = useSelector((state) => state.auth);
+  const [error, setError] = useState(errorData);
 
   const [formData, setformData] = useState({
     name: "",
     email: "",
     password: "",
   });
-  const [error, setError] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -23,20 +26,22 @@ const Signup = () => {
       formData.email === "" ||
       formData.password === ""
     ) {
-      return alert("All fields are required");
+      return setError("All fields are required");
     }
     try {
-      await signup(formData.name, formData.email, formData.password);
-      navigate("/dsahboard");
-    } catch (error) {
-      if (error.response) {
-        setError(
-          error.response.data.error || "Signup failed. Please try again."
-        );
+      const resultAction = await dispatch(signup(formData));
+      if (signup.fulfilled.match(resultAction)) {
+        navigate("/dashboard");
       } else {
-        setError("An unexpected error occurred. Please try again.");
-        console.log(error);
+        if (resultAction.payload) {
+          setError(resultAction.payload);
+        } else {
+          setError("Signup failed. Please try again.");
+        }
       }
+    } catch (error) {
+      setError("An unexpected error occurred. Please try again.");
+      console.error(error);
     }
   };
 
