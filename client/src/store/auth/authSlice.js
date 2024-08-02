@@ -4,8 +4,17 @@ import { jwtDecode } from 'jwt-decode';
 
 const VITE_API = import.meta.env.VITE_API;
 
+const decodeToken = (token) => {
+    try {
+        return token ? jwtDecode(token) : null;
+    } catch (error) {
+        console.error('Error decoding token:', error);
+        return null;
+    }
+};
+
 const initialState = {
-    user: null,
+    user: decodeToken(localStorage.getItem('token')),
     loading: false,
     error: null,
 };
@@ -71,6 +80,7 @@ const authSlice = createSlice({
             localStorage.removeItem('token');
             delete axios.defaults.headers.common['Authorization'];
             state.user = null;
+            state.userToken = null;
         },
     },
     extraReducers: (builder) => {
