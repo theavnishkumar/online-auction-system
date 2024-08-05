@@ -1,7 +1,7 @@
 import { Flex, Button, Drawer, Typography } from "antd";
 import { useState } from "react";
 import { MenuOutlined } from "@ant-design/icons";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { logout, deleteAccount } from "../store/auth/authSlice";
 
@@ -34,15 +34,15 @@ const Navbar = () => {
 
   const navMenu = [
     {
-      title: "Home",
-      url: "#",
+      title: "Dashboard",
+      url: "/dashboard",
     },
     {
-      title: "Features",
-      url: "#",
+      title: "Create Auction",
+      url: "/create-auction",
     },
     {
-      title: "Pricing",
+      title: "My Auction",
       url: "#",
     },
     {
@@ -70,7 +70,7 @@ const Navbar = () => {
         <Flex align="center" justify="space-between" className="hidden md:flex">
           {navMenu.map((menu, index) => (
             <Button key={index} type="text" size="large">
-              {menu.title}
+              <Link to={menu.url}>{menu.title}</Link>
             </Button>
           ))}
         </Flex>
@@ -112,7 +112,7 @@ const Navbar = () => {
               block
               onClick={() => setVisible(false)}
             >
-              {menu.title}
+              <Link to={menu.url}>{menu.title}</Link>
             </Button>
           ))}
           <Button onClick={handleDeleteAccount} danger block>
