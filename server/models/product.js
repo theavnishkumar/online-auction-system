@@ -5,27 +5,30 @@ const productSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    description: {
+    itemDescription: {
         type: String,
         required: true,
     },
-    startingBid: {
+    itemPrice: {
         type: Number,
         default: 0
     },
-    category: {
+    itemCategory: {
         type: String,
         required: true,
+    },
+    itemPhoto: {
+        type: String,
     },
     createdAt: {
         type: Date,
         default: Date.now
     },
-    bidStart: {
+    itemStartDate: {
         type: Date,
         default: Date.now
     },
-    bidEnd: {
+    itemEndDate: {
         type: Date,
         required: "Auction end time is required"
     },
