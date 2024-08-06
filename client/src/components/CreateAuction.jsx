@@ -1,31 +1,79 @@
-import { useState } from "react";
-// import axios from "axios";
-// const VITE_API = `${import.meta.env.VITE_API}`;
+import { useEffect, useState } from "react";
+import axios from "axios";
+const VITE_API = `${import.meta.env.VITE_API}`;
 
 const CreateAuction = () => {
   const [formData, setFormData] = useState({
     itemName: "",
     itemPrice: "",
     itemDescription: "",
+    itemCategory: "",
     itemPhoto: null,
     itemStartDate: "",
     itemEndDate: "",
   });
 
+  const [isValid, setIsValid] = useState(false);
+
+  useEffect(() => {
+    const isValid =
+      formData.itemName &&
+      formData.itemPrice &&
+      formData.itemDescription &&
+      formData.itemCategory &&
+      formData.itemPhoto &&
+      formData.itemStartDate &&
+      formData.itemEndDate;
+    setIsValid(isValid);
+  }, [formData]);
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     console.log(formData);
-    // try {
-    //   const response = await axios.post(`${VITE_API}/api/createauction`, {
-    //     headers: {
-    //       "Content-Type": "multipart/form-data",
-    //     },
-    //   });
-    //   console.log(response.data);
-    // } catch (error) {
-    //   console.error("Error creating auction", error);
-    // }
+
+    try {
+      const formDataForUpload = new FormData();
+      formDataForUpload.append("itemName", formData.itemName);
+      formDataForUpload.append("itemPrice", formData.itemPrice);
+      formDataForUpload.append("itemDescription", formData.itemDescription);
+      formDataForUpload.append("itemCategory", formData.itemCategory);
+      formDataForUpload.append("itemPhoto", formData.itemPhoto);
+      formDataForUpload.append("itemStartDate", formData.itemStartDate);
+      formDataForUpload.append("itemEndDate", formData.itemEndDate);
+
+      const uploadResponse = await axios.post(
+        `${VITE_API}/api/auction/create`,
+        formDataForUpload,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+        }
+      );
+
+      console.log(uploadResponse.data);
+
+      setFormData({
+        itemName: "",
+        itemPrice: "",
+        itemDescription: "",
+        itemCategory: "",
+        itemPhoto: null,
+        itemStartDate: "",
+        itemEndDate: "",
+      });
+    } catch (error) {
+      console.error("Error creating auction:", error);
+    }
   };
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setFormData({ ...formData, itemPhoto: file });
+    }
+  };
+
+  const today = new Date().toISOString().split("T")[0];
+  const minEndDate = formData.itemStartDate || today;
 
   return (
     <div className="min-h-[calc(100svh-9rem)] px-4 py-4">
@@ -99,6 +147,30 @@ const CreateAuction = () => {
               className="w-full appearance-none rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
             />
           </div>
+          {/* Item Category */}
+          <div className="mb-5">
+            <label
+              className="mb-3 block text-base font-medium text-[#07074D]"
+              htmlFor="category"
+            >
+              Item Category
+            </label>
+            <select
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              id="category"
+              name="category"
+              value={formData.itemCategory}
+              onChange={(e) =>
+                setFormData({ ...formData, itemCategory: e.target.value })
+              }
+            >
+              <option value="">Select a category</option>
+              <option value="realestate">Real Estate</option>
+              <option value="electronics">Electronic</option>
+              <option value="education">Education</option>
+              <option value="food">Food</option>
+            </select>
+          </div>
           {/* Item Image */}
           <div className="mb-5">
             <label className="mb-3 block text-base font-medium text-[#07074D]">
@@ -111,24 +183,49 @@ const CreateAuction = () => {
                 name="itemPhoto"
                 id="itemPhoto"
                 className="sr-only"
-                onChange={(e) =>
-                  setFormData({ ...formData, itemPhoto: e.target.value })
-                }
+                onChange={handleFileChange}
               />
+              {formData.itemPhoto && (
+                <div className="mb-4">
+                  <span className="font-medium text-[#07074D]">
+                    Selected file: {formData.itemPhoto.name}
+                  </span>
+                </div>
+              )}
               <label
                 htmlFor="itemPhoto"
-                className="relative flex min-h-[150px] items-center justify-center rounded-md border border-dashed border-[#e0e0e0] text-center"
+                className="relative flex min-h-[100px] items-center justify-center rounded-md border border-dashed border-[#e0e0e0] text-center"
               >
                 <div>
-                  <span className="mb-2 block text-lg font-medium text-[#07074D]">
-                    Drop image here
+                  <span className="flex items-center space-x-2">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="w-6 h-6 text-gray-600"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
+                      ></path>
+                    </svg>
+                    <span className="font-medium text-gray-600">
+                      Drop image to Attach, or
+                      <span className="text-blue-600 underline ml-[4px]">
+                        browse
+                      </span>
+                    </span>
                   </span>
-                  <span className="mb-2 block text-base font-medium text-[#6B7280]">
-                    Or
-                  </span>
-                  <span className="inline-flex rounded border border-[#e0e0e0] py-2 px-7 text-base font-medium text-[#07074D]">
-                    Browse
-                  </span>
+                  <input
+                    type="file"
+                    name="fitemPhoto"
+                    className="hidden"
+                    accept="image/png,image/jpeg"
+                    id="itemPhoto"
+                  />
                 </div>
               </label>
             </div>
@@ -151,6 +248,7 @@ const CreateAuction = () => {
                   type="date"
                   name="date"
                   id="date"
+                  min={today}
                   className="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
                 />
               </div>
@@ -171,6 +269,8 @@ const CreateAuction = () => {
                   type="date"
                   name="date"
                   id="date"
+                  disabled={!formData.itemStartDate}
+                  min={minEndDate}
                   className="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
                 />
               </div>
@@ -181,6 +281,7 @@ const CreateAuction = () => {
             <button
               className="hover:shadow-form rounded-md bg-[#6A64F1] py-3 px-8 text-center text-base font-semibold text-white outline-none"
               type="submit"
+              disabled={!isValid}
             >
               Submit
             </button>
