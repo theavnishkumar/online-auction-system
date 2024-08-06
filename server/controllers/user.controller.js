@@ -18,7 +18,6 @@ const handleSignup = async (req, res) => {
         await newUser.save();
         const token = jwt.sign({ name: name, email: email }, process.env.JWT_SECRET, { expiresIn: '14d' });
         return res.status(200).json({ token });
-        // res.status(201).json({ message: "User created successfully" });
     }
     catch (err) {
         res.status(500).json({ error: "Internal server error" });
@@ -38,7 +37,6 @@ const handleLogin = async (req, res) => {
         }
         const token = jwt.sign({ userId: user._id, name: user.name, email: user.email }, process.env.JWT_SECRET, { expiresIn: '14d' });
         return res.status(201).json({ token });
-        // res.status(200).json({ message: "Login successful" });
     } catch (error) {
         res.status(500).json({ error: "Internal server error" });
     }
