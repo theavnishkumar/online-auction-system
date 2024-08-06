@@ -11,9 +11,9 @@ cloudinary.config({
 const uploadImage = async (file) => {
     try {
         const result = await cloudinary.uploader.upload(file.path, {
-            folder: 'auctions', // Folder name in Cloudinary
+            folder: 'auctions',
         });
-        return result.secure_url; // Cloudinary URL of the uploaded image
+        return result.secure_url;
     } catch (error) {
         throw new Error('Error uploading image to Cloudinary');
     }
