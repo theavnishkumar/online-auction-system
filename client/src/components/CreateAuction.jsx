@@ -41,15 +41,9 @@ const CreateAuction = () => {
       formDataForUpload.append("itemStartDate", formData.itemStartDate);
       formDataForUpload.append("itemEndDate", formData.itemEndDate);
 
-      const uploadResponse = await axios.post(
-        `${VITE_API}/api/auction/create`,
-        formDataForUpload,
-        {
-          headers: { "Content-Type": "multipart/form-data" },
-        }
-      );
-
-      console.log(uploadResponse.data);
+      await axios.post(`${VITE_API}/api/auction/create`, formDataForUpload, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
 
       setFormData({
         itemName: "",
