@@ -8,7 +8,7 @@ const storage = new CloudinaryStorage({
     params: {
         folder: 'uploads',
         format: async (req, file) => 'png',
-        public_id: (req, file) => 'computed-filename-using-request',
+        public_id: (req, file) => `${Date.now()}-${file.originalname}`,
     },
 });
 

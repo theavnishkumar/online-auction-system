@@ -33,4 +33,13 @@ const createAuction = async (req, res) => {
     }
 };
 
-export default createAuction;
+const showAuction = async (req, res) => {
+    try {
+        const auctions = await Product.find().sort({ createdAt: -1 });
+        return res.status(200).json({ message: 'All auctions', auctions });
+    } catch (error) {
+        return res.status(500).json({ message: 'Error fetching auctions', error: error.message });
+    }
+}
+
+export { createAuction, showAuction };
