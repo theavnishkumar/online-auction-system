@@ -2,6 +2,7 @@ import Card from "../components/Card";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchAuctions } from "../store/auction/auctionSlice";
+import Skeleton from "../components/Skeleton";
 
 const Dashboard = () => {
   const dispatch = useDispatch();
@@ -11,7 +12,14 @@ const Dashboard = () => {
     dispatch(fetchAuctions());
   }, [dispatch]);
 
-  if (loading || auctions.length === 0) return <p>Loading...</p>;
+  if (loading || auctions.length === 0)
+    return (
+      <>
+        <Skeleton />
+        <Skeleton />
+        <Skeleton />
+      </>
+    );
   if (error)
     return (
       <div>
