@@ -4,7 +4,7 @@ import Product from '../models/product.js';
 
 const createAuction = async (req, res) => {
     try {
-        const { itemName, itemPrice, itemDescription, itemCategory, itemStartDate, itemEndDate } = req.body;
+        const { itemName, itemPrice, itemDescription, itemCategory, itemStartDate, itemEndDate, seller } = req.body;
         let imageUrl = '';
 
         if (req.file) {
@@ -24,6 +24,7 @@ const createAuction = async (req, res) => {
             itemPhoto: imageUrl,
             itemStartDate,
             itemEndDate,
+            seller,
         });
         await newAuction.save();
 

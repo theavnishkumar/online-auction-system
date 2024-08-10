@@ -2,6 +2,8 @@ import User from "../models/user.js";
 import bcrypt from "bcrypt";
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
+import Product from "../models/product.js";
+import mongoose from "mongoose";
 
 dotenv.config().parsed;
 
@@ -16,7 +18,7 @@ const handleSignup = async (req, res) => {
         const salt = await bcrypt.genSalt(10);
         newUser.password = await bcrypt.hash(password, salt);
         await newUser.save();
-        const token = jwt.sign({ name: name, email: email }, process.env.JWT_SECRET, { expiresIn: '14d' });
+        const token = jwt.sign({ userId: newUser._id, name: name, email: email }, process.env.JWT_SECRET, { expiresIn: '14d' });
         return res.status(200).json({ token });
     }
     catch (err) {
@@ -43,13 +45,16 @@ const handleLogin = async (req, res) => {
 }
 
 const handleDelete = async (req, res) => {
-    const { email } = req.body;
+    const { userId } = req.body;
+    // console.log(userId);
     try {
-        const user = await User.findOne({ email });
+        const user = await User.findOne({ userId });
         if (!user) {
             return res.status(400).json({ error: "User doesn't exist." });
         }
-        await User.findOneAndDelete({ email });
+        console.log(deletedUser);
+        await User.findOneAndDelete({ userId });
+        // await Product.deleteMany({ seller: 'userId' });
         return res.status(200).json({ message: "User deleted successfully" });
     }
     catch (err) {
@@ -57,4 +62,13 @@ const handleDelete = async (req, res) => {
     }
 }
 
-export { handleSignup, handleLogin, handleDelete };
+const handleGetUser = async (req, res) => {
+    const { seller } = req.body;
+    console.log(seller);
+    const user = await User.findOne({ _id: seller }, { name: 1, _id: 0 });
+    return res.status(200).json(user);
+
+}
+
+
+export { handleSignup, handleLogin, handleDelete, handleGetUser };

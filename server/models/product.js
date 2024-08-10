@@ -34,10 +34,10 @@ const productSchema = new mongoose.Schema({
     },
     seller: {
         type: mongoose.Schema.ObjectId,
-        ref: 'user'
+        ref: 'User'
     },
     bids: [{
-        bidder: { type: mongoose.Schema.ObjectId, ref: 'user' },
+        bidder: { type: mongoose.Schema.ObjectId, ref: 'User' },
         bid: Number,
         time: Date
     }],
