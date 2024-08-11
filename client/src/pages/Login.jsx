@@ -2,7 +2,7 @@ import { Button, Card, Checkbox, Form, Input } from "antd";
 import { FiHome } from "react-icons/fi";
 import { IoArrowBackSharp } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { login } from "../store/auth/authSlice";
 
@@ -10,7 +10,7 @@ const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { errorData } = useSelector((state) => state.auth);
+  const { user, errorData } = useSelector((state) => state.auth);
   const [error, setError] = useState(errorData);
   const [formData, setformData] = useState({
     email: "",
@@ -38,6 +38,12 @@ const Login = () => {
       console.log(error);
     }
   };
+
+  useEffect(() => {
+    if (user) {
+      navigate("/dashboard");
+    }
+  }, [user, navigate]);
 
   return (
     <div className="min-h-svh min-w-full flex flex-col items-center justify-center">

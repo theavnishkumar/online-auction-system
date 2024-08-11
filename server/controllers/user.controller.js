@@ -46,21 +46,26 @@ const handleLogin = async (req, res) => {
 
 const handleDelete = async (req, res) => {
     const { userId } = req.body;
-    // console.log(userId);
+
     try {
-        const user = await User.findOne({ userId });
+        // Find the user first
+        const user = await User.findOne({ _id: userId });
         if (!user) {
             return res.status(400).json({ error: "User doesn't exist." });
         }
-        console.log(deletedUser);
-        await User.findOneAndDelete({ userId });
-        // await Product.deleteMany({ seller: 'userId' });
-        return res.status(200).json({ message: "User deleted successfully" });
-    }
-    catch (err) {
+
+        // Delete all posts of the user
+        await Product.deleteMany({ seller: userId });
+
+        // Delete the user
+        await User.findOneAndDelete({ _id: userId });
+
+        return res.status(200).json({ message: "User and all related posts deleted successfully" });
+    } catch (err) {
+        console.error(err);
         res.status(500).json({ error: "Internal server error" });
     }
-}
+};
 
 const handleGetUser = async (req, res) => {
     const { seller } = req.body;

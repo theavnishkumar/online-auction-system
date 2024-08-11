@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { useSelector } from "react-redux";
 const VITE_API = `${import.meta.env.VITE_API}`;
 
 const CreateAuction = () => {
@@ -14,6 +15,7 @@ const CreateAuction = () => {
   });
 
   const [isValid, setIsValid] = useState(false);
+  const { user } = useSelector((state) => state.auth);
 
   useEffect(() => {
     const isValid =
@@ -29,7 +31,6 @@ const CreateAuction = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log(formData);
 
     try {
       const formDataForUpload = new FormData();
@@ -40,6 +41,7 @@ const CreateAuction = () => {
       formDataForUpload.append("itemPhoto", formData.itemPhoto);
       formDataForUpload.append("itemStartDate", formData.itemStartDate);
       formDataForUpload.append("itemEndDate", formData.itemEndDate);
+      formDataForUpload.append("seller", user.userId);
 
       await axios.post(`${VITE_API}/api/auction/create`, formDataForUpload, {
         headers: { "Content-Type": "multipart/form-data" },

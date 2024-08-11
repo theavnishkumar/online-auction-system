@@ -27,7 +27,7 @@ const Card = ({
           {itemName || "Card Title"}
         </div>
         <span className="text-gray-600 font-normal -mt-4">
-          by Avnish Kumar on {itemPostDate.slice(0, 10) || "Post date"}
+          by Avnish on {itemPostDate.slice(0, 10) || "Post date"}
         </span>
         <div className="text-gray-600 font-normal -mt-2">
           {itemDescription || "Card Description"}

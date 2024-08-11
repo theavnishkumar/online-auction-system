@@ -1,11 +1,13 @@
 import { Flex, Button, Drawer, Typography } from "antd";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { MenuOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import Footer from "../components/Footer";
+import { useSelector } from "react-redux";
 
 const Landing = () => {
   const navigate = useNavigate();
+  const { user } = useSelector((state) => state.auth);
 
   const [visible, setVisible] = useState(false);
   const showDrawer = () => {
@@ -30,6 +32,12 @@ const Landing = () => {
       url: "#",
     },
   ];
+
+  useEffect(() => {
+    if (user) {
+      navigate("/dashboard");
+    }
+  }, [user, navigate]);
 
   return (
     <>

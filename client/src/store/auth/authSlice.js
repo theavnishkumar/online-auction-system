@@ -45,9 +45,9 @@ export const signup = createAsyncThunk('auth/signup', async ({ name, email, pass
     }
 });
 
-export const deleteAccount = createAsyncThunk('auth/deleteAccount', async (email, { rejectWithValue }) => {
+export const deleteAccount = createAsyncThunk('auth/deleteAccount', async (userId, { rejectWithValue }) => {
     try {
-        await axios.delete(`${VITE_API}/api/delete`, { data: { email } });
+        await axios.delete(`${VITE_API}/api/delete`, { data: { userId } });
         localStorage.removeItem('token');
         delete axios.defaults.headers.common['Authorization'];
         return null;

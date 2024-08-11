@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { logout, deleteAccount } from "../store/auth/authSlice";
+import DialogBox from "./DialogBox";
 
 const navMenu = [
   { title: "Home", url: "/dashboard" },
@@ -16,12 +17,15 @@ const Navbar = () => {
   const dropdownRef = useRef(null);
   const buttonRef = useRef(null);
   const [open, setOpen] = useState(false);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
   const { user } = useSelector((state) => state.auth);
 
+  // Open dropdown
   const openMenu = () => {
     setOpen(!open);
   };
 
+  // Close dropdown when clicked outside
   const handleClickOutside = (event) => {
     if (
       dropdownRef.current &&
@@ -43,12 +47,16 @@ const Navbar = () => {
   const handleDeleteAccount = async () => {
     if (user) {
       try {
-        await dispatch(deleteAccount(user.email)).unwrap();
+        await dispatch(deleteAccount(user.userId)).unwrap();
         navigate("/");
       } catch (error) {
         console.error("Failed to delete account:", error);
       }
     }
+  };
+  // Close dialog
+  const closeDialog = () => {
+    setIsDialogOpen(false);
   };
 
   useEffect(() => {
@@ -111,40 +119,24 @@ const Navbar = () => {
                   ))}
                 </ul>
                 <div className="py-2">
-                  <Link
+                  <button
+                    onClick={() => setIsDialogOpen(true)}
+                    className="px-4 py-2 text-sm text-red-600 hover:bg-gray-100 w-full text-left"
+                  >
+                    Delete My Acount
+                  </button>
+                </div>
+                <div className="py-2">
+                  <button
                     onClick={handleLogout}
                     className="block px-4 py-2 text-sm text-red-600 hover:bg-gray-100"
                   >
                     Sign out
-                  </Link>
+                  </button>
                 </div>
               </div>
             )}
           </div>
-          {/* <button
-            data-collapse-toggle="navbar-user"
-            type="button"
-            className="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200"
-            aria-controls="navbar-user"
-            aria-expanded="false"
-          >
-            <span className="sr-only">Open main menu</span>
-            <svg
-              className="w-5 h-5"
-              aria-hidden="true"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 17 14"
-            >
-              <path
-                stroke="currentColor"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M1 1h15M1 7h15M1 13h15"
-              />
-            </svg>
-          </button> */}
         </div>
         <div
           className="items-center justify-between hidden w-full md:flex md:w-auto md:order-1"
@@ -164,6 +156,9 @@ const Navbar = () => {
           </ul>
         </div>
       </div>
+      {isDialogOpen && (
+        <DialogBox onConfirm={handleDeleteAccount} onCancel={closeDialog} />
+      )}
     </nav>
   );
 };

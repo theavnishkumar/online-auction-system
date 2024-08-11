@@ -30,10 +30,6 @@ const Dashboard = () => {
   // const user = useSelector((state) => state.auth.user);
   return (
     <div className="min-h-[calc(100svh-9rem)] px-4 py-4 w-full">
-      {/* Hi, {user.name}
-      <br />
-      your email is : {user.email} */}
-
       {auctions.auctions.map((auction) => (
         <Card
           key={auction._id}
