@@ -4,13 +4,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { logout, deleteAccount } from "../store/auth/authSlice";
 import DialogBox from "./DialogBox";
 
-const navMenu = [
-  { title: "Home", url: "/dashboard" },
-  { title: "My Auction", url: "#" },
-  { title: "Create Auction", url: "/create-auction" },
-  { title: "Accounts", url: "#" },
-];
-
 const Navbar = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -19,6 +12,13 @@ const Navbar = () => {
   const [open, setOpen] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const { user } = useSelector((state) => state.auth);
+
+  const navMenu = [
+    { title: "Home", url: "/auction" },
+    { title: "My Auction", url: `/auction/${user.userId}` },
+    { title: "Create Auction", url: "/create-auction" },
+    { title: "Accounts", url: "#" },
+  ];
 
   // Open dropdown
   const openMenu = () => {
@@ -69,7 +69,7 @@ const Navbar = () => {
     <nav className="bg-white border-gray-200 sticky top-0 z-50 border-b">
       <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
         <Link
-          to={"/dashboard"}
+          to={"/auction"}
           className="flex items-center space-x-3 rtl:space-x-reverse"
         >
           <span className="self-center text-2xl font-semibold whitespace-nowrap ">

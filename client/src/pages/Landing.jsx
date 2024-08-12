@@ -35,7 +35,7 @@ const Landing = () => {
 
   useEffect(() => {
     if (user) {
-      navigate("/dashboard");
+      navigate("/auction");
     }
   }, [user, navigate]);
 

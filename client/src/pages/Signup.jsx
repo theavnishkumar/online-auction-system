@@ -31,7 +31,7 @@ const Signup = () => {
     try {
       const resultAction = await dispatch(signup(formData));
       if (signup.fulfilled.match(resultAction)) {
-        navigate("/dashboard");
+        navigate("/auction");
       } else {
         if (resultAction.payload) {
           setError(resultAction.payload);
@@ -47,7 +47,7 @@ const Signup = () => {
 
   useEffect(() => {
     if (user) {
-      navigate("/dashboard");
+      navigate("/auction");
     }
   }, [user, navigate]);
 

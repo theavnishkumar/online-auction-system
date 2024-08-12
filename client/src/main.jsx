@@ -11,6 +11,7 @@ import Landing from "./pages/Landing.jsx";
 import { store } from "./store/store.js";
 import { Provider } from "react-redux";
 import CreateAuction from "./components/CreateAuction.jsx";
+import MyAuction from "./pages/MyAuction.jsx";
 
 const router = createBrowserRouter([
   {
@@ -32,12 +33,16 @@ const router = createBrowserRouter([
     errorElement: <Error />,
     children: [
       {
-        path: "dashboard",
+        path: "auction",
         element: <Dashboard />,
       },
       {
         path: "create-auction",
         element: <CreateAuction />,
+      },
+      {
+        path: "auction/:userId",
+        element: <MyAuction />,
       },
     ],
   },

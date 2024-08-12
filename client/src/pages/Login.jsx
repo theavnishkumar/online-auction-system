@@ -25,7 +25,7 @@ const Login = () => {
     try {
       const resultAction = await dispatch(login(formData));
       if (login.fulfilled.match(resultAction)) {
-        navigate("/dashboard");
+        navigate("/auction");
       } else {
         if (resultAction.payload) {
           setError(resultAction.payload);
@@ -41,7 +41,7 @@ const Login = () => {
 
   useEffect(() => {
     if (user) {
-      navigate("/dashboard");
+      navigate("/auction");
     }
   }, [user, navigate]);
 
