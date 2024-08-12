@@ -72,8 +72,26 @@ const handleGetUser = async (req, res) => {
     console.log(seller);
     const user = await User.findOne({ _id: seller }, { name: 1, _id: 0 });
     return res.status(200).json(user);
+}
 
+const handleUser = async (req, res) => {
+    const { userId } = req.params;
+    try {
+        const user = await User.findOne({ _id: userId }, { password: 0 });
+        if (!user) {
+            console.log("hii");
+            return res.status(400).json({ error: "User doesn't exist." });
+        }
+        const products = await Product.find({ seller: userId }).sort({ createdAt: -1 });
+        if (products.length === 0) {
+            return res.status(200).json({ message: "No products found.", user });
+        }
+        return res.status(200).json({ message: "User and Products", user, products });
+    }
+    catch (err) {
+        res.status(500).json({ error: "Internal server error" });
+    }
 }
 
 
-export { handleSignup, handleLogin, handleDelete, handleGetUser };
+export { handleSignup, handleLogin, handleDelete, handleGetUser, handleUser };
