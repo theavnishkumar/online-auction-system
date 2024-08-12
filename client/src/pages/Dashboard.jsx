@@ -11,7 +11,6 @@ const Dashboard = () => {
   useEffect(() => {
     dispatch(fetchAuctions());
   }, [dispatch]);
-  console.log(auctions);
 
   if (loading || auctions.length === 0)
     return (
