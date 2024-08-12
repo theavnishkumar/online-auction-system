@@ -47,10 +47,11 @@ const MyAuction = () => {
               itemStartDate={auction.itemStartDate}
               itemEndDate={auction.itemEndDate}
               itemPhoto={auction.itemPhoto}
+              sellerName={auction.seller.name}
             />
           ))
         ) : (
-          <div className="no-file-found flex flex-col items-center justify-center py-8 px-4 text-center bg-gray-100  rounded-lg shadow-md my-2 max-w-md max-md:mx-auto">
+          <div className="flex flex-col items-center justify-center py-8 px-4 text-center bg-gray-100 rounded-lg shadow-md my-2 max-w-md max-md:mx-auto">
             <svg
               className="w-12 h-12  text-gray-700"
               stroke="currentColor"

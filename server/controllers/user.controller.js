@@ -82,7 +82,7 @@ const handleUser = async (req, res) => {
             console.log("hii");
             return res.status(400).json({ error: "User doesn't exist." });
         }
-        const products = await Product.find({ seller: userId }).sort({ createdAt: -1 });
+        const products = await Product.find({ seller: userId }).sort({ createdAt: -1 }).populate('seller', '_id name');
         if (products.length === 0) {
             return res.status(200).json({ message: "No products found.", user });
         }

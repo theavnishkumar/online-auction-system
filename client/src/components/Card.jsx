@@ -1,5 +1,8 @@
+import { Link } from "react-router-dom";
+
 /* eslint-disable react/prop-types */
 const Card = ({
+  item_id,
   itemName,
   itemDescription,
   itemPostDate,
@@ -8,6 +11,7 @@ const Card = ({
   itemEndDate,
   itemPhoto,
   // itemCategory,
+  sellerName,
 }) => {
   return (
     <div className="lg:max-w-4xl lg:flex lg:items-center lg:max-h-96 max-w-sm sm:max-w-md p-2 gap-2 mx-auto max-lg:space-y-2">
@@ -27,7 +31,18 @@ const Card = ({
           {itemName || "Card Title"}
         </div>
         <span className="text-gray-600 font-normal -mt-4">
-          by Avnish on {itemPostDate.slice(0, 10) || "Post date"}
+          by{" "}
+          {item_id && item_id.length > 0 ? (
+            <Link to={`/auction/${item_id}`} className="text-blue-700">
+              {sellerName}
+            </Link>
+          ) : (
+            sellerName
+          )}
+          {/* <Link to={`/auction/${item_id}`} className="text-blue-700">
+            {sellerName}
+          </Link>{" "} */}{" "}
+          on {itemPostDate.slice(0, 10) || "Post date"}
         </span>
         <div className="text-gray-600 font-normal -mt-2">
           {itemDescription || "Card Description"}
