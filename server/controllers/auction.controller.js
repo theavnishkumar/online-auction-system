@@ -43,4 +43,17 @@ const showAuction = async (req, res) => {
     }
 }
 
-export { createAuction, showAuction };
+const auctionById = async (req, res) => {
+    try {
+        const auction = await Product.findById(req.params.id).populate('seller', '_id name createdAt');
+        if (!auction) {
+            return res.status(404).json({ message: 'Auction not found' });
+        }
+        return res.status(200).json({ message: 'Auction found', auction });
+    }
+    catch (error) {
+        return res.status(500).json({ message: 'Error fetching auction', error: error.message });
+    }
+}
+
+export { createAuction, showAuction, auctionById };
