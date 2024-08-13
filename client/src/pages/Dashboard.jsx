@@ -6,13 +6,14 @@ import Skeleton from "../components/Skeleton";
 
 const Dashboard = () => {
   const dispatch = useDispatch();
+  // const user = useSelector((state) => state.auth.user);
   const { auctions, loading, error } = useSelector((state) => state.auctions);
 
   useEffect(() => {
     dispatch(fetchAuctions());
   }, [dispatch]);
 
-  if (loading || auctions.length === 0)
+  if (loading || auctions === null)
     return (
       <>
         <Skeleton />
@@ -27,7 +28,6 @@ const Dashboard = () => {
       </div>
     );
 
-  // const user = useSelector((state) => state.auth.user);
   return (
     <div className="min-h-[calc(100svh-9rem)] px-4 py-4 w-full">
       {auctions && auctions.length > 0 ? (

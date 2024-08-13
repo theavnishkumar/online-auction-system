@@ -4,7 +4,7 @@ const VITE_API = import.meta.env.VITE_API;
 
 
 const initialState = {
-    auctions: [],
+    auctions: null,
     loading: false,
     error: null,
     userData: null,
