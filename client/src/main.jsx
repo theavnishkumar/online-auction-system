@@ -12,6 +12,7 @@ import { store } from "./store/store.js";
 import { Provider } from "react-redux";
 import CreateAuction from "./components/CreateAuction.jsx";
 import MyAuction from "./pages/MyAuction.jsx";
+import Product from "./pages/Product.jsx";
 
 const router = createBrowserRouter([
   {
@@ -41,8 +42,12 @@ const router = createBrowserRouter([
         element: <CreateAuction />,
       },
       {
-        path: "auction/:userId",
+        path: "auction/user/:userId",
         element: <MyAuction />,
+      },
+      {
+        path: "auction/:productId",
+        element: <Product />,
       },
     ],
   },

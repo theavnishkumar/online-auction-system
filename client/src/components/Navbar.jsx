@@ -15,7 +15,7 @@ const Navbar = () => {
 
   const navMenu = [
     { title: "Home", url: "/auction" },
-    { title: "My Auction", url: `/auction/${user.userId}` },
+    { title: "My Auction", url: `/auction/user/${user.userId}` },
     { title: "Create Auction", url: "/create-auction" },
     { title: "Accounts", url: "#" },
   ];
