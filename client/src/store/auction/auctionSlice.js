@@ -9,6 +9,7 @@ const initialState = {
     error: null,
     userData: null,
     userProducts: [],
+    auctionById: [],
 };
 
 
@@ -37,6 +38,22 @@ export const fetchUserAndProducts = createAsyncThunk(
                 axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
             }
             const response = await axios.get(`${VITE_API}/api/${userId}`);
+            return response.data;
+        } catch (error) {
+            return rejectWithValue(error.response?.data || "An unexpected error occurred.");
+        }
+    }
+);
+
+export const fetchAuctionById = createAsyncThunk(
+    'auctions/fetchAuctionById',
+    async (productId, { rejectWithValue }) => {
+        try {
+            const token = localStorage.getItem('token');
+            if (token) {
+                axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+            }
+            const response = await axios.get(`${VITE_API}/api/auction/${productId}`);
             return response.data;
         } catch (error) {
             return rejectWithValue(error.response?.data || "An unexpected error occurred.");
@@ -74,6 +91,19 @@ const auctionSlice = createSlice({
                 state.userProducts = action.payload.products;
             })
             .addCase(fetchUserAndProducts.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload;
+            })
+            // Single ID
+            .addCase(fetchAuctionById.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(fetchAuctionById.fulfilled, (state, action) => {
+                state.loading = false;
+                state.auctionById = action.payload.auction;
+            })
+            .addCase(fetchAuctionById.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload;
             });

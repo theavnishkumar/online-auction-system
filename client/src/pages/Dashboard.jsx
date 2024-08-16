@@ -34,6 +34,7 @@ const Dashboard = () => {
         auctions.map((auction) => (
           <Card
             key={auction._id}
+            auction_id={auction._id}
             item_id={auction.seller._id}
             itemName={auction.itemName}
             itemDescription={auction.itemDescription}
