@@ -45,7 +45,10 @@ const showAuction = async (req, res) => {
 
 const auctionById = async (req, res) => {
     try {
-        const auction = await Product.findById(req.params.id).populate('seller', '_id name createdAt');
+        const auction = await Product.findById(req.params.id).populate('seller', '_id name createdAt').populate({
+            path: 'bids.bidder',
+            select: 'name'
+        });
         if (!auction) {
             return res.status(404).json({ message: 'Auction not found' });
         }
@@ -56,4 +59,26 @@ const auctionById = async (req, res) => {
     }
 }
 
-export { createAuction, showAuction, auctionById };
+const updateAuctionById = async (req, res) => {
+    try {
+        const { bid, bidder } = req.body;
+        const auction = await Product.findById(req.params.id);
+        if (!auction) {
+            return res.status(404).json({ message: 'Auction not found' });
+        }
+        if (auction.itemEndDate < Date.now()) {
+            return res.status(400).json({ message: 'Auction has ended' });
+        }
+        if (auction.itemPrice >= bid) {
+            return res.status(400).json({ message: 'Bid must be greater than current price' });
+        }
+        auction.itemPrice = bid;
+        auction.bids.push({ bidder, bid, time: Date.now() });
+        await auction.save();
+        return res.status(200).json({ message: 'Auction updated successfully', auction });
+    } catch (error) {
+        return res.status(500).json({ message: 'Error updating auction', error: error.message });
+    }
+}
+
+export { createAuction, showAuction, auctionById, updateAuctionById };
