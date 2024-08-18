@@ -1,15 +1,32 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { fetchAuctionById } from "../store/auction/auctionSlice";
 import Skeleton from "../components/Skeleton";
+import axios from "axios";
+const VITE_API = import.meta.env.VITE_API;
 
 const Product = () => {
   const { productId } = useParams();
   const dispatch = useDispatch();
+  const [bid, setBid] = useState(0);
   const { auctionById, loading, error } = useSelector(
     (state) => state.auctions
   );
+  const { user } = useSelector((state) => state.auth);
+
+  const handleBid = (e) => {
+    e.preventDefault();
+    try {
+      axios.post(`${VITE_API}/api/auction/${productId}`, {
+        bid,
+        bidder: user.userId,
+      });
+    } catch (error) {
+      console.error(error);
+    }
+    console.log("Bid submitted");
+  };
 
   useEffect(() => {
     if (productId) {
@@ -40,14 +57,7 @@ const Product = () => {
             {auctionById.itemName || "Product Name"}
           </h2>
           <div className="my-8 xl:mb-10 xl:mt-12 w-3/5 bg-red-200 mx-auto">
-            <img
-              className="w-full"
-              src={
-                auctionById.itemPhoto ||
-                "https://flowbite.s3.amazonaws.com/blocks/e-commerce/imac-showcase.svg"
-              }
-              alt=""
-            />
+            <img className="w-full" src={auctionById.itemPhoto} alt="" />
           </div>
           <div className="mx-auto max-w-2xl space-y-6">
             <p className="text-base font-normal text-gray-500 ">
@@ -148,7 +158,65 @@ const Product = () => {
             </ul> */}
           </div>
           <div className="mx-auto mb-6 max-w-3xl space-y-6 md:mb-12">
-            <p className="text-base font-semibold text-gray-900 ">Bids:</p>
+            <form onSubmit={handleBid}>
+              <label
+                htmlFor="helper-text"
+                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+              >
+                Your price
+              </label>
+              <input
+                type="number"
+                aria-describedby="bid price"
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 mb-3"
+                placeholder="Enter your price"
+                value={bid}
+                onChange={(e) => setBid(e.target.value)}
+              />
+              <button
+                type="submit"
+                className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 "
+              >
+                Bid
+              </button>
+            </form>
+            <p className="text-base font-semibold text-gray-900 ">
+              Bidder History:
+            </p>
+
+            <div className="relative overflow-x-auto">
+              {auctionById && auctionById.bids ? (
+                <table className="w-full text-sm text-left rtl:text-right text-gray-500">
+                  <thead className="text-xs text-gray-700 uppercase bg-gray-50">
+                    <tr>
+                      <th scope="col" className="px-6 py-3">
+                        Bidder Name
+                      </th>
+                      <th scope="col" className="px-6 py-3">
+                        Price
+                      </th>
+                      <th scope="col" className="px-6 py-3">
+                        Time
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {auctionById.bids.map((bid, index) => (
+                      <tr className="bg-white border-b" key={index}>
+                        <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
+                          {bid.bidder.name}
+                        </td>
+                        <td className="px-6 py-4">{bid.bid}</td>
+                        <td className="px-6 py-4">{bid.time.slice(0, 10)}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              ) : (
+                <p>Loading...</p>
+              )}
+            </div>
+
             <p className="text-base font-normal text-gray-500 ">
               {/* {auctionById.bids || "Bids"} */}
             </p>
