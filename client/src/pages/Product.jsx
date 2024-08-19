@@ -9,7 +9,8 @@ const VITE_API = import.meta.env.VITE_API;
 const Product = () => {
   const { productId } = useParams();
   const dispatch = useDispatch();
-  const [bid, setBid] = useState(0);
+  const [bid, setBid] = useState("");
+  const [errorLine, setErrorLine] = useState("");
   const { auctionById, loading, error } = useSelector(
     (state) => state.auctions
   );
@@ -18,14 +19,20 @@ const Product = () => {
   const handleBid = (e) => {
     e.preventDefault();
     try {
+      if (bid <= auctionById.itemPrice) {
+        setErrorLine(`Enter bid greater than`);
+        return;
+      }
+      setBid("");
+      setErrorLine("");
       axios.post(`${VITE_API}/api/auction/${productId}`, {
         bid,
         bidder: user.userId,
       });
+      dispatch(fetchAuctionById(productId));
     } catch (error) {
       console.error(error);
     }
-    console.log("Bid submitted");
   };
 
   useEffect(() => {
@@ -179,6 +186,11 @@ const Product = () => {
               >
                 Bid
               </button>
+              {errorLine && (
+                <p className="text-base font-normal text-red-500 ">
+                  {errorLine} {auctionById.itemPrice}
+                </p>
+              )}
             </form>
             <p className="text-base font-semibold text-gray-900 ">
               Bidder History:
