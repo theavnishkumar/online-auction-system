@@ -63,41 +63,18 @@ const updateAuctionById = async (req, res) => {
     try {
         const { bid, bidder } = req.body;
         const auction = await Product.findById(req.params.id);
-
         if (!auction) {
             return res.status(404).json({ message: 'Auction not found' });
         }
-
-        // Check if the auction has ended
         if (auction.itemEndDate < Date.now()) {
             return res.status(400).json({ message: 'Auction has ended' });
         }
-
-        // Ensure the new bid is higher than the current highest bid
         if (auction.itemPrice >= bid) {
             return res.status(400).json({ message: 'Bid must be greater than current price' });
         }
-
-        // Find the existing bid by the same bidder
-        const existingBidIndex = auction.bids.findIndex(
-            (b) => b.bidder.toString() === bidder.toString()
-        );
-
-        if (existingBidIndex !== -1) {
-            // Update the existing bid
-            auction.bids[existingBidIndex].bid = bid;
-            auction.bids[existingBidIndex].time = Date.now();
-        } else {
-            // Add a new bid if none exists
-            auction.bids.push({ bidder, bid, time: Date.now() });
-        }
-
-        // Update the auction's current price
         auction.itemPrice = bid;
-
-        // Save the auction with the updated bid or new bid
+        auction.bids.push({ bidder, bid, time: Date.now() });
         await auction.save();
-
         return res.status(200).json({ message: 'Auction updated successfully', auction });
     } catch (error) {
         return res.status(500).json({ message: 'Error updating auction', error: error.message });
