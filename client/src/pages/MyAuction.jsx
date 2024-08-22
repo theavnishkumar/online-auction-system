@@ -40,6 +40,7 @@ const MyAuction = () => {
           userProducts.map((auction) => (
             <Card
               key={auction._id}
+              auction_id={auction._id}
               itemName={auction.itemName}
               itemDescription={auction.itemDescription}
               itemPrice={auction.itemPrice}

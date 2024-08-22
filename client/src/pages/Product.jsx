@@ -4,34 +4,49 @@ import { useParams } from "react-router-dom";
 import { fetchAuctionById } from "../store/auction/auctionSlice";
 import Skeleton from "../components/Skeleton";
 import axios from "axios";
+import { FaSpinner } from "react-icons/fa";
+import CountdownTimer from "../components/CountdownTimer";
 const VITE_API = import.meta.env.VITE_API;
 
 const Product = () => {
   const { productId } = useParams();
   const dispatch = useDispatch();
   const [bid, setBid] = useState("");
+  const [loadingAnimation, setLoadingAnimation] = useState(false);
   const [errorLine, setErrorLine] = useState("");
   const { auctionById, loading, error } = useSelector(
     (state) => state.auctions
   );
   const { user } = useSelector((state) => state.auth);
 
-  const handleBid = (e) => {
+  const [isDisabled, setIsDisabled] = useState(false);
+
+  const handleTimeUp = () => {
+    setIsDisabled(true);
+  };
+
+  const handleBid = async (e) => {
     e.preventDefault();
+    setLoadingAnimation(true);
     try {
       if (bid <= auctionById.itemPrice) {
         setErrorLine(`Enter bid greater than`);
+        setLoadingAnimation(false);
         return;
       }
-      setBid("");
       setErrorLine("");
-      axios.post(`${VITE_API}/api/auction/${productId}`, {
+
+      await axios.post(`${VITE_API}/api/auction/${productId}`, {
         bid,
         bidder: user.userId,
       });
+      setBid("");
+
       dispatch(fetchAuctionById(productId));
     } catch (error) {
       console.error(error);
+    } finally {
+      setLoadingAnimation(false);
     }
   };
 
@@ -66,21 +81,46 @@ const Product = () => {
           <div className="my-8 xl:mb-10 xl:mt-12 w-3/5 bg-red-200 mx-auto">
             <img className="w-full" src={auctionById.itemPhoto} alt="" />
           </div>
-          <div className="mx-auto max-w-2xl space-y-6">
+          <div className="mx-auto max-w-2xl space-y-2">
+            <p className="text-base font-semibold text-gray-900 -ml-4">
+              Product Description:
+            </p>
             <p className="text-base font-normal text-gray-500 ">
               {auctionById.itemDescription || "Product Description"}
             </p>
 
-            <p className="text-base font-normal text-gray-500 ">
-              {auctionById.itemPrice || "Product Price"}
-              <br />
-              {auctionById.itemStartDate || "Start Date"}
-              <br />
-              {auctionById.itemEndDate || "End Date"}
-              <br />
-              {/* {auctionById.seller || "Seller Name"} */}
-              <br />
-            </p>
+            <div className="mx-auto max-w-2xl space-y-2">
+              <p className="text-base font-semibold text-gray-900 -ml-4">
+                Price:
+              </p>
+              <p className="text-base font-normal text-gray-500">
+                {auctionById.itemPrice || "Product Price"}
+              </p>
+
+              <p className="text-base font-semibold text-gray-900 -ml-4">
+                Auction Start Date:
+              </p>
+              <p className="text-base font-normal text-gray-500">
+                {auctionById.itemStartDate || "Start Date"}
+              </p>
+
+              <p className="text-base font-semibold text-gray-900 -ml-4">
+                Auction End Date:
+              </p>
+              <p className="text-base font-normal text-gray-500">
+                {auctionById.itemEndDate || "End Date"}
+              </p>
+
+              <p className="text-base font-semibold text-gray-900 -ml-4">
+                Time Left:
+              </p>
+              <div className="text-base font-normal text-red-500">
+                <CountdownTimer
+                  endDate={auctionById.itemEndDate}
+                  onTimeUp={handleTimeUp}
+                />
+              </div>
+            </div>
 
             {/* <p className="text-base font-semibold text-gray-900 ">
               Key Features and Benefits:
@@ -179,12 +219,18 @@ const Product = () => {
                 placeholder="Enter your price"
                 value={bid}
                 onChange={(e) => setBid(e.target.value)}
+                disabled={isDisabled}
               />
               <button
                 type="submit"
-                className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 "
+                className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-gray-700"
+                disabled={loadingAnimation || isDisabled}
               >
-                Bid
+                {loadingAnimation ? (
+                  <FaSpinner className="animate-spin" />
+                ) : (
+                  "Bid"
+                )}
               </button>
               {errorLine && (
                 <p className="text-base font-normal text-red-500 ">
@@ -228,10 +274,6 @@ const Product = () => {
                 <p>Loading...</p>
               )}
             </div>
-
-            <p className="text-base font-normal text-gray-500 ">
-              {/* {auctionById.bids || "Bids"} */}
-            </p>
 
             {/* <p className="text-base font-normal text-gray-500 ">
               A-Grade/CR: iMacs are in 9/10 Cosmetic Condition and are 100%
