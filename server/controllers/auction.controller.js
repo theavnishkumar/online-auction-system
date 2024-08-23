@@ -52,6 +52,7 @@ const auctionById = async (req, res) => {
         if (!auction) {
             return res.status(404).json({ message: 'Auction not found' });
         }
+        auction.bids = auction.bids.sort((a, b) => b.bid - a.bid);
         return res.status(200).json({ message: 'Auction found', auction });
     }
     catch (error) {
