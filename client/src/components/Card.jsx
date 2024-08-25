@@ -47,9 +47,6 @@ const Card = ({
           ) : (
             sellerName
           )}
-          {/* <Link to={`/auction/${item_id}`} className="text-blue-700">
-            {sellerName}
-          </Link>{" "} */}{" "}
           on {itemPostDate.slice(0, 10) || "Post date"}
         </span>
         <div className="text-gray-600 font-normal -mt-2">
