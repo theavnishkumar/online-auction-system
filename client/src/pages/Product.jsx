@@ -82,7 +82,7 @@ const Product = () => {
             <img className="w-full" src={auctionById.itemPhoto} alt="" />
           </div>
           <div className="mx-auto max-w-2xl space-y-2">
-            <p className="text-base font-semibold text-gray-900 -ml-4">
+            <p className="text-base font-semibold text-gray-900">
               Product Description:
             </p>
             <p className="text-base font-normal text-gray-500 ">
@@ -90,28 +90,26 @@ const Product = () => {
             </p>
 
             <div className="mx-auto max-w-2xl space-y-2">
-              <p className="text-base font-semibold text-gray-900 -ml-4">
-                Price:
-              </p>
+              <p className="text-base font-semibold text-gray-900">Price:</p>
               <p className="text-base font-normal text-gray-500">
                 {auctionById.itemPrice || "Product Price"}
               </p>
 
-              <p className="text-base font-semibold text-gray-900 -ml-4">
+              <p className="text-base font-semibold text-gray-900">
                 Auction Start Date:
               </p>
               <p className="text-base font-normal text-gray-500">
                 {auctionById.itemStartDate || "Start Date"}
               </p>
 
-              <p className="text-base font-semibold text-gray-900 -ml-4">
+              <p className="text-base font-semibold text-gray-900">
                 Auction End Date:
               </p>
               <p className="text-base font-normal text-gray-500">
                 {auctionById.itemEndDate || "End Date"}
               </p>
 
-              <p className="text-base font-semibold text-gray-900 -ml-4">
+              <p className="text-base font-semibold text-gray-900">
                 Time Left:
               </p>
               <div className="text-base font-normal text-red-500">

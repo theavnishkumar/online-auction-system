@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
 import CountdownTimer from "./CountdownTimer";
-import { useState } from "react";
 
 /* eslint-disable react/prop-types */
 const Card = ({
@@ -16,10 +15,7 @@ const Card = ({
   // itemCategory,
   sellerName,
 }) => {
-  const [isDisabled, setIsDisabled] = useState(false);
-  const handleTimeUp = () => {
-    setIsDisabled(true);
-  };
+  const handleTimeUp = () => {};
 
   return (
     <div className="lg:max-w-4xl lg:flex lg:items-center lg:max-h-96 max-w-sm sm:max-w-md p-2 gap-2 mx-auto max-lg:space-y-2">
@@ -47,7 +43,7 @@ const Card = ({
           ) : (
             sellerName
           )}
-          on {itemPostDate.slice(0, 10) || "Post date"}
+          &nbsp;on&nbsp;{itemPostDate.slice(0, 10) || "Post date"}
         </span>
         <div className="text-gray-600 font-normal -mt-2">
           {itemDescription.slice(0, 196) || "Card Description"}...
@@ -69,23 +65,19 @@ const Card = ({
               {itemEndDate.slice(0, 10) || "End date"}
             </span>
           </div>
-          <span className="text-gray-600 font-normal">Time Left :</span>
-          <div className="text-base font-normal text-red-500">
+          <div className="text-base font-normal text-red-500 flex">
+            <span className="text-gray-600 font-normal">Time Left :</span>&nbsp;
             <CountdownTimer endDate={itemEndDate} onTimeUp={handleTimeUp} />
           </div>
         </div>
         {/* Card Buttons */}
         <div className="absolute bottom-2 right-3">
-          <button
-            href="#_"
-            className="rounded px-5 py-2.5 overflow-hidden group bg-green-500 relative hover:bg-gradient-to-r hover:from-green-500 hover:to-green-400 text-white hover:ring-2 hover:ring-offset-2 hover:ring-green-400 transition-all ease-out duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-gray-700"
-            disabled={isDisabled}
-          >
-            <span className="absolute right-0 w-8 h-32 -mt-12 transition-all duration-1000 transform translate-x-12 bg-white opacity-10 rotate-12 group-hover:-translate-x-40 ease"></span>
-            <span className="relative">
-              <Link to={`/auction/${auction_id}`}>View</Link>
-            </span>
-          </button>
+          <Link to={`/auction/${auction_id}`}>
+            <button className="rounded px-5 py-2.5 overflow-hidden group bg-green-500 relative hover:bg-gradient-to-r hover:from-green-500 hover:to-green-400 text-white hover:ring-2 hover:ring-offset-2 hover:ring-green-400 transition-all ease-out duration-300 ">
+              <span className="absolute right-0 w-8 h-32 -mt-12 transition-all duration-1000 transform translate-x-12 bg-white opacity-10 rotate-12 group-hover:-translate-x-40 ease"></span>
+              <span className="relative">View</span>
+            </button>
+          </Link>
         </div>
       </div>
     </div>
