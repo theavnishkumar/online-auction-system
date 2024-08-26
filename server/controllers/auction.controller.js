@@ -36,7 +36,8 @@ const createAuction = async (req, res) => {
 
 const showAuction = async (req, res) => {
     try {
-        const auctions = await Product.find().sort({ createdAt: -1 }).populate('seller', '_id name');
+        const currentDate = Date.now();
+        const auctions = await Product.find({ itemEndDate: { $gte: currentDate } }).sort({ createdAt: -1 }).populate('seller', '_id name');
         return res.status(200).json({ message: 'All auctions', auctions });
     } catch (error) {
         return res.status(500).json({ message: 'Error fetching auctions', error: error.message });
