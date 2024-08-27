@@ -46,6 +46,7 @@ const showAuction = async (req, res) => {
 
 const auctionById = async (req, res) => {
     try {
+        const { page = 1, limit = 5 } = req.query;
         const auction = await Product.findById(req.params.id).populate('seller', '_id name createdAt').populate({
             path: 'bids.bidder',
             select: 'name'
@@ -54,7 +55,22 @@ const auctionById = async (req, res) => {
             return res.status(404).json({ message: 'Auction not found' });
         }
         auction.bids = auction.bids.sort((a, b) => b.bid - a.bid);
-        return res.status(200).json({ message: 'Auction found', auction });
+
+        // Pagination
+
+        const startIndex = (page - 1) * limit;
+        const paginatedBids = auction.bids.slice(startIndex, startIndex + limit);
+
+        return res.status(200).json({
+            message: 'Auction found',
+            auction: {
+                ...auction.toObject(),
+                bids: paginatedBids,
+                totalBids: auction.bids.length,
+                totalPages: Math.ceil(auction.bids.length / limit),
+                currentPage: parseInt(page)
+            }
+        });
     }
     catch (error) {
         return res.status(500).json({ message: 'Error fetching auction', error: error.message });
