@@ -28,6 +28,7 @@ export const login = createAsyncThunk('auth/login', async ({ email, password }, 
         const decoded = jwtDecode(token);
         return decoded;
     } catch (error) {
+        console.log(error);
         return rejectWithValue(error.response ? error.response.data.error : 'Login failed. Please try again.');
     }
 });

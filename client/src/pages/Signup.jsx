@@ -1,10 +1,10 @@
-import { Button, Card, Checkbox, Form, Input } from "antd";
 import { FiHome } from "react-icons/fi";
 import { IoArrowBackSharp } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { signup } from "../store/auth/authSlice";
+import { TbUserSquareRounded } from "react-icons/tb";
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -18,6 +18,7 @@ const Signup = () => {
     email: "",
     password: "",
   });
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -29,18 +30,22 @@ const Signup = () => {
       return setError("All fields are required");
     }
     try {
+      setLoading(true);
       const resultAction = await dispatch(signup(formData));
       if (signup.fulfilled.match(resultAction)) {
         navigate("/auction");
       } else {
         if (resultAction.payload) {
           setError(resultAction.payload);
+          setLoading(false);
         } else {
           setError("Signup failed. Please try again.");
+          setLoading(false);
         }
       }
     } catch (error) {
       setError("An unexpected error occurred. Please try again.");
+      setLoading(false);
       console.error(error);
     }
   };
@@ -52,117 +57,149 @@ const Signup = () => {
   }, [user, navigate]);
 
   return (
-    <div className="min-h-svh min-w-full flex flex-col items-center justify-center">
-      <Card
-        bordered={true}
-        style={{
-          width: 350,
-        }}
-      >
-        <div className="flex justify-between px-4 pb-4">
+    <section className="py-4 md:py-8">
+      <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
+        <div className="flex items-center justify-between w-80 md:w-96 mb-4 text-2xl font-semibold text-gray-900">
           <IoArrowBackSharp
-            size={28}
+            className="w-8 h-8"
             style={{ cursor: "pointer" }}
             onClick={() => navigate(-1)}
           />
+          <TbUserSquareRounded className="w-12 h-12 -mb-8 z-10" />
           <FiHome
-            size={26}
+            className="w-8 h-8"
             style={{ cursor: "pointer" }}
             onClick={() => navigate("/")}
           />
         </div>
-        {error && (
-          <span className="block px-3 pb-2 text-red-600 font-semibold">
-            {error}
-          </span>
-        )}
-        <Form
-          name="layout"
-          style={{
-            width: "100%",
-          }}
-          initialValues={{
-            remember: true,
-          }}
-          autoComplete="off"
-          layout="vertical"
-          onSubmitCapture={handleSubmit}
-        >
-          <Form.Item
-            label="Name"
-            name="name"
-            rules={[
-              {
-                required: true,
-                message: "Please input your name!",
-              },
-            ]}
-          >
-            <Input
-              onChange={(e) =>
-                setformData({ ...formData, name: e.target.value })
-              }
-              value={formData.name}
-            />
-          </Form.Item>
+        <div className="w-full bg-white rounded-lg shadow md:mt-0 sm:max-w-md xl:p-0 ">
+          <div className="p-6 space-y-6 md:space-y-8 sm:p-8">
+            <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl text-center">
+              Sign up
+            </h1>
+            {error && (
+              <span className="block px-3 text-red-600 font-semibold">
+                {error}
+              </span>
+            )}
+            <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit}>
+              <div>
+                <label
+                  htmlFor="name"
+                  className="block mb-2 text-sm font-medium text-gray-900 "
+                >
+                  Name
+                </label>
+                <input
+                  type="text"
+                  name="name"
+                  id="name"
+                  className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-amber-600 focus:border-amber-600 block w-full p-2.5"
+                  placeholder="John Doe"
+                  required=""
+                  onChange={(e) =>
+                    setformData({ ...formData, name: e.target.value })
+                  }
+                  value={formData.name}
+                />
+              </div>
 
-          <Form.Item
-            label="Email"
-            name="email"
-            rules={[
-              {
-                required: true,
-                message: "Please input your email!",
-              },
-            ]}
-          >
-            <Input
-              onChange={(e) =>
-                setformData({ ...formData, email: e.target.value })
-              }
-              value={formData.email}
-            />
-          </Form.Item>
+              <div>
+                <label
+                  htmlFor="email"
+                  className="block mb-2 text-sm font-medium text-gray-900 "
+                >
+                  Email Address
+                </label>
+                <input
+                  type="email"
+                  name="login"
+                  id="email"
+                  className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-amber-600 focus:border-amber-600 block w-full p-2.5"
+                  placeholder="name@xyz.com"
+                  required=""
+                  onChange={(e) =>
+                    setformData({ ...formData, email: e.target.value })
+                  }
+                  value={formData.email}
+                />
+              </div>
+              <div>
+                <label
+                  htmlFor="password"
+                  className="block mb-2 text-sm font-medium text-gray-900 "
+                >
+                  Password
+                </label>
+                <input
+                  type="password"
+                  name="password"
+                  id="password"
+                  placeholder="••••••••"
+                  className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-amber-600 focus:border-amber-600 block w-full p-2.5 "
+                  required=""
+                  onChange={(e) =>
+                    setformData({ ...formData, password: e.target.value })
+                  }
+                  value={formData.password}
+                />
+              </div>
 
-          <Form.Item
-            label="Password"
-            name="password"
-            rules={[
-              {
-                required: true,
-                message: "Please input your password!",
-              },
-            ]}
-          >
-            <Input.Password
-              onChange={(e) =>
-                setformData({ ...formData, password: e.target.value })
-              }
-              value={formData.password}
-            />
-          </Form.Item>
+              {loading ? (
+                <button
+                  className="flex items-center justify-center gap-2 text-white bg-amber-600 py-1.5 px-4 rounded  w-full border"
+                  disabled
+                >
+                  <svg
+                    className="text-gray-300 animate-spin"
+                    viewBox="0 0 64 64"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                  >
+                    <path
+                      d="M32 3C35.8083 3 39.5794 3.75011 43.0978 5.20749C46.6163 6.66488 49.8132 8.80101 52.5061 11.4939C55.199 14.1868 57.3351 17.3837 58.7925 20.9022C60.2499 24.4206 61 28.1917 61 32C61 35.8083 60.2499 39.5794 58.7925 43.0978C57.3351 46.6163 55.199 49.8132 52.5061 52.5061C49.8132 55.199 46.6163 57.3351 43.0978 58.7925C39.5794 60.2499 35.8083 61 32 61C28.1917 61 24.4206 60.2499 20.9022 58.7925C17.3837 57.3351 14.1868 55.199 11.4939 52.5061C8.801 49.8132 6.66487 46.6163 5.20749 43.0978C3.7501 39.5794 3 35.8083 3 32C3 28.1917 3.75011 24.4206 5.2075 20.9022C6.66489 17.3837 8.80101 14.1868 11.4939 11.4939C14.1868 8.80099 17.3838 6.66487 20.9022 5.20749C24.4206 3.7501 28.1917 3 32 3L32 3Z"
+                      stroke="currentColor"
+                      stroke-width="5"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    ></path>
+                    <path
+                      d="M32 3C36.5778 3 41.0906 4.08374 45.1692 6.16256C49.2477 8.24138 52.7762 11.2562 55.466 14.9605C58.1558 18.6647 59.9304 22.9531 60.6448 27.4748C61.3591 31.9965 60.9928 36.6232 59.5759 40.9762"
+                      stroke="currentColor"
+                      stroke-width="5"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      className="text-gray-300"
+                    ></path>
+                  </svg>
+                  Loading...
+                </button>
+              ) : (
+                <button
+                  type="submit"
+                  className="text-white bg-amber-600 py-1.5 px-4 rounded  w-full"
+                >
+                  Login
+                </button>
+              )}
 
-          <Form.Item name="remember" valuePropName="checked">
-            <Checkbox>Remember me</Checkbox>
-          </Form.Item>
-
-          <Form.Item>
-            <Button type="primary" htmlType="submit" block>
-              Signup
-            </Button>
-          </Form.Item>
-        </Form>
-        <span className="text-center block">
-          Already have account?{" "}
-          <b
-            className="cursor-pointer text-blue-600"
-            onClick={() => navigate("/login")}
-          >
-            login here
-          </b>
-        </span>
-      </Card>
-    </div>
+              <p className="text-sm text-center text-gray-500">
+                Already have account?{" "}
+                <a
+                  href=""
+                  className="font-medium text-teal-600 hover:underline"
+                  onClick={() => navigate("/login")}
+                >
+                  Sign up
+                </a>
+              </p>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
   );
 };
 

@@ -13,6 +13,7 @@ import { Provider } from "react-redux";
 import CreateAuction from "./components/CreateAuction.jsx";
 import MyAuction from "./pages/MyAuction.jsx";
 import Product from "./pages/Product.jsx";
+import Test from "./pages/Test.jsx";
 
 const router = createBrowserRouter([
   {
@@ -27,6 +28,10 @@ const router = createBrowserRouter([
   {
     path: "/signup",
     element: <Signup />,
+  },
+  {
+    path: "/test",
+    element: <Test />,
   },
   {
     path: "/",
