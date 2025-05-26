@@ -1,19 +1,19 @@
-import jwt from 'jsonwebtoken';
-import dotenv from 'dotenv';
-dotenv.config().parsed;
+import jwt from "jsonwebtoken";
+import dotenv from "dotenv"
+dotenv.config();
 
-const auth = async (req, res, next) => {
-    const token = req.header('Authorization')?.split(' ')[1];
-    if (!token) {
-        return res.status(401).json({ msg: 'No token, authorization denied' });
-    }
+const JWT_SECRET = process.env.JWT_SECRET;
+
+export const secureRoute=(req,res,next)=>{
+    const token=req.cookies.auth_token;
+    if(!token) return res.status(401).json({error:"Unauthorized"});
+
     try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        req.userId = decoded.userId;
+        const decode=jwt.verify(token, JWT_SECRET);
+        req.user=decode;
         next();
     } catch (error) {
-        res.status(401).json({ msg: 'Token is not valid' });
+        console.log(error);
+        return res.status(401).json({error:"Invalid or expired token"});
     }
 }
-
-export default auth;

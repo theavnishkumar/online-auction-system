@@ -4,27 +4,33 @@ import Product from '../models/product.js';
 
 const createAuction = async (req, res) => {
     try {
-        const { itemName, itemPrice, itemDescription, itemCategory, itemStartDate, itemEndDate, seller } = req.body;
+        const { itemName, startingPrice, itemDescription, itemCategory, itemStartDate, itemEndDate } = req.body;
         let imageUrl = '';
 
         if (req.file) {
             try {
-                console.log(req.file);
                 imageUrl = await uploadImage(req.file);
             } catch (error) {
                 return res.status(500).json({ message: 'Error uploading image to Cloudinary', error: error.message });
             }
         }
 
+        const start = itemStartDate ? new Date(itemStartDate) : new Date();
+        const end = new Date(itemEndDate);
+        if (end <= start) {
+            return res.status(400).json({ message: 'Auction end date must be after start date' });
+        }
+
         const newAuction = new Product({
             itemName,
-            itemPrice,
+            startingPrice,
+            currentPrice: startingPrice,
             itemDescription,
             itemCategory,
             itemPhoto: imageUrl,
-            itemStartDate,
-            itemEndDate,
-            seller,
+            itemStartDate: start,
+            itemEndDate: end,
+            seller: req.user.id,
         });
         await newAuction.save();
 
@@ -36,9 +42,23 @@ const createAuction = async (req, res) => {
 
 const showAuction = async (req, res) => {
     try {
-        const currentDate = Date.now();
-        const auctions = await Product.find({ itemEndDate: { $gte: currentDate } }).sort({ createdAt: -1 }).populate('seller', '_id name');
-        return res.status(200).json({ message: 'All auctions', auctions });
+        const auction = await Product.find({ itemEndDate: { $gt: new Date() } })
+            .populate("seller", "name")
+            .select("itemName itemDescription currentPrice bids itemEndDate itemCategory itemPhoto seller")
+            .sort({ createdAt: -1 });
+        const formatted = auction.map(auction => ({
+            _id: auction._id,
+            itemName: auction.itemName,
+            itemDescription: auction.itemDescription,
+            currentPrice: auction.currentPrice,
+            bidsCount: auction.bids.length,
+            timeLeft: Math.max(0, new Date(auction.itemEndDate) - new Date()),
+            itemCategory: auction.itemCategory,
+            sellerName: auction.seller.name,
+            itemPhoto: auction.itemPhoto,
+        }));
+
+        res.status(200).json(formatted);
     } catch (error) {
         return res.status(500).json({ message: 'Error fetching auctions', error: error.message });
     }
@@ -46,57 +66,42 @@ const showAuction = async (req, res) => {
 
 const auctionById = async (req, res) => {
     try {
-        const { page = 1, limit = 5 } = req.query;
-        const auction = await Product.findById(req.params.id).populate('seller', '_id name createdAt').populate({
-            path: 'bids.bidder',
-            select: 'name'
-        });
-        if (!auction) {
-            return res.status(404).json({ message: 'Auction not found' });
-        }
-        auction.bids = auction.bids.sort((a, b) => b.bid - a.bid);
-
-        // Pagination
-
-        const startIndex = (page - 1) * limit;
-        const paginatedBids = auction.bids.slice(startIndex, startIndex + limit);
-
-        return res.status(200).json({
-            message: 'Auction found',
-            auction: {
-                ...auction.toObject(),
-                bids: paginatedBids,
-                totalBids: auction.bids.length,
-                totalPages: Math.ceil(auction.bids.length / limit),
-                currentPage: parseInt(page)
-            }
-        });
-    }
-    catch (error) {
-        return res.status(500).json({ message: 'Error fetching auction', error: error.message });
+        const { id } = req.params;
+        const auction = await Product.findById(id)
+            .populate("seller", "name")
+            .populate("bids.bidder", "name")
+            .sort({ createdAt: -1 });
+        res.status(200).json(auction);
+    } catch (error) {
+        return res.status(500).json({ message: 'Error fetching auctions', error: error.message });
     }
 }
 
-const updateAuctionById = async (req, res) => {
+const placeBid = async (req, res) => {
     try {
-        const { bid, bidder } = req.body;
-        const auction = await Product.findById(req.params.id);
-        if (!auction) {
-            return res.status(404).json({ message: 'Auction not found' });
-        }
-        if (auction.itemEndDate < Date.now()) {
-            return res.status(400).json({ message: 'Auction has ended' });
-        }
-        if (auction.itemPrice >= bid) {
-            return res.status(400).json({ message: 'Bid must be greater than current price' });
-        }
-        auction.itemPrice = bid;
-        auction.bids.push({ bidder, bid, time: Date.now() });
-        await auction.save();
-        return res.status(200).json({ message: 'Auction updated successfully', auction });
-    } catch (error) {
-        return res.status(500).json({ message: 'Error updating auction', error: error.message });
-    }
-};
+        const { bidAmount } = req.body;
+        const user = req.user.id;
+        const { id } = req.params;
 
-export { createAuction, showAuction, auctionById, updateAuctionById };
+        const product = await Product.findById(id).populate('bids.bidder', "name");
+        if (!product) return res.status(404).json({ message: "Auction not found" });
+
+        if (new Date(product.itemEndDate) < new Date()) return res.status(400).json({ message: "Auction has already ended" });
+
+        const minBid = Math.max(product.currentPrice, product.startingPrice) + 1;
+        if (bidAmount < minBid) return res.status(400).json({ message: `Bid must be at least Rs ${minBid}` })
+
+        product.bids.push({
+            bidder: user,
+            bidAmount: bidAmount,
+        })
+
+        product.currentPrice = bidAmount;
+        await product.save();
+        res.status(200).json({ message: "Bid placed successfully" });
+    } catch (error) {
+        res.status(500).json({ message: "Error placing bid", error: error.message })
+    }
+}
+
+export { createAuction, showAuction, auctionById, placeBid };

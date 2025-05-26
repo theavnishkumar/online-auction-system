@@ -1,17 +1,20 @@
 import mongoose from 'mongoose';
 
+const bidSchema = new mongoose.Schema({
+    bidder: { type: mongoose.Schema.ObjectId, ref: 'User', required: true },
+    bidAmount: { type: Number, required: true },
+    bidTime: { type: Date, default: Date.now }
+});
+
 const productSchema = new mongoose.Schema({
     itemName: {
         type: String,
         required: true,
+        trim: true,
     },
     itemDescription: {
         type: String,
         required: true,
-    },
-    itemPrice: {
-        type: Number,
-        default: 0
     },
     itemCategory: {
         type: String,
@@ -20,29 +23,38 @@ const productSchema = new mongoose.Schema({
     itemPhoto: {
         type: String,
     },
-    createdAt: {
-        type: Date,
-        default: Date.now
+    startingPrice: {
+        type: Number,
+        required: true,
+    },
+    currentPrice: {
+        type: Number,
+        default: 0,
     },
     itemStartDate: {
         type: Date,
-        default: Date.now
+        default: Date.now,
     },
     itemEndDate: {
         type: Date,
-        required: "Auction end time is required"
+        required: true,
     },
     seller: {
         type: mongoose.Schema.ObjectId,
-        ref: 'User'
+        ref: 'User',
+        required: true,
     },
-    bids: [{
-        bidder: { type: mongoose.Schema.ObjectId, ref: 'User' },
-        bid: Number,
-        time: Date
-    }],
+    bids: [bidSchema],
+    winner: {
+        type: mongoose.Schema.ObjectId,
+        ref: 'User',
+        default: null
+    },
+    isSold: {
+        type: Boolean,
+        default: false,
+    }
 }, { timestamps: true });
 
 const Product = mongoose.model('Product', productSchema);
-
 export default Product;

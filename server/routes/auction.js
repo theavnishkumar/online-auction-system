@@ -1,6 +1,6 @@
 import express from 'express';
 // import multer from 'multer';
-import { createAuction, showAuction, auctionById, updateAuctionById } from '../controllers/auction.controller.js';
+import { createAuction, showAuction, auctionById, placeBid } from '../controllers/auction.controller.js';
 import upload from '../middleware/multer.js';
 
 // const upload = multer({ dest: 'uploads/' });
@@ -8,8 +8,8 @@ import upload from '../middleware/multer.js';
 const auctionRouter = express.Router();
 
 auctionRouter.post('/create', upload.single('itemPhoto'), createAuction);
-auctionRouter.get('/show', showAuction)
+auctionRouter.get('/', showAuction)
 auctionRouter.get('/:id', auctionById)
-auctionRouter.post('/:id', updateAuctionById)
+auctionRouter.post('/:id', placeBid)
 
 export default auctionRouter;
