@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { logout, deleteAccount } from "../store/auth/authSlice";
+import { logout} from "../store/auth/authSlice";
 import DialogBox from "./DialogBox";
 
-const Navbar = () => {
+export const Navbar = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const dropdownRef = useRef(null);
@@ -12,13 +12,6 @@ const Navbar = () => {
   const [open, setOpen] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const { user } = useSelector((state) => state.auth);
-
-  const navMenu = [
-    { title: "Home", url: "/auction" },
-    { title: "My Auction", url: `/auction/user/${user.userId}` },
-    { title: "Create Auction", url: "/create-auction" },
-    { title: "Accounts", url: "#" },
-  ];
 
   // Open dropdown
   const openMenu = () => {
@@ -65,6 +58,7 @@ const Navbar = () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+
   return (
     <nav className="bg-white border-gray-200 sticky top-0 z-50 border-b">
       <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
@@ -73,7 +67,7 @@ const Navbar = () => {
           className="flex items-center space-x-3 rtl:space-x-reverse"
         >
           <span className="self-center text-2xl font-semibold whitespace-nowrap ">
-            Kipa Auction
+            Online Auction
           </span>
         </Link>
         <div className="flex items-center md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
@@ -100,8 +94,8 @@ const Navbar = () => {
                 className="z-10 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 absolute right-0 mt-2"
               >
                 <div className="px-4 py-3 text-sm text-gray-900">
-                  <div>{user.name}</div>
-                  <div className="font-medium truncate">{user.email}</div>
+                  <div>{user.user.name}</div>
+                  <div className="font-medium truncate">{user.user.email}</div>
                 </div>
                 <ul
                   className="py-2 text-sm text-gray-700"
@@ -118,14 +112,14 @@ const Navbar = () => {
                     </li>
                   ))}
                 </ul>
-                <div className="py-2">
+                {/* <div className="py-2">
                   <button
                     onClick={() => setIsDialogOpen(true)}
                     className="px-4 py-2 text-sm text-red-600 hover:bg-gray-100 w-full text-left"
                   >
                     Delete My Acount
                   </button>
-                </div>
+                </div> */}
                 <div className="py-2">
                   <button
                     onClick={handleLogout}
@@ -163,4 +157,7 @@ const Navbar = () => {
   );
 };
 
-export default Navbar;
+  const navMenu = [
+    { title: "Dashboard", url: "/" },
+    { title: "View Auction", url: "auction" }
+  ];
