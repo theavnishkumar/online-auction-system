@@ -1,136 +1,135 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
-import { jwtDecode } from 'jwt-decode';
 
 const VITE_API = import.meta.env.VITE_API;
 
-const decodeToken = (token) => {
+// Return user if loggedin
+export const checkAuth = createAsyncThunk('auth/checkAuth', async (_, { rejectWithValue }) => {
     try {
-        return token ? jwtDecode(token) : null;
+        const response = await axios.get(`${VITE_API}/user`, {
+            withCredentials: true,
+        });
+        return response.data;
     } catch (error) {
-        console.error('Error decoding token:', error);
-        return null;
+        return rejectWithValue("Not authenticated");
     }
-};
+});
 
+// login 
+export const login = createAsyncThunk('auth/login', async ({ email, password }, { rejectWithValue }) => {
+    try {
+        await axios.post(`${VITE_API}/auth/login`, { email, password }, {
+            withCredentials: true,
+        });
+
+        const response = await axios.get(`${VITE_API}/user`, {
+            withCredentials: true,
+        });
+
+        return response.data;
+    } catch (error) {
+        return rejectWithValue(error.response?.data?.error || "Login failed");
+    }
+});
+
+// signup
+export const signup = createAsyncThunk('auth/signup', async ({ name, email, password }, { rejectWithValue }) => {
+    try {
+        await axios.post(`${VITE_API}/auth/signup`, { name, email, password }, {
+            withCredentials: true,
+        });
+
+        const response = await axios.get(`${VITE_API}/user`, {
+            withCredentials: true,
+        });
+
+        return response.data;
+    } catch (error) {
+        return rejectWithValue(error.response?.data?.error || "Signup failed");
+    }
+});
+
+// logout
+export const logout = createAsyncThunk('auth/logout', async (_, { rejectWithValue }) => {
+    try {
+        await axios.post(`${VITE_API}/auth/logout`, {}, {
+            withCredentials: true,
+        });
+        return null;
+    } catch (error) {
+        return rejectWithValue("Logout failed");
+    }
+});
+
+// initial auth state
 const initialState = {
-    user: decodeToken(localStorage.getItem('token')),
-    loading: false,
+    user: null,
+    loading: true,
     error: null,
 };
 
-export const login = createAsyncThunk('auth/login', async ({ email, password }, { rejectWithValue }) => {
-    try {
-        const response = await axios.post(`${VITE_API}/api/login`, { email, password });
-        const { token } = response.data;
-        localStorage.setItem('token', token);
-        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-        const decoded = jwtDecode(token);
-        return decoded;
-    } catch (error) {
-        console.log(error);
-        return rejectWithValue(error.response ? error.response.data.error : 'Login failed. Please try again.');
-    }
-});
-
-export const signup = createAsyncThunk('auth/signup', async ({ name, email, password }, { rejectWithValue }) => {
-    try {
-        const response = await axios.post(`${VITE_API}/api/signup`, { name, email, password });
-        const { token } = response.data;
-        localStorage.setItem('token', token);
-        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-        const decoded = jwtDecode(token);
-        return decoded;
-    } catch (error) {
-        return rejectWithValue(error.response ? error.response.data.error : 'Signup failed. Please try again.');
-    }
-});
-
-export const deleteAccount = createAsyncThunk('auth/deleteAccount', async (userId, { rejectWithValue }) => {
-    try {
-        await axios.delete(`${VITE_API}/api/delete`, { data: { userId } });
-        localStorage.removeItem('token');
-        delete axios.defaults.headers.common['Authorization'];
-        return null;
-    } catch (error) {
-        return rejectWithValue('Failed to delete account.');
-    }
-});
-
-export const checkAuth = createAsyncThunk('auth/checkAuth', async (_, { rejectWithValue }) => {
-    try {
-        const token = localStorage.getItem('token');
-        if (!token) {
-            throw new Error('No token found');
-        }
-        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-        const decoded = jwtDecode(token);
-        return decoded;
-    } catch (error) {
-        localStorage.removeItem('token');
-        delete axios.defaults.headers.common['Authorization'];
-        return rejectWithValue('Failed to authenticate.');
-    }
-});
-
+// auth slice
 const authSlice = createSlice({
     name: 'auth',
     initialState,
-    reducers: {
-        logout: (state) => {
-            localStorage.removeItem('token');
-            delete axios.defaults.headers.common['Authorization'];
-            state.user = null;
-            state.userToken = null;
-        },
-    },
+    reducers: {},
     extraReducers: (builder) => {
         builder
+            // checkAuth
             .addCase(checkAuth.pending, (state) => {
                 state.loading = true;
+                state.error = null;
             })
             .addCase(checkAuth.fulfilled, (state, { payload }) => {
                 state.user = payload;
                 state.loading = false;
             })
             .addCase(checkAuth.rejected, (state, { payload }) => {
+                state.user = null;
                 state.error = payload;
                 state.loading = false;
             })
+
+            // login
             .addCase(login.pending, (state) => {
                 state.loading = true;
                 state.error = null;
             })
             .addCase(login.fulfilled, (state, { payload }) => {
-                state.loading = false;
                 state.user = payload;
+                state.loading = false;
             })
             .addCase(login.rejected, (state, { payload }) => {
-                state.loading = false;
+                state.user = null;
                 state.error = payload;
+                state.loading = false;
             })
+
+            // signup
             .addCase(signup.pending, (state) => {
                 state.loading = true;
                 state.error = null;
             })
             .addCase(signup.fulfilled, (state, { payload }) => {
-                state.loading = false;
                 state.user = payload;
+                state.loading = false;
             })
             .addCase(signup.rejected, (state, { payload }) => {
-                state.loading = false;
-                state.error = payload;
-            })
-            .addCase(deleteAccount.fulfilled, (state) => {
                 state.user = null;
-                localStorage.removeItem('token');
-                delete axios.defaults.headers.common['Authorization'];
+                state.error = payload;
+                state.loading = false;
             })
-            .addCase(deleteAccount.rejected, (state, { payload }) => {
+
+            // logout
+            .addCase(logout.fulfilled, (state) => {
+                state.user = null;
+                state.loading = false;
+                state.error = null;
+            })
+            .addCase(logout.rejected, (state, { payload }) => {
                 state.error = payload;
             });
     },
 });
 
-export const { logout } = authSlice.actions;
 export default authSlice.reducer;
