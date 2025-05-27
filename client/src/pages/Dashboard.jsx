@@ -1,78 +1,104 @@
-import Card from "../components/Card";
-import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { fetchAuctions } from "../store/auction/auctionSlice";
-import Skeleton from "../components/Skeleton";
+import React, { useEffect, useState } from "react";
+import { mockAuctions } from "../auction.js";
+import AuctionCard from "../components/AuctionCard.jsx";
+import { Link } from "react-router-dom";
 
 const Dashboard = () => {
-  const dispatch = useDispatch();
-  // const user = useSelector((state) => state.auth.user);
-  const { auctions, loading, error } = useSelector((state) => state.auctions);
+  const [auctions, setAuctions] = useState([]);
 
   useEffect(() => {
-    dispatch(fetchAuctions());
-  }, [dispatch]);
-
-  if (loading || auctions === null)
-    return (
-      <>
-        <Skeleton />
-        <Skeleton />
-        <Skeleton />
-      </>
-    );
-  if (error)
-    return (
-      <div>
-        <p>Error: {error.message}</p>
-      </div>
-    );
+    setAuctions(mockAuctions);
+  });
 
   return (
-    <div className="min-h-[calc(100svh-9rem)] px-4 py-4 w-full">
-      {auctions && auctions.length > 0 ? (
-        auctions.map((auction) => (
-          <Card
-            key={auction._id}
-            auction_id={auction._id}
-            item_id={auction.seller._id}
-            itemName={auction.itemName}
-            itemDescription={auction.itemDescription}
-            itemPrice={auction.itemPrice}
-            itemPostDate={auction.createdAt}
-            itemStartDate={auction.itemStartDate}
-            itemEndDate={auction.itemEndDate}
-            itemPhoto={auction.itemPhoto}
-            sellerName={auction.seller.name}
-          />
-        ))
-      ) : (
-        <div className="flex flex-col items-center justify-center py-8 px-4 text-center bg-gray-100  rounded-lg shadow-md my-2 max-w-md max-md:mx-auto">
-          <svg
-            className="w-12 h-12  text-gray-700"
-            stroke="currentColor"
-            fill="currentColor"
-            strokeWidth="0"
-            viewBox="0 0 24 24"
-            height="200px"
-            width="200px"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <g id="File_Off">
-              <g>
-                <path d="M4,3.308a.5.5,0,0,0-.7.71l.76.76v14.67a2.5,2.5,0,0,0,2.5,2.5H17.44a2.476,2.476,0,0,0,2.28-1.51l.28.28c.45.45,1.16-.26.7-.71Zm14.92,16.33a1.492,1.492,0,0,1-1.48,1.31H6.56a1.5,1.5,0,0,1-1.5-1.5V5.778Z"></path>
-                <path d="M13.38,3.088v2.92a2.5,2.5,0,0,0,2.5,2.5h3.07l-.01,6.7a.5.5,0,0,0,1,0V8.538a2.057,2.057,0,0,0-.75-1.47c-1.3-1.26-2.59-2.53-3.89-3.8a3.924,3.924,0,0,0-1.41-1.13,6.523,6.523,0,0,0-1.71-.06H6.81a.5.5,0,0,0,0,1Zm4.83,4.42H15.88a1.5,1.5,0,0,1-1.5-1.5V3.768Z"></path>
-              </g>
-            </g>
-          </svg>
-          <h3 className="text-xl font-medium mt-4 text-gray-700 ">
-            Product not found
-          </h3>
-          <p className="text-gray-500  mt-2">
-            No one has not listed any products yet.
-          </p>
+    <div className="bg-gray-50">
+      <main className="max-w-7xl mx-auto px-4 py-8">
+        {/* Stats */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+          <div className="bg-white p-6 rounded-sm shadow-sm border">
+            <h3 className="text-sm font-medium text-gray-500">
+              Total Auctions
+            </h3>
+            <p className="text-2xl font-bold text-gray-900 mt-1">
+              {auctions.length}
+            </p>
+          </div>
+          <div className="bg-white p-6 rounded-sm shadow-sm border">
+            <h3 className="text-sm font-medium text-gray-500">
+              Active Auctions
+            </h3>
+            <p className="text-2xl font-bold text-green-600 mt-1">
+              {
+                auctions.filter((a) => new Date(a.itemEndDate) > new Date())
+                  .length
+              }
+            </p>
+          </div>
+          <div className="bg-white p-6 rounded-sm shadow-sm border">
+            <h3 className="text-sm font-medium text-gray-500">Your Auctions</h3>
+            <p className="text-2xl font-bold text-blue-600 mt-1">
+              {auctions.length}
+            </p>
+          </div>
         </div>
-      )}
+
+        {/* All Auctions Section */}
+        <div className="mb-12">
+          <div className="flex justify-between items-center mb-6">
+            <h2 className="text-2xl font-bold text-gray-900">All Auctions</h2>
+            <Link
+              to="/auction"
+              className="text-blue-600 hover:text-blue-700 font-medium text-sm hover:underline"
+            >
+              View More →
+            </Link>
+          </div>
+
+          {auctions.length === 0 ? (
+            <div className="text-center py-12 bg-white rounded-sm shadow-sm border">
+              <p className="text-gray-500 text-lg">
+                No auctions available at the moment.
+              </p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 place-items-center gap-4">
+              {auctions.slice(0, 3).map((auction) => (
+                <AuctionCard key={auction._id} auction={auction} />
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Your Auctions Section */}
+        <div>
+          <div className="flex justify-between items-center mb-6">
+            <h2 className="text-2xl font-bold text-gray-900">Your Auctions</h2>
+            <Link
+              href="/auctions/my-auctions"
+              className="text-blue-600 hover:text-blue-700 font-medium text-sm hover:underline"
+            >
+              View More →
+            </Link>
+          </div>
+
+          {auctions.length === 0 ? (
+            <div className="text-center py-12 bg-white rounded-sm shadow-sm border">
+              <p className="text-gray-500 text-lg">
+                You haven't created any auctions yet.
+              </p>
+              <button className="mt-4 bg-blue-600 text-white px-6 py-2 rounded-sm hover:bg-blue-700 transition-colors">
+                Create Your First Auction
+              </button>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 place-items-center gap-4">
+              {auctions.slice(0, 3).map((auction) => (
+                <AuctionCard key={auction.id} auction={auction} />
+              ))}
+            </div>
+          )}
+        </div>
+      </main>
     </div>
   );
 };
