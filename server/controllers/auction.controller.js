@@ -2,7 +2,7 @@ import uploadImage from '../services/cloudinaryService.js';
 import Product from '../models/product.js';
 
 
-const createAuction = async (req, res) => {
+export const createAuction = async (req, res) => {
     try {
         const { itemName, startingPrice, itemDescription, itemCategory, itemStartDate, itemEndDate } = req.body;
         let imageUrl = '';
@@ -40,7 +40,7 @@ const createAuction = async (req, res) => {
     }
 };
 
-const showAuction = async (req, res) => {
+export const showAuction = async (req, res) => {
     try {
         const auction = await Product.find({ itemEndDate: { $gt: new Date() } })
             .populate("seller", "name")
@@ -64,20 +64,20 @@ const showAuction = async (req, res) => {
     }
 }
 
-const auctionById = async (req, res) => {
+export const auctionById = async (req, res) => {
     try {
         const { id } = req.params;
         const auction = await Product.findById(id)
             .populate("seller", "name")
-            .populate("bids.bidder", "name")
-            .sort({ createdAt: -1 });
+            .populate("bids.bidder", "name");
+        auction.bids.sort((a, b) => new Date(b.bidTime) - new Date(a.bidTime));
         res.status(200).json(auction);
     } catch (error) {
         return res.status(500).json({ message: 'Error fetching auctions', error: error.message });
     }
 }
 
-const placeBid = async (req, res) => {
+export const placeBid = async (req, res) => {
     try {
         const { bidAmount } = req.body;
         const user = req.user.id;
@@ -89,7 +89,9 @@ const placeBid = async (req, res) => {
         if (new Date(product.itemEndDate) < new Date()) return res.status(400).json({ message: "Auction has already ended" });
 
         const minBid = Math.max(product.currentPrice, product.startingPrice) + 1;
+        const maxBid = Math.max(product.currentPrice, product.startingPrice) + 10;
         if (bidAmount < minBid) return res.status(400).json({ message: `Bid must be at least Rs ${minBid}` })
+        if (bidAmount > maxBid) return res.status(400).json({ message: `Bid must be at max Rs ${maxBid}` })
 
         product.bids.push({
             bidder: user,
@@ -103,5 +105,3 @@ const placeBid = async (req, res) => {
         res.status(500).json({ message: "Error placing bid", error: error.message })
     }
 }
-
-export { createAuction, showAuction, auctionById, placeBid };
