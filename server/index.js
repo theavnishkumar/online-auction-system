@@ -27,7 +27,7 @@ app.get('/', async (req, res) => {
 });
 app.use('/auth', userAuthRouter)
 app.use('/user', secureRoute, userRouter)
-app.use('/api/auction', secureRoute, auctionRouter);
+app.use('/auction', secureRoute, auctionRouter);
 
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);

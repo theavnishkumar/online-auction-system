@@ -1,6 +1,8 @@
 import axios from "axios";
 const VITE_AUCTION_API = import.meta.env.VITE_AUCTION_API;
 
+
+// getting list of all auction
 export const getAuctions = async () => {
     try {
         const res = await axios.get(`${VITE_AUCTION_API}`,
@@ -12,6 +14,8 @@ export const getAuctions = async () => {
     }
 }
 
+
+// getting single auction using _id
 export const viewAuction = async (id) => {
     try {
         const res = await axios.get(`${VITE_AUCTION_API}/${id}`,
@@ -23,6 +27,7 @@ export const viewAuction = async (id) => {
     }
 }
 
+// placing bid for auction
 export const placeBid = async ({ bidAmount, id }) => {
     try {
         const res = await axios.post(`${VITE_AUCTION_API}/${id}`,
@@ -35,6 +40,8 @@ export const placeBid = async ({ bidAmount, id }) => {
     }
 }
 
+
+// creating new auction
 export const createAuction = async (data) => {
     try {
 
@@ -47,17 +54,29 @@ export const createAuction = async (data) => {
         formData.append("itemEndDate", data.itemEndDate);
         formData.append("itemPhoto", data.itemPhoto);
 
-        const res = await axios.post(`${VITE_AUCTION_API}/create`,
+        const res = await axios.post(`${VITE_AUCTION_API}`,
             formData,
             {
                 headers: {
                     "Content-Type": "multipart/form-data",
                 },
-                withCredentials: true, // if using cookies/session for auth
+                withCredentials: true,
             }
         );
         return res.data;
     } catch (error) {
         console.log("Error creating auction", error.message);
+    }
+}
+
+// getting single auction using _id
+export const dashboardStats = async () => {
+    try {
+        const res = await axios.get(`${VITE_AUCTION_API}/stats`,
+            { withCredentials: true }
+        );
+        return res.data;
+    } catch (error) {
+        console.log("Error on getting dashboard data", error.message);
     }
 }

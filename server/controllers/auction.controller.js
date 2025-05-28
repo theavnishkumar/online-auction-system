@@ -1,5 +1,6 @@
 import uploadImage from '../services/cloudinaryService.js';
 import Product from '../models/product.js';
+import mongoose from "mongoose"
 
 
 export const createAuction = async (req, res) => {
@@ -103,5 +104,59 @@ export const placeBid = async (req, res) => {
         res.status(200).json({ message: "Bid placed successfully" });
     } catch (error) {
         res.status(500).json({ message: "Error placing bid", error: error.message })
+    }
+}
+
+export const dashboardData = async (req, res) => {
+    try {
+        const userObjectId = new mongoose.Types.ObjectId(req.user.id);
+        const dateNow = new Date();
+        const stats = await Product.aggregate([
+            {
+                $facet: {
+                    totalAuctions: [{ $count: "count" }],
+                    userAuctionCount: [{ $match: { seller: userObjectId } }, { $count: "count" }],
+                    activeAuctions: [
+                        { $match: { itemStartDate: { $lte: dateNow }, itemEndDate: { $gte: dateNow } } },
+                        { $count: "count" }
+                    ]
+                }
+            }
+        ]);
+
+        const totalAuctions = stats[0].totalAuctions[0]?.count || 0;
+        const userAuctionCount = stats[0].userAuctionCount[0]?.count || 0;
+        const activeAuctions = stats[0].activeAuctions[0]?.count || 0;
+
+        const globalAuction = await Product.find({ itemEndDate: { $gt: dateNow } }).populate("seller", "name").sort({ createdAt: -1 }).limit(3);;
+        const latestAuctions = globalAuction.map(auction => ({
+            _id: auction._id,
+            itemName: auction.itemName,
+            itemDescription: auction.itemDescription,
+            currentPrice: auction.currentPrice,
+            bidsCount: auction.bids.length,
+            timeLeft: Math.max(0, new Date(auction.itemEndDate) - new Date()),
+            itemCategory: auction.itemCategory,
+            sellerName: auction.seller.name,
+            itemPhoto: auction.itemPhoto,
+        }));
+
+        const userAuction = await Product.find({ seller: userObjectId }).populate("seller", "name").sort({ createdAt: -1 }).limit(3);
+        const latestUserAuctions = userAuction.map(auction => ({
+            _id: auction._id,
+            itemName: auction.itemName,
+            itemDescription: auction.itemDescription,
+            currentPrice: auction.currentPrice,
+            bidsCount: auction.bids.length,
+            timeLeft: Math.max(0, new Date(auction.itemEndDate) - new Date()),
+            itemCategory: auction.itemCategory,
+            sellerName: auction.seller.name,
+            itemPhoto: auction.itemPhoto,
+        }));
+
+        return res.status(200).json({ totalAuctions, userAuctionCount, activeAuctions, latestAuctions, latestUserAuctions })
+
+    } catch (error) {
+        res.status(500).json({ message: "Error getting dashboard data", error: error.message })
     }
 }
