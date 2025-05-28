@@ -1,8 +1,9 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { login } from "../store/auth/authSlice";
-import { Link } from "react-router-dom";
+import { checkAuth, login } from "../store/auth/authSlice";
+import { Link } from "react-router";
+import LoadingScreen from "../components/LoadingScreen";
 
 const Login = () => {
   const dispatch = useDispatch();
@@ -25,10 +26,13 @@ const Login = () => {
   };
 
   useEffect(() => {
+    dispatch(checkAuth());
     if (user) {
       navigate("/");
     }
-  }, [user, navigate]);
+  }, [user, navigate, dispatch]);
+
+  if (loading) return <LoadingScreen />;
 
   return (
     <div className="min-h-screen flex flex-col">
