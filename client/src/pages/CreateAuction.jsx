@@ -118,7 +118,7 @@ export const CreateAuction = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       <main className="max-w-4xl mx-auto px-4 py-8">
-        <div className="bg-white rounded-md shadow-md border">
+        <div className="bg-white rounded-md shadow-md border border-gray-200">
           <div className="p-6 md:p-8">
             <form onSubmit={handleSubmit} className="space-y-6">
               {/* Item Name */}

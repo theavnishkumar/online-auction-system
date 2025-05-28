@@ -1,5 +1,4 @@
 import { useState } from "react";
-// import { Link } from "react-router-dom";
 import AuctionCard from "../components/AuctionCard";
 import { useQuery } from "@tanstack/react-query";
 import { getAuctions } from "../api/auction";
