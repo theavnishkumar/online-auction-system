@@ -1,5 +1,5 @@
 import Error from "../Error";
-import { OpenLayout } from "../layout/openLayout";
+import { OpenLayout } from "../layout/OpenLayout";
 import { Landing } from "../pages/Landing";
 import Login from "../pages/Login";
 import Signup from "../pages/Signup";
