@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { createBrowserRouter, RouterProvider } from "react-router";
 import { store } from "./store/store.js";
 import { Provider } from "react-redux";
 import { protectedRoutes } from "./routers/protectedRoutes.jsx";

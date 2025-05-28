@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 
 export default function AuctionCard({ auction }) {
   const daysLeft = Math.ceil(auction.timeLeft / (1000 * 60 * 60 * 24));
@@ -44,9 +44,9 @@ export default function AuctionCard({ auction }) {
           </div>
         </div>
 
-        <div className="border-t pt-3">
+        <div className="border-t border-gray-200 pt-3">
           <p className="text-xs text-gray-500 mb-3">
-            Seller: {auction.sellerName}
+            Seller: {auction?.sellerName || auction?.seller?.name}
           </p>
           <Link to={`/auction/${auction._id}`}>
             <button className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors text-sm font-medium">

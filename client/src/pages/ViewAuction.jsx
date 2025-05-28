@@ -1,8 +1,7 @@
 import { useRef } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link } from "react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { placeBid, viewAuction } from "../api/auction.js";
-import { MdDelete } from "react-icons/md";
 import { useSelector } from "react-redux";
 import LoadingScreen from "../components/LoadingScreen.jsx";
 
@@ -47,7 +46,7 @@ export const ViewAuction = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Image Section */}
           <div className="space-y-4 grid grid-cols-1 place-items-center content-start">
-            <div className="max-w-xl aspect-square bg-white rounded-md shadow-md border overflow-hidden flex items-center justify-center">
+            <div className="max-w-xl aspect-square bg-white rounded-md shadow-md border border-gray-200 overflow-hidden flex items-center justify-center">
               <img
                 src={data.itemPhoto || "https://picsum.photos/601"}
                 alt={data.itemName}
@@ -82,7 +81,7 @@ export const ViewAuction = () => {
             </div>
 
             {/* Pricing Info */}
-            <div className="bg-white p-6 rounded-md shadow-md border">
+            <div className="bg-white p-6 rounded-md shadow-md border border-gray-200">
               <div className="grid grid-cols-2 gap-4 mb-4">
                 <div>
                   <p className="text-sm text-gray-500">Starting Price</p>
@@ -120,7 +119,7 @@ export const ViewAuction = () => {
 
             {/* Bid Form */}
             {data.seller._id != user.user._id && isActive && (
-              <div className="bg-white p-6 rounded-md shadow-md border">
+              <div className="bg-white p-6 rounded-md shadow-md border border-gray-200">
                 <h3 className="text-lg font-semibold mb-4">Place Your Bid</h3>
                 <form onSubmit={handleBidSubmit} className="space-y-4">
                   <div>
@@ -138,7 +137,7 @@ export const ViewAuction = () => {
                       ref={inputRef}
                       min={data.currentPrice + 1}
                       max={data.currentPrice + 10}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      className="w-full px-3 py-2 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                       placeholder="Enter your bid amount"
                       required
                     />
@@ -154,7 +153,7 @@ export const ViewAuction = () => {
             )}
 
             {/* Seller Info */}
-            <div className="bg-white p-6 rounded-md shadow-md border">
+            <div className="bg-white p-6 rounded-md shadow-md border border-gray-200">
               <h3 className="text-lg font-semibold mb-3">Seller Information</h3>
               <p className="text-gray-900 font-medium">{data.seller.name}</p>
             </div>
@@ -164,7 +163,7 @@ export const ViewAuction = () => {
         {/* Bid History */}
         <div className="mt-12">
           <h2 className="text-2xl font-bold text-gray-900 mb-6">Bid History</h2>
-          <div className="bg-white rounded-md shadow-md border overflow-hidden">
+          <div className="bg-white rounded-md shadow-md border border-gray-200 overflow-hidden">
             {data.bids.length === 0 ? (
               <div className="p-8 text-center text-gray-500">
                 No bids yet. Be the first to bid!
