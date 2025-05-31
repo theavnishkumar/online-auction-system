@@ -6,14 +6,16 @@ import { useSelector } from "react-redux";
 import LoadingScreen from "../components/LoadingScreen.jsx";
 
 export const ViewAuction = () => {
-  const { user } = useSelector((state) => state.auth);
   const { id } = useParams();
+  const { user } = useSelector((state) => state.auth);
   const queryClient = useQueryClient();
   const inputRef = useRef();
 
   const { data, isLoading } = useQuery({
-    queryKey: ["viewAuctions"],
+    queryKey: ["viewAuctions", id],
     queryFn: () => viewAuction(id),
+    staleTime: 30 * 1000,
+    placeholderData: () => undefined,
   });
 
   const placeBidMutate = useMutation({
