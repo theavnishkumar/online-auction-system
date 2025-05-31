@@ -257,14 +257,14 @@ const protectedNavLink=[
     icon: <MdOutlineDashboard className="mr-3 h-5 w-5" />,
   },
   {
-    name: "View Auction",
-    link: "/auction",
-    icon: <RiAuctionLine className="mr-3 h-5 w-5" />,
-  },
-  {
     name: "Create Auction",
     link: "/create",
     icon: <MdOutlineCreate className="mr-3 h-5 w-5" />,
+  },
+  {
+    name: "View Auction",
+    link: "/auction",
+    icon: <RiAuctionLine className="mr-3 h-5 w-5" />,
   },
   {
     name: "My Auction",

@@ -74,7 +74,7 @@ const Dashboard = () => {
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-2xl font-bold text-gray-900">Your Auctions</h2>
             <Link
-              href="/auctions/my-auctions"
+              to="/myauction"
               className="text-blue-600 hover:text-blue-700 font-medium text-sm hover:underline"
             >
               View More
