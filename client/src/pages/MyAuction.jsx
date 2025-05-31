@@ -7,7 +7,7 @@ import LoadingScreen from "../components/LoadingScreen";
 export const MyAuction = () => {
   const [filter, setFilter] = useState("all");
   const { data, isLoading } = useQuery({
-    queryKey: ["myAuction"],
+    queryKey: ["myauctions"],
     queryFn: getMyAuctions,
     staleTime: 30 * 1000,
   });
