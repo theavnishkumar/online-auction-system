@@ -9,7 +9,7 @@ import { secureRoute } from './middleware/auth.js';
 import userAuthRouter from './routes/userAuth.js';
 import userRouter from './routes/user.js';
 
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 4000;
 
 const app = express();
 app.use(cookieParser());
