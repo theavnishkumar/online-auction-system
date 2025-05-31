@@ -14,6 +14,18 @@ export const getAuctions = async () => {
     }
 }
 
+// getting list of all auction
+export const getMyAuctions = async () => {
+    try {
+        const res = await axios.get(`${VITE_AUCTION_API}/myauction`,
+            { withCredentials: true }
+        );
+        return res.data;
+    } catch (error) {
+        console.log("Error on getting my auction data", error.message);
+    }
+}
+
 
 // getting single auction using _id
 export const viewAuction = async (id) => {

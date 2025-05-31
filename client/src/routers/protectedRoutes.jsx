@@ -3,6 +3,7 @@ import { ViewAuction } from "../pages/ViewAuction";
 import { MainLayout } from "../layout/MainLayout";
 import { AuctionList } from "../pages/AuctionList";
 import { CreateAuction } from "../pages/CreateAuction";
+import { MyAuction } from "../pages/MyAuction";
 
 export const protectedRoutes = [
   {
@@ -13,6 +14,11 @@ export const protectedRoutes = [
       {
         path: "auction",
         element: <AuctionList />,
+        errorElement: <Error />,
+      },
+      {
+        path: "myauction",
+        element: <MyAuction />,
         errorElement: <Error />,
       },
       {
