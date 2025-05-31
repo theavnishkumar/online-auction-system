@@ -1,10 +1,13 @@
 import { useState } from "react";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createAuction } from "../api/auction.js";
 import { useRef } from "react";
+import { useNavigate } from "react-router";
 
 export const CreateAuction = () => {
   const fileInputRef = useRef();
+  const queryClient = useQueryClient();
+  const navigate = useNavigate();
   const [error, setError] = useState("");
   const [formData, setFormData] = useState({
     itemName: "",
@@ -18,7 +21,7 @@ export const CreateAuction = () => {
 
   const { mutate, isPending } = useMutation({
     mutationFn: createAuction,
-    onSuccess: () => {
+    onSuccess: (data) => {
       setFormData({
         itemName: "",
         itemDescription: "",
@@ -29,8 +32,13 @@ export const CreateAuction = () => {
         itemPhoto: "",
       });
       setError("");
+      queryClient.invalidateQueries({ queryKey: ["viewAuctions"] });
+      queryClient.invalidateQueries({ queryKey: ["allAuction"] });
+      queryClient.invalidateQueries({ queryKey: ["stats"] });
+
+      navigate(`/auction/${data.newAuction._id}`);
     },
-    onError: (e) =>
+    onError: (error) =>
       setError(error?.response?.data?.message || "Something went wrong"),
   });
 
