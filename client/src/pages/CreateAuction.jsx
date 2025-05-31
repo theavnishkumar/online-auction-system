@@ -34,6 +34,7 @@ export const CreateAuction = () => {
       setError("");
       queryClient.invalidateQueries({ queryKey: ["viewAuctions"] });
       queryClient.invalidateQueries({ queryKey: ["allAuction"] });
+      queryClient.invalidateQueries({ queryKey: ["myauctions"] });
       queryClient.invalidateQueries({ queryKey: ["stats"] });
 
       navigate(`/auction/${data.newAuction._id}`);
