@@ -6,6 +6,7 @@ import { checkAuth } from "../store/auth/authSlice";
 import { Footer } from "../components/Footer";
 import LoadingScreen from "../components/LoadingScreen";
 import { useNavigate } from "react-router";
+import ScrollToTop from "../utils/ScrollToTop";
 
 export const MainLayout = () => {
   const { user, loading } = useSelector((state) => state.auth);
@@ -28,6 +29,7 @@ export const MainLayout = () => {
 
   return (
     <>
+    <ScrollToTop />
       <Navbar />
       <Outlet />
       <Footer />
