@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { Outlet } from "react-router";
-import {Navbar} from "../components/Navbar";
+import { Navbar } from "../components/Navbar";
 import { useDispatch, useSelector } from "react-redux";
 import { checkAuth } from "../store/auth/authSlice";
 import { Footer } from "../components/Footer";
@@ -13,8 +13,10 @@ export const MainLayout = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    dispatch(checkAuth());
-  }, [dispatch]);
+    if (!user) {
+      dispatch(checkAuth());
+    }
+  }, [dispatch, user]);
 
   useEffect(() => {
     if (!loading && !user) {
