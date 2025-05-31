@@ -9,9 +9,10 @@ export const AuctionList = () => {
   const { data, isLoading } = useQuery({
     queryKey: ["allAuction"],
     queryFn: getAuctions,
+    staleTime: 30 * 1000,
   });
 
-  if (isLoading) return <LoadingScreen/>;
+  if (isLoading) return <LoadingScreen />;
 
   const categories = [
     "all",

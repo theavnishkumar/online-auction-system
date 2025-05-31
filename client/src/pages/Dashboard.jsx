@@ -8,6 +8,7 @@ const Dashboard = () => {
   const { data, isLoading } = useQuery({
     queryKey: ["stats"],
     queryFn: () => dashboardStats(),
+    staleTime: 30 * 1000,
   });
 
   if (isLoading) return <LoadingScreen />;
