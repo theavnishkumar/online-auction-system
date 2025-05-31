@@ -12,8 +12,10 @@ export const Landing = () => {
   const dispatch = useDispatch();
   
   useEffect(() => {
-    dispatch(checkAuth());
-  }, [dispatch]);
+    if (!user) {
+      dispatch(checkAuth());
+    }
+  }, [dispatch, user]);
   
   if(loading) return <LoadingScreen/>
   
