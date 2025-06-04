@@ -44,7 +44,7 @@ online-auction-system/
 ### 🔐 Backend `.env`
 
 ```env
-PORT=4000
+PORT=3000
 ORIGIN=http://localhost:5173
 MONGO_URL=<your-mongodb-url>
 JWT_SECRET=<your-jwt-secret>
@@ -53,13 +53,14 @@ CLOUDINARY_CLOUD_NAME=<cloud-name>
 CLOUDINARY_API_KEY=<cloud-key>
 CLOUDINARY_API_SECRET=<cloud-secret>
 CLOUDINARY_URL=<cloudinary-url>
+RESEND_API_KEY=<resend-api-key>
 ```
 
 ### 🌐 Frontend `.env`
 
 ```env
-VITE_API=http://localhost:4000
-VITE_AUCTION_API=http://localhost:4000/auction
+VITE_API=http://localhost:3000
+VITE_AUCTION_API=http://localhost:3000/auction
 ```
 
 ---
