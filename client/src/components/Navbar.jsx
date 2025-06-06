@@ -2,12 +2,22 @@ import { useEffect, useState } from "react";
 import { Link, NavLink, useNavigate } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../store/auth/authSlice";
-import { MdOutlineCreate, MdOutlineDashboard } from "react-icons/md";
-import { FaRegUser } from "react-icons/fa";
-import { IoCloseSharp, IoDocumentTextOutline, IoLogOutOutline,IoSettingsOutline } from "react-icons/io5";
-import { CiMail } from "react-icons/ci";
+import {
+  MdOutlineCreate,
+  MdOutlineDashboard,
+  MdMailOutline,
+  MdAttachMoney,
+  MdMenuOpen,
+  MdOutlineAccountCircle,
+  MdOutlineHome,
+  MdOutlinePrivacyTip,
+} from "react-icons/md";
+import {
+  IoCloseSharp,
+  IoDocumentTextOutline,
+  IoLogOutOutline,
+} from "react-icons/io5";
 import { RiAuctionLine } from "react-icons/ri";
-import { IoMdMenu } from "react-icons/io";
 
 export const Navbar = () => {
   const dispatch = useDispatch();
@@ -21,7 +31,7 @@ export const Navbar = () => {
     navigate("/");
   };
 
-    const toggleMenu = () => {
+  const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
@@ -58,8 +68,8 @@ export const Navbar = () => {
                   key={item.link}
                   className={({ isActive }) =>
                     isActive
-                      ? "text-indigo-700 hover:text-indigo-900"
-                      : "text-gray-700 hover:text-gray-900"
+                      ? "text-indigo-600 hover:text-indigo-800 font-medium"
+                      : "text-gray-600 hover:text-gray-800 font-medium"
                   }
                 >
                   {item.name}
@@ -67,16 +77,15 @@ export const Navbar = () => {
               ))}
             </nav>
 
-             {/* Mobile Menu Button */}
-              <button
-                onClick={toggleMenu}
-                className="text-gray-600 hover:text-gray-900 focus:outline-none"
-                aria-expanded={isMenuOpen}
-                aria-label="Toggle menu"
-              >
-                <IoMdMenu className="h-6 w-6" />
-              </button>
-
+            {/* Mobile Menu Button */}
+            <button
+              onClick={toggleMenu}
+              className="text-gray-600 hover:text-gray-900 focus:outline-none"
+              aria-expanded={isMenuOpen}
+              aria-label="Toggle menu"
+            >
+              <MdMenuOpen className="h-6 w-6" />
+            </button>
           </div>
         </div>
       </header>
@@ -103,7 +112,7 @@ export const Navbar = () => {
           </div>
           <button
             onClick={() => setIsMenuOpen(false)}
-            className="text-gray-600 hover:text-gray-900 focus:outline-none"
+            className="text-gray-600 hover:text-gray-900 focus:outline-none pr-2"
             aria-label="Close menu"
           >
             <IoCloseSharp className="h-6 w-6" />
@@ -121,12 +130,14 @@ export const Navbar = () => {
                     className="h-full w-full object-cover"
                   />
                 ) : (
-                  <FaRegUser className="h-10 w-10 text-gray-500" />
+                  <MdOutlineAccountCircle className="h-10 w-10 text-gray-500" />
                 )}
               </div>
               <div>
                 <p className="font-medium text-gray-900 ">{user.user.name}</p>
-                <p className="text-sm text-gray-500 truncate">{user.user.email}</p>
+                <p className="text-sm text-gray-500 truncate">
+                  {user.user.email}
+                </p>
               </div>
             </div>
           </div>
@@ -140,8 +151,8 @@ export const Navbar = () => {
                   to={item.link}
                   className={({ isActive }) =>
                     isActive
-                      ? "flex items-center py-2 text-indigo-700  hover:text-indigo-900 font-medium"
-                      : "flex items-center py-2 text-gray-700  hover:text-gray-900 font-medium"
+                      ? "flex items-center py-2 text-indigo-600  hover:text-indigo-800 font-medium"
+                      : "flex items-center py-2 text-gray-600  hover:text-gray-800 font-medium"
                   }
                   onClick={() => setIsMenuOpen(false)}
                 >
@@ -161,8 +172,8 @@ export const Navbar = () => {
                       to={item.link}
                       className={({ isActive }) =>
                         isActive
-                          ? "flex items-center py-2 text-indigo-700  hover:text-indigo-900 font-medium"
-                          : "flex items-center py-2 text-gray-700  hover:text-gray-900 font-medium"
+                          ? "flex items-center py-2 text-indigo-600  hover:text-indigo-800 font-medium"
+                          : "flex items-center py-2 text-gray-600  hover:text-gray-800 font-medium"
                       }
                       onClick={() => setIsMenuOpen(false)}
                     >
@@ -173,7 +184,7 @@ export const Navbar = () => {
                 ))}
                 <li>
                   <button
-                    className="flex items-center w-full py-2 text-gray-700  hover:text-gray-900 font-medium text-left cursor-pointer"
+                    className="flex items-center w-full py-2 text-gray-600  hover:text-gray-800 font-medium text-left cursor-pointer"
                     onClick={() => {
                       setIsMenuOpen(false);
                       handleLogout();
@@ -207,7 +218,7 @@ export const Navbar = () => {
       </div>
     </>
   );
-}
+};
 export const LoginSignup = () => {
   return (
     <>
@@ -231,17 +242,17 @@ const navMenu = [
   {
     name: "Home",
     link: "/",
-    icon: <FaRegUser className="mr-3 h-5 w-5" />,
+    icon: <MdOutlineHome className="mr-3 h-5 w-5" />,
   },
   {
     name: "About",
     link: "/about",
-    icon: <FaRegUser className="mr-3 h-5 w-5" />,
+    icon: <MdOutlineAccountCircle className="mr-3 h-5 w-5" />,
   },
   {
     name: "Contact",
     link: "/contact",
-    icon: <CiMail className="mr-3 h-5 w-5" />,
+    icon: <MdMailOutline className="mr-3 h-5 w-5" />,
   },
   {
     name: "Legal",
@@ -250,8 +261,8 @@ const navMenu = [
   },
 ];
 
-const protectedNavLink=[
-    {
+const protectedNavLink = [
+  {
     name: "Dashboard",
     link: "/",
     icon: <MdOutlineDashboard className="mr-3 h-5 w-5" />,
@@ -269,21 +280,21 @@ const protectedNavLink=[
   {
     name: "My Auction",
     link: "/myauction",
-    icon: <RiAuctionLine className="mr-3 h-5 w-5" />,
+    icon: <MdAttachMoney className="mr-3 h-5 w-5" />,
   },
   {
     name: "Contact",
     link: "/contact",
-    icon: <CiMail className="mr-3 h-5 w-5" />,
+    icon: <MdMailOutline className="mr-3 h-5 w-5" />,
   },
   {
     name: "Profile",
     link: "/profile",
-    icon: <FaRegUser className="mr-3 h-5 w-5" />,
+    icon: <MdOutlineAccountCircle className="mr-3 h-5 w-5" />,
   },
   {
-    name: "Settings",
-    link: "/settings",
-    icon: <IoSettingsOutline className="mr-3 h-5 w-5" />,
+    name: "Privacy",
+    link: "/privacy",
+    icon: <MdOutlinePrivacyTip className="mr-3 h-5 w-5" />,
   },
-]
+];
