@@ -1,5 +1,5 @@
 import express from 'express';
-import {handleGetUser, handleChangePassword  } from '../controllers/user.controller.js';
+import { handleGetUser, handleChangePassword, getLoginHistory } from '../controllers/user.controller.js';
 
 const userRouter = express.Router();
 
@@ -9,5 +9,6 @@ const userRouter = express.Router();
 // userRouter.delete('/delete', handleDelete);
 userRouter.get('/', handleGetUser);
 userRouter.patch("/", handleChangePassword);
+userRouter.get("/logins", getLoginHistory)
 
 export default userRouter;
