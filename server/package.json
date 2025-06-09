@@ -1,8 +1,9 @@
 {
   "name": "auction_system_server",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "backend for online auction system",
   "main": "index.js",
+  "private": true,
   "scripts": {
     "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
