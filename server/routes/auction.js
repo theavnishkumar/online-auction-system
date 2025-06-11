@@ -1,9 +1,6 @@
 import express from 'express';
-// import multer from 'multer';
 import { createAuction, showAuction, auctionById, placeBid, dashboardData, myAuction } from '../controllers/auction.controller.js';
 import upload from '../middleware/multer.js';
-
-// const upload = multer({ dest: 'uploads/' });
 
 const auctionRouter = express.Router();
 

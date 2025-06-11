@@ -1,6 +1,6 @@
 {
   "name": "auction_system_server",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "backend for online auction system",
   "main": "index.js",
   "private": true,
