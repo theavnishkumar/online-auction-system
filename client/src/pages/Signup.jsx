@@ -16,6 +16,7 @@ const Signup = () => {
     email: "",
     password: "",
   });
+  const [isError, setIsError] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -24,6 +25,10 @@ const Signup = () => {
       navigate("/");
     } catch (error) {
       console.log("Signup Failed", error);
+      setIsError(error || "something went wrong");
+      setTimeout(() => {
+        setIsError("");
+      }, 10000);
     }
   };
 
@@ -118,6 +123,12 @@ const Signup = () => {
                   Password must be at least 8 characters long
                 </p>
               </div>
+
+              {isError && (
+                <div className="bg-red-50 border border-red-200 text-red-700 px-4 mb-4 -mt-2 py-3 rounded-md">
+                  {isError}
+                </div>
+              )}
 
               <button
                 type="submit"
