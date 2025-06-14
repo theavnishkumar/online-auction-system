@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { checkAuth, signup } from "../store/auth/authSlice";
+import { signup } from "../store/auth/authSlice";
 import { Link } from "react-router";
 import LoadingScreen from "../components/LoadingScreen";
 
@@ -33,11 +33,10 @@ const Signup = () => {
   };
 
   useEffect(() => {
-    dispatch(checkAuth());
     if (user) {
       navigate("/");
     }
-  }, [user, navigate, dispatch]);
+  }, [user, navigate]);
 
   if (loading) return <LoadingScreen />;
 
