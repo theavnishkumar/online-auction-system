@@ -87,23 +87,72 @@ export const placeBid = async (req, res) => {
         const product = await Product.findById(id).populate('bids.bidder', "name");
         if (!product) return res.status(404).json({ message: "Auction not found" });
 
-        if (new Date(product.itemEndDate) < new Date()) return res.status(400).json({ message: "Auction has already ended" });
+        if (new Date(product.itemEndDate) < new Date()) 
+            return res.status(400).json({ message: "Auction has already ended" });
+
+        // Check if user is not the seller
+        if (product.seller.toString() === user) {
+            return res.status(400).json({ message: "Sellers cannot bid on their own items" });
+        }
 
         const minBid = Math.max(product.currentPrice, product.startingPrice) + 1;
         const maxBid = Math.max(product.currentPrice, product.startingPrice) + 10;
-        if (bidAmount < minBid) return res.status(400).json({ message: `Bid must be at least Rs ${minBid}` })
-        if (bidAmount > maxBid) return res.status(400).json({ message: `Bid must be at max Rs ${maxBid}` })
+        if (bidAmount < minBid) 
+            return res.status(400).json({ message: `Bid must be at least Rs ${minBid}` });
+        if (bidAmount > maxBid) 
+            return res.status(400).json({ message: `Bid must be at max Rs ${maxBid}` });
 
-        product.bids.push({
+        // Create new bid object (bidTime will be set automatically by schema default)
+        const newBid = {
             bidder: user,
-            bidAmount: bidAmount,
-        })
+            bidAmount: bidAmount
+        };
 
+        // Add new bid to the beginning of array (most recent first)
+        product.bids.unshift(newBid);
         product.currentPrice = bidAmount;
+        
         await product.save();
-        res.status(200).json({ message: "Bid placed successfully" });
+
+        // Re-populate the product to get the updated bid with bidder details
+        const updatedProduct = await Product.findById(id).populate('bids.bidder', 'name');
+        const populatedBid = updatedProduct.bids[0]; // Get the newly added bid
+
+        // Get Socket.IO instance and emit real-time update
+        const io = req.app.get('io');
+        if (io) {
+            // Emit to all users in this auction room
+            io.to(`auction_${id}`).emit('newBid', {
+                bidAmount: populatedBid.bidAmount,
+                bidder: {
+                    _id: populatedBid.bidder._id,
+                    name: populatedBid.bidder.name
+                },
+                bidTime: populatedBid.bidTime
+            });
+
+            // Optional: Emit updated auction stats
+            io.to(`auction_${id}`).emit('auctionUpdate', {
+                auctionId: id,
+                currentPrice: product.currentPrice,
+                totalBids: product.bids.length,
+                minNextBid: product.currentPrice + 1,
+                maxNextBid: product.currentPrice + 10
+            });
+        }
+
+        res.status(200).json({ 
+            message: "Bid placed successfully",
+            bidAmount: bidAmount,
+            currentPrice: product.currentPrice,
+            totalBids: product.bids.length,
+            minNextBid: product.currentPrice + 1,
+            maxNextBid: product.currentPrice + 10
+        });
+
     } catch (error) {
-        res.status(500).json({ message: "Error placing bid", error: error.message })
+        console.error('Error placing bid:', error);
+        res.status(500).json({ message: "Error placing bid", error: error.message });
     }
 }
 
