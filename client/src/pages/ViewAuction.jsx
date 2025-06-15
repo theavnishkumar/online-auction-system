@@ -23,18 +23,18 @@ export const ViewAuction = () => {
     if (!socket || !id) return;
 
     // Join the auction room
-    socket.emit('joinAuction', id);
+    socket.emit("joinAuction", id);
 
     // Listen for new bids
     const handleNewBid = (bidData) => {
       // Update the cache with new bid data
       queryClient.setQueryData(["viewAuctions", id], (oldData) => {
         if (!oldData) return oldData;
-        
+
         return {
           ...oldData,
           currentPrice: bidData.bidAmount,
-          bids: [bidData, ...oldData.bids] // Add new bid to the beginning
+          bids: [bidData, ...oldData.bids], // Add new bid to the beginning
         };
       });
 
@@ -48,11 +48,11 @@ export const ViewAuction = () => {
     const handleAuctionUpdate = (updateData) => {
       queryClient.setQueryData(["viewAuctions", id], (oldData) => {
         if (!oldData) return oldData;
-        
+
         return {
           ...oldData,
           currentPrice: updateData.currentPrice,
-          totalBids: updateData.totalBids
+          totalBids: updateData.totalBids,
         };
       });
     };
@@ -61,40 +61,40 @@ export const ViewAuction = () => {
     const handleAuctionEnd = (auctionData) => {
       queryClient.setQueryData(["viewAuctions", id], (oldData) => {
         if (!oldData) return oldData;
-        
+
         return {
           ...oldData,
           itemEndDate: auctionData.endDate,
-          winner: auctionData.winner
+          winner: auctionData.winner,
         };
       });
     };
 
-    socket.on('newBid', handleNewBid);
-    socket.on('auctionUpdate', handleAuctionUpdate);
-    socket.on('auctionEnded', handleAuctionEnd);
+    socket.on("newBid", handleNewBid);
+    socket.on("auctionUpdate", handleAuctionUpdate);
+    socket.on("auctionEnded", handleAuctionEnd);
 
     // Cleanup
     return () => {
-      socket.off('newBid', handleNewBid);
-      socket.off('auctionUpdate', handleAuctionUpdate);
-      socket.off('auctionEnded', handleAuctionEnd);
-      socket.emit('leaveAuction', id);
+      socket.off("newBid", handleNewBid);
+      socket.off("auctionUpdate", handleAuctionUpdate);
+      socket.off("auctionEnded", handleAuctionEnd);
+      socket.emit("leaveAuction", id);
     };
   }, [socket, id, queryClient, user.user._id]);
 
   const placeBidMutate = useMutation({
     mutationFn: ({ bidAmount, id }) => placeBid({ bidAmount, id }),
-    onSuccess: () => {      
+    onSuccess: (response) => {
       if (socket) {
-        socket.emit('placeBid', {
+        socket.emit("placeBid", {
           auctionId: id,
           bidAmount: response.bidAmount,
           bidder: {
             _id: user.user._id,
-            name: user.user.name
+            name: user.user.name,
           },
-          bidTime: new Date().toISOString()
+          bidTime: new Date().toISOString(),
         });
       }
       if (inputRef.current) inputRef.current.value = "";
@@ -211,7 +211,8 @@ export const ViewAuction = () => {
                       htmlFor="bidAmount"
                       className="block text-sm font-medium text-gray-700 mb-1"
                     >
-                      Bid Amount (minimum: $ {data.currentPrice + 1} maximum: $ {data.currentPrice + 10})
+                      Bid Amount (minimum: $ {data.currentPrice + 1} maximum: ${" "}
+                      {data.currentPrice + 10})
                     </label>
                     <input
                       type="number"
@@ -267,14 +268,18 @@ export const ViewAuction = () => {
                   <div
                     key={`${bid.bidder?._id}-${bid.bidTime}-${index}`}
                     className={`p-4 flex justify-between items-center transition-all duration-500 ${
-                      index === 0 ? 'bg-green-50 border-l-4 border-green-500' : ''
+                      index === 0
+                        ? "bg-green-50 border-l-4 border-green-500"
+                        : ""
                     }`}
                   >
                     <div>
                       <p className="font-medium text-gray-900">
                         {bid.bidder?.name}
                         {bid.bidder?._id === user.user._id && (
-                          <span className="text-blue-600 text-sm ml-1">(You)</span>
+                          <span className="text-blue-600 text-sm ml-1">
+                            (You)
+                          </span>
                         )}
                       </p>
                       <p className="text-sm text-gray-500">
