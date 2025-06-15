@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router";
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { checkAuth, login } from "../store/auth/authSlice";
+import { login } from "../store/auth/authSlice";
 import { Link } from "react-router";
 import LoadingScreen from "../components/LoadingScreen";
 
@@ -14,6 +14,7 @@ const Login = () => {
     email: "",
     password: "",
   });
+  const [isError, setIsError] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -22,15 +23,18 @@ const Login = () => {
       navigate("/");
     } catch (error) {
       console.log("Login Failed", error);
+      setIsError(error || "something went wrong");
+      setTimeout(() => {
+        setIsError("");
+      }, 10000);
     }
   };
 
   useEffect(() => {
-    dispatch(checkAuth());
     if (user) {
       navigate("/");
     }
-  }, [user, navigate, dispatch]);
+  }, [user, navigate]);
 
   if (loading) return <LoadingScreen />;
 
@@ -87,6 +91,12 @@ const Login = () => {
                   required
                 />
               </div>
+
+              {isError && (
+                <div className="bg-red-50 border border-red-200 text-red-700 px-4 mb-4 -mt-2 py-3 rounded-md">
+                  {isError}
+                </div>
+              )}
 
               <button
                 type="submit"

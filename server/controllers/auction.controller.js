@@ -160,3 +160,27 @@ export const dashboardData = async (req, res) => {
         res.status(500).json({ message: "Error getting dashboard data", error: error.message })
     }
 }
+
+export const myAuction = async (req, res) => {
+    try {
+        const auction = await Product.find({ seller: req.user.id })
+            .populate("seller", "name")
+            .select("itemName itemDescription currentPrice bids itemEndDate itemCategory itemPhoto seller")
+            .sort({ createdAt: -1 });
+        const formatted = auction.map(auction => ({
+            _id: auction._id,
+            itemName: auction.itemName,
+            itemDescription: auction.itemDescription,
+            currentPrice: auction.currentPrice,
+            bidsCount: auction.bids.length,
+            timeLeft: Math.max(0, new Date(auction.itemEndDate) - new Date()),
+            itemCategory: auction.itemCategory,
+            sellerName: auction.seller.name,
+            itemPhoto: auction.itemPhoto,
+        }));
+
+        res.status(200).json(formatted);
+    } catch (error) {
+        return res.status(500).json({ message: 'Error fetching auctions', error: error.message });
+    }
+}

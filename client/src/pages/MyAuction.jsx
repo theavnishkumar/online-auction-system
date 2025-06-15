@@ -1,14 +1,14 @@
 import { useState } from "react";
 import AuctionCard from "../components/AuctionCard";
 import { useQuery } from "@tanstack/react-query";
-import { getAuctions } from "../api/auction";
+import { getMyAuctions } from "../api/auction";
 import LoadingScreen from "../components/LoadingScreen";
 
-export const AuctionList = () => {
+export const MyAuction = () => {
   const [filter, setFilter] = useState("all");
   const { data, isLoading } = useQuery({
-    queryKey: ["allAuction"],
-    queryFn: getAuctions,
+    queryKey: ["myauctions"],
+    queryFn: getMyAuctions,
     staleTime: 30 * 1000,
   });
 
@@ -51,7 +51,7 @@ export const AuctionList = () => {
         {/* Results */}
         <div className="mb-6">
           <h2 className="text-xl font-semibold text-gray-900 mb-4">
-            {filter === "all" ? "All Auctions" : `${filter} Auctions`}
+            {filter === "all" ? "My All Auctions" : `${filter} Auctions`}
             <span className="text-sm font-normal text-gray-500 ml-2">
               ({filteredAuctions.length} items)
             </span>

@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { checkAuth, signup } from "../store/auth/authSlice";
+import { signup } from "../store/auth/authSlice";
 import { Link } from "react-router";
 import LoadingScreen from "../components/LoadingScreen";
 
@@ -16,6 +16,7 @@ const Signup = () => {
     email: "",
     password: "",
   });
+  const [isError, setIsError] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -24,15 +25,18 @@ const Signup = () => {
       navigate("/");
     } catch (error) {
       console.log("Signup Failed", error);
+      setIsError(error || "something went wrong");
+      setTimeout(() => {
+        setIsError("");
+      }, 10000);
     }
   };
 
   useEffect(() => {
-    dispatch(checkAuth());
     if (user) {
       navigate("/");
     }
-  }, [user, navigate, dispatch]);
+  }, [user, navigate]);
 
   if (loading) return <LoadingScreen />;
 
@@ -118,6 +122,12 @@ const Signup = () => {
                   Password must be at least 8 characters long
                 </p>
               </div>
+
+              {isError && (
+                <div className="bg-red-50 border border-red-200 text-red-700 px-4 mb-4 -mt-2 py-3 rounded-md">
+                  {isError}
+                </div>
+              )}
 
               <button
                 type="submit"

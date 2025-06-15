@@ -1,143 +1,187 @@
-# Online Auction System
+# 🛒 Online Auction System - MERN Stack Web App
 
-## Overview
-This is a full-stack online auction system built using the MERN (MongoDB, Express.js, React, Node.js) stack. It allows users to place bids on items, manage auctions, and handle authentication securely.
+An online auction platform built using the **MERN stack**, with secure login, cookie-based auth, real-time bidding support (upcoming), and user login tracking for security. Designed for full-stack learners and developers with clean architecture.
 
-## Table of Contents
-1. [Features](#features)
-2. [Technologies Used](#technologies-used)
-   - [Frontend (React)](#frontend-react)
-   - [Backend (Node.js + Express)](#backend-nodejs--express)
-3. [Installation and Setup](#installation-and-setup)
-   - [Prerequisites](#prerequisites)
-   - [Steps to Run the Project](#steps-to-run-the-project)
-     1. [Clone the Repository](#1-clone-the-repository)
-     2. [Setup Backend (Server)](#2-setup-backend-server)
-     3. [Setup Cloudinary](#3-setup-cloudinary)
-     4. [Setup Frontend (Client)](#4-setup-frontend-client)
-4. [Project Structure](#project-structure)
-5. [Usage](#usage)
-6. [Future Improvements](#future-improvements)
-7. [Contributing](#contributing)
-8. [License](#license)
+## Live Preview 🌐 [Visit Website](https://auction.ihavetech.com)
+![image](https://github.com/user-attachments/assets/719ec319-d1d3-4e17-9b0b-ae5db8cfd6b4)
 
-## Features
-- User authentication and authorization
-- Real-time bidding with live updates
-- Countdown timer for auctions
-- Product categories and search functionality
-- Image uploads via Cloudinary
+---
 
-## Technologies Used
+## 📦 Tech Stack
 
-### Frontend (React)
-- **React 18** - JavaScript library for building UI
-- **Ant Design** (`antd`) - UI component library
-- **React Router DOM** - Routing library for navigation
-- **Redux Toolkit** - State management
-- **Axios** - HTTP requests to backend
-- **JWT Decode** - Decoding JWT tokens for authentication
+### 🔹 Frontend
 
-### Backend (Node.js + Express)
-- **Express.js** - Web framework for handling API requests
-- **MongoDB + Mongoose** - Database for storing user and auction data
-- **jsonwebtoken (JWT)** - Token-based authentication
-- **bcrypt** - Password hashing for security
-- **Cloudinary + Multer** - Image storage and file upload handling
-- **CORS & dotenv** - Security and environment management
+* React 19 (Vite + JSX)
+* Tailwind CSS
+* React Router v7+
+* Axios
+* TanStack Query (React Query)
+* Redux Toolkit (for global state)
 
-## Installation and Setup
+### 🔸 Backend
 
-### Prerequisites
-Make sure you have the following installed:
-- **Node.js** (Latest LTS version)
-- **MongoDB** (Locally or via a cloud service like MongoDB Atlas)
+* Node.js + Express.js
+* MongoDB + Mongoose
+* Multer (image upload)
+* JWT Authentication (with `httpOnly` cookies)
+* Cloudinary (image hosting)
+* Device, Browser, IP, and Geo-location logging
 
-### Steps to Run the Project
+---
 
-#### 1. Clone the Repository
-```sh
-git clone https://github.com/theavnishkumar/online-auction-system.git
+## 📁 Folder Structure
+
+```
+online-auction-system/
+├── client/        # React frontend
+└── server/        # Express backend
+```
+
+---
+
+## ⚙️ Environment Variables
+
+### 🔐 Backend `.env`
+
+```env
+PORT=3000
+ORIGIN=http://localhost:5173
+MONGO_URL=<your-mongodb-url>
+JWT_SECRET=<your-jwt-secret>
+JWT_EXPIRES_IN=1d
+CLOUDINARY_CLOUD_NAME=<cloud-name>
+CLOUDINARY_API_KEY=<cloud-key>
+CLOUDINARY_API_SECRET=<cloud-secret>
+CLOUDINARY_URL=<cloudinary-url>
+RESEND_API_KEY=<resend-api-key>
+```
+
+### 🌐 Frontend `.env`
+
+```env
+VITE_API=http://localhost:3000
+VITE_AUCTION_API=http://localhost:3000/auction
+```
+
+---
+
+## 🚀 Getting Started
+
+### 📥 1. Clone the Repository
+
+```bash
+git clone <your-repo-url>
 cd online-auction-system
 ```
 
-#### 2. Setup Backend (Server)
-```sh
+### 🛠️ 2. Setup Backend
+
+```bash
 cd server
 npm install
+cp .env.example .env  # or manually create .env
+npm run dev
 ```
 
-- Create a `.env` file in the `server` directory and add the following:
-```env
-PORT=4000
-MONGO_URI=your_mongodb_connection_string
-JWT_SECRET=your_secret_key
-CLOUDINARY_CLOUD_NAME=your_cloudinary_name
-CLOUDINARY_API_KEY=your_cloudinary_api_key
-CLOUDINARY_API_SECRET=your_cloudinary_api_secret
-```
+### 🌐 3. Setup Frontend
 
-- Start the backend server:
-```sh
-npm start
-```
-
-#### 3. Setup Cloudinary
-Cloudinary is used for storing images. Follow these steps to configure it:
-
-1. Sign up at [Cloudinary](https://cloudinary.com/).
-2. Navigate to the **Dashboard** and copy your Cloud Name, API Key, and API Secret.
-3. Add these credentials to the `.env` file in the `server` directory:
-   ```env
-   CLOUDINARY_CLOUD_NAME=your_cloudinary_name
-   CLOUDINARY_API_KEY=your_cloudinary_api_key
-   CLOUDINARY_API_SECRET=your_cloudinary_api_secret
-   ```
-4. Install Cloudinary dependencies in the server:
-   ```sh
-   npm install cloudinary multer multer-storage-cloudinary
-   ```
-5. Use Cloudinary in your Node.js application to handle image uploads.
-
-#### 4. Setup Frontend (Client)
-```sh
+```bash
 cd ../client
 npm install
+cp .env.example .env  # or manually create .env
+npm run dev
 ```
 
-- Create a `.env` file in the `client` directory and add:
-```env
-REACT_APP_API_URL=http://localhost:4000
-```
+---
 
-- Start the frontend application:
-```sh
-npm start
-```
+## 🔐 Authentication (via `httpOnly` Secure Cookies)
 
-## Project Structure
-```
-/online-auction-system
-  ├── client/   # React Frontend
-  ├── server/   # Node.js Backend
-  ├── .env      # Environment variables
-  ├── package.json # Dependencies
-```
+* Tokens stored in `httpOnly` cookies (not accessible from JS)
+* Auth is auto-validated on refresh via `/user` route
+* State managed via Redux Toolkit + cookies
 
-## Usage
-- Register/Login to the platform.
-- Create auctions and upload images via Cloudinary.
-- Place bids on available auctions.
-- View auction history and user profiles.
-- Monitor countdown timers for auction expirations.
+### 🔐 Auth Routes (`/auth`)
 
-## Future Improvements
-- Enhance real-time bidding with WebSockets.
-- Implement payment gateway for transactions.
-- Improve UI/UX for a better user experience.
+| Method | Endpoint       | Description              |
+| ------ | -------------- | ------------------------ |
+| POST   | `/auth/login`  | Login user (sets cookie) |
+| POST   | `/auth/signup` | Register new user        |
+| POST   | `/auth/logout` | Logout user              |
 
-## Contributing
-Contributions are welcome! Feel free to submit a pull request with improvements or bug fixes.
+### 👤 Auto Login Route
 
-## License
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+| Method | Endpoint | Description                        |
+| ------ | -------- | ---------------------------------- |
+| GET    | `/user`  | Auto-login if valid cookie present |
+
+---
+
+## 🛒 Auction Routes (`/auction`)
+
+| Method | Endpoint         | Description                            |
+| ------ | ---------------- | -------------------------------------- |
+| GET    | `/auction/stats` | Dashboard stats (active, total, user)  |
+| GET    | `/auction/`      | Get all auction items                  |
+| POST   | `/auction/`      | Create new auction (with image upload) |
+| GET    | `/auction/:id`   | Get single auction item by ID          |
+| POST   | `/auction/:id`   | Place a bid on auction item            |
+
+---
+
+## 🔍 Key Features
+
+* ✅ Auth with cookies and Redux
+* ✅ Auction creation with image upload
+* ✅ Auto-login from stored cookie
+* ✅ Tracks logged-in user auction data
+* ✅ Login logs (IP, country, state, device, browser)
+* ✅ Multer + Cloudinary integration
+* ✅ Proper routing using React Router v7 (framework-based)
+
+---
+
+## 🔒 Login Security Logging
+
+* IP Address
+* Country and State (via GeoIP)
+* Device Type
+* Browser Type/Version
+* Used to detect abnormal behavior and prevent abuse
+
+---
+
+## 🧠 State Management
+
+* **Redux Toolkit** used for global auth state
+* Combined with **TanStack Query** for caching API responses
+* Ensures smooth sync between client and backend
+
+---
+
+## 🛠️ Upcoming Features
+
+* ✅ Proper error handling & status responses
+* ✅ Prevents spam login attempts or abuse
+* 🔄 WebSocket for real-time bidding & updates
+
+---
+
+## 👨‍💻 Contribution Guide
+
+1. Fork the repository
+2. Create a branch: `git checkout -b feature-branch`
+3. Make your changes
+4. Commit and push: `git commit -m "Add feature"`
+5. Open a Pull Request (PR)
+
+---
+
+## 🧾 License
+
+This project is licensed under the **[MIT](LICENSE)**.
+
+---
+
+## 👨‍🎓 Author
+
+Developed by [Avnish Kumar](https://github.com/theavnishkumar). Built for educational, security-focused, and full-stack learning purposes.
