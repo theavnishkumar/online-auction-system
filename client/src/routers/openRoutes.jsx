@@ -1,5 +1,6 @@
 import Error from "../Error";
 import { OpenLayout } from "../layout/OpenLayout";
+import {About} from "../pages/About";
 import { Contact } from "../pages/Contact";
 import { Landing } from "../pages/Landing";
 import AcceptableUsePolicy from "../pages/legal/AcceptableUsePolicy";
@@ -35,6 +36,11 @@ export const openRoutes = [
       {
         path: "contact",
         element: <Contact />,
+        errorElement: <Error />,
+      },
+      {
+        path: "about",
+        element: <About />,
         errorElement: <Error />,
       },
       {
