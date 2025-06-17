@@ -1,6 +1,10 @@
 # 🛒 Online Auction System - MERN Stack Web App
 
-An online auction platform built using the **MERN stack**, with secure login, cookie-based auth, real-time bidding support (upcoming), and user login tracking for security. Designed for full-stack learners and developers with clean architecture.
+An **Online Auction System** built with the **MERN stack (MongoDB, Express, React, Node.js)** that allows users to create auctions, upload images, and bid on products in real-time (WebSocket feature coming soon).
+
+> 🎓 **Major project / Minor project** for Computer Science Engineering – built by **Avnish Kumar** for full-stack learning and portfolio development.
+
+This system supports secure login via **httpOnly cookies**, tracks device & location on login, and is structured with clean code using modern tools like **Redux Toolkit**, **React Router v7**, and **Cloudinary**.
 
 ## Live Preview 🌐 [Visit Website](https://auction.ihavetech.com)
 ![image](https://github.com/user-attachments/assets/719ec319-d1d3-4e17-9b0b-ae5db8cfd6b4)
