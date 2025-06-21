@@ -15,22 +15,22 @@ export const Footer = () => {
             </div>
             <div className="flex space-x-6">
               <Link
-                to="/"
+                to="/contact"
                 className="text-gray-400 hover:text-white text-sm transition-colors"
               >
-                Home
+                About
               </Link>
               <Link
-                to="/auctions/all"
+                to="/legal"
                 className="text-gray-400 hover:text-white text-sm transition-colors"
               >
-                Auctions
+                Legal
               </Link>
               <Link
-                to="/create-auction"
+                to="/contact"
                 className="text-gray-400 hover:text-white text-sm transition-colors"
               >
-                Sell
+                Contact
               </Link>
             </div>
           </div>
