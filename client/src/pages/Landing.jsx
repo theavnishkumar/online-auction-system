@@ -4,6 +4,7 @@ import { Features } from "../components/Landing/Features";
 import { Hero } from "../components/Landing/Hero";
 import Dashboard from "./Dashboard";
 import LoadingScreen from "../components/LoadingScreen";
+import { Auction } from "../components/Landing/Auction";
 
 export const Landing = () => {
   const { user, loading } = useSelector((state) => state.auth);
@@ -15,6 +16,7 @@ export const Landing = () => {
       {!user && (
         <>
           <Hero />
+          <Auction/>
           <Features />
           <CTA />
         </>
