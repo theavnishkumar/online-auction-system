@@ -1,5 +1,6 @@
 import { FaClock, FaArrowRight, FaChevronRight } from "react-icons/fa";
 import { Link } from "react-router";
+import { AdsComponent } from "../AdsComponent";
 
 export const Auction = () => {
   return (
@@ -15,7 +16,7 @@ export const Auction = () => {
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-2">
           {/* Auction Item 1 */}
           <div className="border border-gray-200 rounded-md overflow-hidden hover:shadow-lg transition-shadow bg-white">
             <div className="relative">
@@ -121,6 +122,7 @@ export const Auction = () => {
             </div>
           </div>
         </div>
+        <AdsComponent dataAdSlot="5537585913" />
       </div>
     </section>
   );
