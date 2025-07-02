@@ -64,6 +64,9 @@ export const getLoginHistory = async (req, res) => {
             },
             {
                 $sort: { loginAt: -1 }
+            },
+            {
+                $limit: 10
             }
         ]);
 
@@ -86,7 +89,7 @@ export const getLoginHistory = async (req, res) => {
             ].filter(Boolean).join(", ");
 
             return {
-                id:login._id,
+                id: login._id,
                 dateTime: formattedDate,
                 ipAddress: login.ipAddress || "Unknown",
                 location: location || "Unknown",
