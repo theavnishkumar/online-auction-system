@@ -1,7 +1,9 @@
 import { Link } from "react-router";
 import { AdsComponent } from "../components/AdsComponent";
+import { useSelector } from "react-redux";
 
 export const About = () => {
+  const { user } = useSelector((state) => state.auth);
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-5xl mx-auto px-4 py-12">
@@ -48,7 +50,7 @@ export const About = () => {
               </ul>
             </section>
 
-            <AdsComponent dataAdSlot="1002244889" />
+            {!user && <AdsComponent dataAdSlot="1002244889" />}
 
             <section>
               <h2 className="text-xl font-semibold text-gray-900 mb-4">
