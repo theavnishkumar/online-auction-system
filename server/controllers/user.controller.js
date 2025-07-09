@@ -5,7 +5,7 @@ import mongoose from "mongoose";
 
 export const handleGetUser = async (req, res) => {
     try {
-        const user = await User.findById(req.user.id).select("name email avatar");
+        const user = await User.findById(req.user.id).select("name email avatar role");
 
         if (!user) return res.status(404).json({ message: "User not found" });
 
