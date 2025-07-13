@@ -167,6 +167,7 @@ npm run dev
 * ✅ Proper error handling & status responses
 * ✅ Prevents spam login attempts or abuse
 * 🔄 WebSocket for real-time bidding & updates
+* ✅ Admin Dashboard for managing users
 
 ---
 
