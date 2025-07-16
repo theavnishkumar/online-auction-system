@@ -1,6 +1,6 @@
 # 🛒 Online Auction System - MERN Stack Web App
 
-An **Online Auction System** built with the **MERN stack (MongoDB, Express, React, Node.js)** that allows users to create auctions, upload images, and bid on products in real-time (WebSocket feature coming soon).
+An **Online Auction System** built with the **MERN stack (MongoDB, Express, React, Node.js)** that allows users to create auctions, upload images, and bid on products in real-time (WebSocket feature and Admin Dashboard coming soon).
 
 > 🎓 **Major project / Minor project** for Computer Science Engineering – built by **Avnish Kumar** for full-stack learning and portfolio development.
 
