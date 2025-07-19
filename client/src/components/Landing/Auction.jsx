@@ -1,6 +1,6 @@
 import { FaClock, FaArrowRight, FaChevronRight } from "react-icons/fa";
 import { Link } from "react-router";
-import { AdsComponent } from "../AdsComponent";
+// import { AdsComponent } from "../AdsComponent";
 
 export const Auction = () => {
   return (
@@ -122,7 +122,7 @@ export const Auction = () => {
             </div>
           </div>
         </div>
-        <AdsComponent dataAdSlot="5537585913" />
+        {/* <AdsComponent dataAdSlot="5537585913" /> */}
       </div>
     </section>
   );

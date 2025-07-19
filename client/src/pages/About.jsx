@@ -1,5 +1,5 @@
 import { Link } from "react-router";
-import { AdsComponent } from "../components/AdsComponent";
+// import { AdsComponent } from "../components/AdsComponent";
 import { useSelector } from "react-redux";
 
 export const About = () => {
@@ -50,7 +50,7 @@ export const About = () => {
               </ul>
             </section>
 
-            {!user && <AdsComponent dataAdSlot="1002244889" />}
+            {/* {!user && <AdsComponent dataAdSlot="1002244889" />} */}
 
             <section>
               <h2 className="text-xl font-semibold text-gray-900 mb-4">
