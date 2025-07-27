@@ -74,7 +74,7 @@ VITE_AUCTION_API=http://localhost:3000/auction
 ### 📥 1. Clone the Repository
 
 ```bash
-git clone <your-repo-url>
+git clone https://github.com/theavnishkumar/online-auction-system.git
 cd online-auction-system
 ```
 
