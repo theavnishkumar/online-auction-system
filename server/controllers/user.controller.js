@@ -2,9 +2,12 @@ import Login from "../models/Login.js";
 import User from "../models/user.js";
 import bcrypt from "bcrypt";
 import mongoose from "mongoose";
+import { connectDB } from '../connection.js'
+
 
 export const handleGetUser = async (req, res) => {
     try {
+        await connectDB();
         const user = await User.findById(req.user.id).select("name email avatar role");
 
         if (!user) return res.status(404).json({ message: "User not found" });
@@ -18,6 +21,7 @@ export const handleGetUser = async (req, res) => {
 
 export const handleChangePassword = async (req, res) => {
     try {
+        await connectDB();
         const { currentPassword, newPassword, confirmPassword } = req.body;
         if (!currentPassword || !newPassword || !confirmPassword) {
             return res.status(400).json({ error: "Please enter all fields" });
@@ -56,6 +60,7 @@ export const handleChangePassword = async (req, res) => {
 
 export const getLoginHistory = async (req, res) => {
     try {
+        await connectDB();
         const userId = req.user.id;
 
         const logins = await Login.aggregate([

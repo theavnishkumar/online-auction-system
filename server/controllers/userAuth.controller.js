@@ -7,6 +7,7 @@ import { generateToken } from "../utils/jwt.js";
 import { getClientIp, getLocationFromIp } from "../utils/geoDetails.js";
 dotenv.config();
 
+
 export const handleUserLogin = async (req, res) => {
     const { email, password } = req.body;
     if (!email || !password) return res.status(400).json({ error: "All Fields are required" });
@@ -59,6 +60,7 @@ export const handleUserLogin = async (req, res) => {
 }
 
 export const handleUserSignup = async (req, res) => {
+    await connectDB();
     const { name, email, password } = req.body;
 
     // Checking input fields

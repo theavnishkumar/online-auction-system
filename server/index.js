@@ -13,6 +13,8 @@ import adminRouter from './routes/admin.js';
 
 const port = process.env.PORT || 4000;
 
+connectDB();
+
 const app = express();
 app.use(cookieParser());
 app.use(express.json());
@@ -22,7 +24,6 @@ app.use(cors({
     credentials: true,
 }));
 
-connectDB();
 
 app.get('/', async (req, res) => {
     res.json({ msg: 'Welcome to Online Auction System API' });
