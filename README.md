@@ -1,5 +1,13 @@
 # 🛒 Online Auction System - MERN Stack Web App
 
+![Status](https://img.shields.io/badge/Status-Active-brightgreen)
+![License](https://img.shields.io/github/license/theavnishkumar/online-auction-system)
+![PRs Welcome](https://img.shields.io/badge/PRs-Welcome-blue)
+![Issues](https://img.shields.io/github/issues/theavnishkumar/online-auction-system)
+![Forks](https://img.shields.io/github/forks/theavnishkumar/online-auction-system?style=social)
+![Stars](https://img.shields.io/github/stars/theavnishkumar/online-auction-system?style=social)
+---
+
 An **Online Auction System** built with the **MERN stack (MongoDB, Express, React, Node.js)** that allows users to create auctions, upload images, and bid on products in real-time (WebSocket feature and Admin Dashboard coming soon).
 
 > 🎓 **Major project / Minor project** for Computer Science Engineering – built by **Avnish Kumar** for full-stack learning and portfolio development.
