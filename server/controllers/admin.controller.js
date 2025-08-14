@@ -6,24 +6,35 @@ export const getAdminDashboard = async (req, res) => {
     try {
         await connectDB();
         
-        const activeAuctions = await Product.find({ itemEndDate: { $gt: new Date() } })
+        // Get statistics
+        const totalAuctions = await Product.countDocuments();
+        const activeAuctions = await Product.countDocuments({ itemEndDate: { $gt: new Date() } });
+        const totalUsers = await User.countDocuments();
+        const recentUsers = await User.countDocuments({ 
+            createdAt: { $gte: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000) } 
+        });
+        
+        // Get recent active auctions for display
+        const recentActiveAuctions = await Product.find({ itemEndDate: { $gt: new Date() } })
             .populate('seller', 'name email')
             .sort({ createdAt: -1 })
             .limit(10);
             
-        const inactiveAuctions = await Product.find({ itemEndDate: { $lt: new Date() } })
-            .populate('seller', 'name email')
+        // Get recent users for display
+        const recentUsersList = await User.find({})
+            .select('name email role createdAt avatar')
             .sort({ createdAt: -1 })
             .limit(10);
             
-        const recentUsers = await User.find({})
-            .select('name email signupAt')
-            .sort({ createdAt: -1 })
-            .limit(10);
         res.status(200).json({
-            activeAuctions,
-            inactiveAuctions,
-            recentUsers
+            stats: {
+                activeAuctions,
+                totalAuctions,
+                totalUsers,
+                recentUsers
+            },
+            recentAuctions: recentActiveAuctions,
+            recentUsersList: recentUsersList
         });
     } catch (error) {
         res.status(500).json({ message: 'Error fetching admin dashboard data', error: error.message });

@@ -11,6 +11,7 @@ import {
   MdOutlineAccountCircle,
   MdOutlineHome,
   MdOutlinePrivacyTip,
+  MdAdminPanelSettings,
 } from "react-icons/md";
 import {
   IoCloseSharp,
@@ -62,7 +63,7 @@ export const Navbar = () => {
 
             {/* Desktop Navigation */}
             <nav className="hidden md:flex items-center space-x-6">
-              {(user ? protectedNavLink.slice(0, 4) : navMenu).map((item) => (
+              {(user ? getNavLinks(user.user.role) : navMenu).map((item) => (
                 <NavLink
                   to={item.link}
                   key={item.link}
@@ -145,7 +146,7 @@ export const Navbar = () => {
 
         <nav className="p-4">
           <ul className="space-y-1">
-            {(user ? protectedNavLink.slice(0, 4) : navMenu).map((item) => (
+            {(user ? getNavLinks(user.user.role) : navMenu).map((item) => (
               <li key={item.link}>
                 <NavLink
                   to={item.link}
@@ -298,3 +299,34 @@ const protectedNavLink = [
     icon: <MdOutlinePrivacyTip className="mr-3 h-5 w-5" />,
   },
 ];
+
+const adminNavLink = [
+  {
+    name: "Admin Panel",
+    link: "/admin",
+    icon: <MdAdminPanelSettings className="mr-3 h-5 w-5" />,
+  },
+  {
+    name: "Dashboard",
+    link: "/",
+    icon: <MdOutlineDashboard className="mr-3 h-5 w-5" />,
+  },
+  {
+    name: "Create Auction",
+    link: "/create",
+    icon: <MdOutlineCreate className="mr-3 h-5 w-5" />,
+  },
+  {
+    name: "View Auction",
+    link: "/auction",
+    icon: <RiAuctionLine className="mr-3 h-5 w-5" />,
+  },
+];
+
+// Helper function to get navigation links based on user role
+const getNavLinks = (userRole) => {
+  if (userRole === 'admin') {
+    return adminNavLink;
+  }
+  return protectedNavLink.slice(0, 4);
+};

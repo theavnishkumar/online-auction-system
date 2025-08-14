@@ -54,7 +54,7 @@ export const handleUserLogin = async (req, res) => {
         return res.status(200).json({ message: "Login Successful" });
 
     } catch (error) {
-        console.error("Login Error:", err);
+        console.error("Login Error:", error);
         return res.status(500).json({ error: "Server error from handle login" });
     }
 }
