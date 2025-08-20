@@ -171,6 +171,12 @@ export const AdminDashboard = () => {
         <div>
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-2xl font-bold text-gray-900">Recent Users</h2>
+            <Link
+              to="/admin/users"
+              className="text-blue-600 hover:text-blue-700 font-medium text-sm hover:underline"
+            >
+              View All Users
+            </Link>
           </div>
 
           {/* Users Table */}
@@ -196,6 +202,9 @@ export const AdminDashboard = () => {
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Joined
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Last Login
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Status
@@ -231,6 +240,9 @@ export const AdminDashboard = () => {
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                           {new Date(user.createdAt).toLocaleDateString()}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          {user.lastLogin ? new Date(user.lastLogin).toLocaleDateString() : 'Never'}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <span className="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">

@@ -1,5 +1,6 @@
 import { AdminLayout } from "../layout/AdminLayout";
 import { AdminDashboard } from "../pages/Admin/AdminDashboard";
+import { UsersList } from "../pages/Admin/UsersList";
 
 export const adminRouter = [
   {
@@ -9,6 +10,10 @@ export const adminRouter = [
       {
         index: true,
         element: <AdminDashboard />,
+      },
+      {
+        path: "users",
+        element: <UsersList />,
       },
     ],
   },

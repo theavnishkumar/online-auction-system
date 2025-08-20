@@ -41,6 +41,14 @@ export const handleUserLogin = async (req, res) => {
         const userAgent = req.headers["user-agent"];
         const location = await getLocationFromIp(ip);
 
+        // Update user's last login and location
+        await User.findByIdAndUpdate(user._id, {
+            lastLogin: new Date(),
+            location: location,
+            ipAddress: ip,
+            userAgent: userAgent
+        });
+
         // Saving login details
         const login = new Login({
             userId: user._id,
@@ -93,6 +101,7 @@ export const handleUserSignup = async (req, res) => {
             userAgent,
             location,
             signupAt: new Date(),
+            lastLogin: new Date(),
         });
         await newUser.save();
 

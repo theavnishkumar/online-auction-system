@@ -15,10 +15,10 @@ export const getAdminDashboard = async () => {
 };
 
 // Get all users with pagination and filtering
-export const getAllUsers = async (page = 1, search = '', role = 'all', limit = 10) => {
+export const getAllUsers = async (page = 1, search = '', role = 'all', limit = 10, sortBy = 'createdAt', sortOrder = 'desc') => {
     try {
         const res = await axios.get(`${VITE_API}/admin/users`, {
-            params: { page, search, role, limit },
+            params: { page, search, role, limit, sortBy, sortOrder },
             withCredentials: true
         });
         return res.data;

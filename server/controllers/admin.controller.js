@@ -22,7 +22,7 @@ export const getAdminDashboard = async (req, res) => {
             
         // Get recent users for display
         const recentUsersList = await User.find({})
-            .select('name email role createdAt avatar')
+            .select('name email role createdAt lastLogin location avatar')
             .sort({ createdAt: -1 })
             .limit(10);
             
@@ -68,7 +68,7 @@ export const getAllUsers = async (req, res) => {
         
         // Get users with pagination, search, and sorting
         const users = await User.find(searchQuery)
-            .select('name email role createdAt signupAt avatar')
+            .select('name email role createdAt signupAt lastLogin location avatar')
             .sort({ [sortBy]: sortOrder })
             .skip(skip)
             .limit(limit)
