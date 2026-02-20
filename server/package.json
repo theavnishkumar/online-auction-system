@@ -2,12 +2,12 @@
   "name": "auction_system_server",
   "version": "2.0.2",
   "description": "backend for online auction system",
-  "main": "index.js",
+  "main": "server.js",
   "private": true,
   "scripts": {
-    "start": "node index.js",
+    "start": "node server.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon index.js"
+    "dev": "nodemon server.js"
   },
   "author": "Avnish Kumar",
   "license": "MIT",
@@ -16,6 +16,7 @@
     "axios": "^1.9.0",
     "bcrypt": "^6.0.0",
     "cloudinary": "^1.21.0",
+    "compression": "^1.8.1",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "dotenv": "^16.5.0",
@@ -24,7 +25,9 @@
     "mongoose": "^8.15.1",
     "multer": "^1.4.5-lts.2",
     "multer-storage-cloudinary": "^4.0.0",
-    "nodemon": "^3.1.9",
     "resend": "^4.5.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.13"
   }
 }

@@ -1,8 +1,7 @@
 import { Resend } from "resend";
-import dotenv from "dotenv"
-dotenv.config()
+import { env } from "../config/env.config.js";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+const resend = new Resend(env.resend_api_key);
 
 export const handleSendMessage = async (req, res) => {
     try {
