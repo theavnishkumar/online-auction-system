@@ -5,7 +5,7 @@ export const env = {
   port: process.env.PORT || 4000,
   origin: process.env.ORIGIN,
   node_env: process.env.NODE_ENV,
-  mongo_uri: process.env.MONGO_URI,
+  mongo_uri: process.env.MONGO_URL,
   jwt_secret: process.env.JWT_SECRET,
   jwt_expires_in: process.env.JWT_EXPIRES_IN || "7d",
   cookie_domain: process.env.COOKIE_DOMAIN, // e.g., ".ihavetech.com" for cross-subdomain

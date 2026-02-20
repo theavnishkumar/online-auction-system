@@ -1,13 +1,6 @@
 import mongoose from "mongoose";
 import { env } from "../config/env.config.js";
 
-const MONGO_URI = env.mongo_uri;
-
-if (!MONGO_URI) {
-  console.error("MongoDB connection URI is not defined in environment variables.");
-  process.exit(1);
-}
-
 let cached = global.mongoose;
 
 if (!cached) {
@@ -18,6 +11,15 @@ if (!cached) {
 }
 
 export const connectDB = async () => {
+  // Check for MONGO_URI when connecting, not at module load
+  const MONGO_URI = env.mongo_uri;
+
+  if (!MONGO_URI) {
+    throw new Error(
+      "MongoDB connection URI is not defined in environment variables. Please set MONGO_URI in your environment.",
+    );
+  }
+
   if (cached.conn) return cached.conn;
 
   if (!cached.promise) {
