@@ -1,12 +1,10 @@
 import { useState } from "react";
-import { useMutation } from "@tanstack/react-query";
-import { changePassword } from "../api/user";
 import { CiMail, CiUser, CiLock, CiCamera } from "react-icons/ci";
 import { useSelector } from "react-redux";
-import LoadingScreen from "../components/LoadingScreen";
+import { useChangePassword } from "../hooks/useUser";
 
 export default function Profile() {
-  const { user} = useSelector((state) => state.auth);
+  const { user } = useSelector((state) => state.auth);
   const [isError, setIsError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const [formData, setFormData] = useState({
@@ -15,8 +13,7 @@ export default function Profile() {
     confirmPassword: "",
   });
 
-  const { mutate, isPending } = useMutation({
-    mutationFn: () => changePassword(formData),
+  const { mutate, isPending } = useChangePassword({
     onSuccess: () => {
       setSuccessMessage("Password Changed Successfully");
       setTimeout(() => {

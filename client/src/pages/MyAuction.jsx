@@ -1,17 +1,11 @@
 import { useState } from "react";
 import AuctionCard from "../components/AuctionCard";
-import { useQuery } from "@tanstack/react-query";
-import { getMyAuctions } from "../api/auction";
 import LoadingScreen from "../components/LoadingScreen";
+import { useGetMyAuctions } from "../hooks/useAuction";
 
 export const MyAuction = () => {
   const [filter, setFilter] = useState("all");
-  const { data, isLoading } = useQuery({
-    queryKey: ["myauctions"],
-    queryFn: getMyAuctions,
-    staleTime: 30 * 1000,
-  });
-
+  const { data, isLoading } = useGetMyAuctions();
   if (isLoading) return <LoadingScreen />;
 
   const categories = [

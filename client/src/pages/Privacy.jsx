@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { use, useState } from "react";
 import { Link } from "react-router";
 import {
   CiCalendar,
@@ -7,16 +7,11 @@ import {
   CiServer,
   CiMonitor,
 } from "react-icons/ci";
-import { useQuery } from "@tanstack/react-query";
-import { loginHistory } from "../api/user";
 import LoadingScreen from "../components/LoadingScreen";
+import { useLoginHistory } from "../hooks/useUser";
 
 export default function Privacy() {
-  const { data, isLoading } = useQuery({
-    queryFn: loginHistory,
-    queryKey: ["userLogins"],
-    staleTime: 60 * 1000 * 5,
-  });
+  const { data, isLoading } = useLoginHistory();
 
   if (isLoading) return <LoadingScreen />;
 

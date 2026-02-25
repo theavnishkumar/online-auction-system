@@ -11,15 +11,15 @@ export const handleUserLogin = async (req, res) => {
     return res.status(400).json({ error: "All Fields are required" });
   try {
     const user = await User.findOne({ email });
-    //  Checking user exists
+    //  Checking user exists — use same message to prevent user enumeration
     if (!user) {
-      return res.status(400).json({ error: "User not found" });
+      return res.status(401).json({ error: "Invalid email or password" });
     }
 
     // Password Validate
     const psswordValidate = await bcrypt.compare(password, user.password);
     if (!psswordValidate) {
-      return res.status(401).json({ error: "Invalid Credentials" });
+      return res.status(401).json({ error: "Invalid email or password" });
     }
 
     // generating jwt token
@@ -65,6 +65,14 @@ export const handleUserSignup = async (req, res) => {
   if (!name || !email || !password) {
     return res.status(400).json({ error: "All fields are required" });
   }
+
+  // Server-side password strength validation
+  if (password.length < 8) {
+    return res
+      .status(400)
+      .json({ error: "Password must be at least 8 characters long" });
+  }
+
   try {
     const existingUser = await User.findOne({ email });
 

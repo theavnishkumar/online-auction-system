@@ -1,6 +1,7 @@
-import uploadImage from "../services/cloudinaryService.js";
+import getImageUrl from "../services/cloudinaryService.js";
 import Product from "../models/product.model.js";
 import mongoose from "mongoose";
+import { getIO } from "../socket/index.js";
 
 export const createAuction = async (req, res) => {
   try {
@@ -16,7 +17,7 @@ export const createAuction = async (req, res) => {
 
     if (req.file) {
       try {
-        imageUrl = await uploadImage(req.file);
+        imageUrl = getImageUrl(req.file);
       } catch (error) {
         return res.status(500).json({
           message: "Error uploading image to Cloudinary",
@@ -64,16 +65,16 @@ export const showAuction = async (req, res) => {
         "itemName itemDescription currentPrice bids itemEndDate itemCategory itemPhoto seller",
       )
       .sort({ createdAt: -1 });
-    const formatted = auction.map((auction) => ({
-      _id: auction._id,
-      itemName: auction.itemName,
-      itemDescription: auction.itemDescription,
-      currentPrice: auction.currentPrice,
-      bidsCount: auction.bids.length,
-      timeLeft: Math.max(0, new Date(auction.itemEndDate) - new Date()),
-      itemCategory: auction.itemCategory,
-      sellerName: auction.seller.name,
-      itemPhoto: auction.itemPhoto,
+    const formatted = auction.map((item) => ({
+      _id: item._id,
+      itemName: item.itemName,
+      itemDescription: item.itemDescription,
+      currentPrice: item.currentPrice,
+      bidsCount: item.bids.length,
+      timeLeft: Math.max(0, new Date(item.itemEndDate) - new Date()),
+      itemCategory: item.itemCategory,
+      sellerName: item.seller.name,
+      itemPhoto: item.itemPhoto,
     }));
 
     res.status(200).json(formatted);
@@ -90,6 +91,11 @@ export const auctionById = async (req, res) => {
     const auction = await Product.findById(id)
       .populate("seller", "name")
       .populate("bids.bidder", "name");
+
+    if (!auction) {
+      return res.status(404).json({ message: "Auction not found" });
+    }
+
     auction.bids.sort((a, b) => new Date(b.bidTime) - new Date(a.bidTime));
     res.status(200).json(auction);
   } catch (error) {
@@ -101,12 +107,23 @@ export const auctionById = async (req, res) => {
 
 export const placeBid = async (req, res) => {
   try {
-    const { bidAmount } = req.body;
+    const bidAmount = Number(req.body.bidAmount);
     const user = req.user.id;
     const { id } = req.params;
 
-    const product = await Product.findById(id).populate("bids.bidder", "name");
+    if (isNaN(bidAmount)) {
+      return res.status(400).json({ message: "Invalid bid amount" });
+    }
+
+    const product = await Product.findById(id);
     if (!product) return res.status(404).json({ message: "Auction not found" });
+
+    // Prevent seller from bidding on their own auction
+    if (product.seller.toString() === user) {
+      return res
+        .status(403)
+        .json({ message: "You cannot bid on your own auction" });
+    }
 
     if (new Date(product.itemEndDate) < new Date())
       return res.status(400).json({ message: "Auction has already ended" });
@@ -122,14 +139,54 @@ export const placeBid = async (req, res) => {
         .status(400)
         .json({ message: `Bid must be at max Rs ${maxBid}` });
 
-    product.bids.push({
-      bidder: user,
-      bidAmount: bidAmount,
-    });
+    // Atomic update to prevent race conditions
+    const updated = await Product.findOneAndUpdate(
+      {
+        _id: id,
+        currentPrice: product.currentPrice,
+        itemEndDate: { $gt: new Date() },
+      },
+      {
+        $set: { currentPrice: bidAmount },
+        $push: { bids: { bidder: user, bidAmount } },
+      },
+      { new: true },
+    );
 
-    product.currentPrice = bidAmount;
-    await product.save();
-    res.status(200).json({ message: "Bid placed successfully" });
+    if (!updated) {
+      return res
+        .status(409)
+        .json({ message: "Bid failed — price changed. Please try again." });
+    }
+
+    // Populate for the response and socket broadcast
+    const populated = await Product.findById(id)
+      .populate("seller", "name")
+      .populate("bids.bidder", "name");
+
+    populated.bids.sort((a, b) => new Date(b.bidTime) - new Date(a.bidTime));
+
+    // Broadcast to all socket users in this auction room
+    try {
+      const io = getIO();
+      const bidderName =
+        populated.bids.find((b) => b.bidder?._id?.toString() === user)?.bidder
+          ?.name || "Someone";
+
+      io.to(id).emit("auction:bidPlaced", {
+        auction: populated,
+        bidderName,
+        bidAmount,
+        message: `${bidderName} placed a bid of Rs ${bidAmount}`,
+      });
+    } catch (socketErr) {
+      // Socket broadcast is best-effort; don't fail the bid
+      console.error("Socket broadcast error:", socketErr.message);
+    }
+
+    res
+      .status(200)
+      .json({ message: "Bid placed successfully", auction: populated });
   } catch (error) {
     res
       .status(500)
@@ -170,32 +227,32 @@ export const dashboardData = async (req, res) => {
       .populate("seller", "name")
       .sort({ createdAt: -1 })
       .limit(3);
-    const latestAuctions = globalAuction.map((auction) => ({
-      _id: auction._id,
-      itemName: auction.itemName,
-      itemDescription: auction.itemDescription,
-      currentPrice: auction.currentPrice,
-      bidsCount: auction.bids.length,
-      timeLeft: Math.max(0, new Date(auction.itemEndDate) - new Date()),
-      itemCategory: auction.itemCategory,
-      sellerName: auction.seller.name,
-      itemPhoto: auction.itemPhoto,
+    const latestAuctions = globalAuction.map((item) => ({
+      _id: item._id,
+      itemName: item.itemName,
+      itemDescription: item.itemDescription,
+      currentPrice: item.currentPrice,
+      bidsCount: item.bids.length,
+      timeLeft: Math.max(0, new Date(item.itemEndDate) - new Date()),
+      itemCategory: item.itemCategory,
+      sellerName: item.seller.name,
+      itemPhoto: item.itemPhoto,
     }));
 
     const userAuction = await Product.find({ seller: userObjectId })
       .populate("seller", "name")
       .sort({ createdAt: -1 })
       .limit(3);
-    const latestUserAuctions = userAuction.map((auction) => ({
-      _id: auction._id,
-      itemName: auction.itemName,
-      itemDescription: auction.itemDescription,
-      currentPrice: auction.currentPrice,
-      bidsCount: auction.bids.length,
-      timeLeft: Math.max(0, new Date(auction.itemEndDate) - new Date()),
-      itemCategory: auction.itemCategory,
-      sellerName: auction.seller.name,
-      itemPhoto: auction.itemPhoto,
+    const latestUserAuctions = userAuction.map((item) => ({
+      _id: item._id,
+      itemName: item.itemName,
+      itemDescription: item.itemDescription,
+      currentPrice: item.currentPrice,
+      bidsCount: item.bids.length,
+      timeLeft: Math.max(0, new Date(item.itemEndDate) - new Date()),
+      itemCategory: item.itemCategory,
+      sellerName: item.seller.name,
+      itemPhoto: item.itemPhoto,
     }));
 
     return res.status(200).json({
@@ -220,16 +277,16 @@ export const myAuction = async (req, res) => {
         "itemName itemDescription currentPrice bids itemEndDate itemCategory itemPhoto seller",
       )
       .sort({ createdAt: -1 });
-    const formatted = auction.map((auction) => ({
-      _id: auction._id,
-      itemName: auction.itemName,
-      itemDescription: auction.itemDescription,
-      currentPrice: auction.currentPrice,
-      bidsCount: auction.bids.length,
-      timeLeft: Math.max(0, new Date(auction.itemEndDate) - new Date()),
-      itemCategory: auction.itemCategory,
-      sellerName: auction.seller.name,
-      itemPhoto: auction.itemPhoto,
+    const formatted = auction.map((item) => ({
+      _id: item._id,
+      itemName: item.itemName,
+      itemDescription: item.itemDescription,
+      currentPrice: item.currentPrice,
+      bidsCount: item.bids.length,
+      timeLeft: Math.max(0, new Date(item.itemEndDate) - new Date()),
+      itemCategory: item.itemCategory,
+      sellerName: item.seller.name,
+      itemPhoto: item.itemPhoto,
     }));
 
     res.status(200).json(formatted);

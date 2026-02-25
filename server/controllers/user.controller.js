@@ -36,6 +36,12 @@ export const handleChangePassword = async (req, res) => {
         .json({ error: "You can't reuse the old password." });
     }
 
+    if (newPassword.length < 8) {
+      return res
+        .status(400)
+        .json({ error: "New password must be at least 8 characters long." });
+    }
+
     const userID = req.user.id;
 
     const user = await User.findById(userID);

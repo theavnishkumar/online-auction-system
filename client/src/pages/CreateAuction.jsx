@@ -1,12 +1,9 @@
-import { useState } from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { createAuction } from "../api/auction.js";
-import { useRef } from "react";
+import { useState, useRef } from "react";
 import { useNavigate } from "react-router";
+import { useCreateAuction } from "../hooks/useAuction.js";
 
 export const CreateAuction = () => {
   const fileInputRef = useRef();
-  const queryClient = useQueryClient();
   const navigate = useNavigate();
   const [error, setError] = useState("");
   const [formData, setFormData] = useState({
@@ -19,8 +16,7 @@ export const CreateAuction = () => {
     itemPhoto: "",
   });
 
-  const { mutate, isPending } = useMutation({
-    mutationFn: createAuction,
+  const { mutate, isPending } = useCreateAuction({
     onSuccess: (data) => {
       setFormData({
         itemName: "",
@@ -32,11 +28,6 @@ export const CreateAuction = () => {
         itemPhoto: "",
       });
       setError("");
-      queryClient.invalidateQueries({ queryKey: ["viewAuctions"] });
-      queryClient.invalidateQueries({ queryKey: ["allAuction"] });
-      queryClient.invalidateQueries({ queryKey: ["myauctions"] });
-      queryClient.invalidateQueries({ queryKey: ["stats"] });
-
       navigate(`/auction/${data.newAuction._id}`);
     },
     onError: (error) =>

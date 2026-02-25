@@ -15,3 +15,14 @@ export const env = {
   cloudinary_url: process.env.CLOUDINARY_URL,
   resend_api_key: process.env.RESEND_API_KEY,
 };
+
+// Validate critical environment variables at startup
+const requiredVars = ["mongo_uri", "jwt_secret", "origin"];
+for (const key of requiredVars) {
+  if (!env[key]) {
+    console.error(
+      `FATAL: Missing required environment variable: ${key.toUpperCase()}`,
+    );
+    process.exit(1);
+  }
+}

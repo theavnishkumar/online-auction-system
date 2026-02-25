@@ -1,0 +1,74 @@
+name: Deploy Backend to AWS EC2
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "server/**"
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    name: Deploy to EC2
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install server dependencies
+        working-directory: ./server
+        run: npm ci --omit=dev
+
+      - name: Deploy to EC2 via SSH
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          port: ${{ secrets.EC2_SSH_PORT || 22 }}
+          script: |
+            set -e
+
+            # Navigate to project directory
+            cd ${{ secrets.EC2_PROJECT_PATH || '~/online-auction-system' }}
+
+            # Pull latest changes
+            git pull origin main
+
+            # Install dependencies
+            cd server
+            npm ci --omit=dev
+
+            # Set environment variables from secrets
+            cat > .env << 'EOF'
+            PORT=${{ secrets.PORT }}
+            ORIGIN=${{ secrets.ORIGIN }}
+            NODE_ENV=production
+            MONGO_URL=${{ secrets.MONGO_URL }}
+            JWT_SECRET=${{ secrets.JWT_SECRET }}
+            JWT_EXPIRES_IN=${{ secrets.JWT_EXPIRES_IN }}
+            COOKIE_DOMAIN=${{ secrets.COOKIE_DOMAIN }}
+            CLOUDINARY_CLOUD_NAME=${{ secrets.CLOUDINARY_CLOUD_NAME }}
+            CLOUDINARY_API_KEY=${{ secrets.CLOUDINARY_API_KEY }}
+            CLOUDINARY_API_SECRET=${{ secrets.CLOUDINARY_API_SECRET }}
+            CLOUDINARY_URL=${{ secrets.CLOUDINARY_URL }}
+            RESEND_API_KEY=${{ secrets.RESEND_API_KEY }}
+            EOF
+
+            # Restart server using PM2
+            if pm2 describe auction-server > /dev/null 2>&1; then
+              pm2 restart auction-server
+            else
+              pm2 start server.js --name auction-server
+            fi
+
+            pm2 save
+
+            echo "Deployment completed successfully"

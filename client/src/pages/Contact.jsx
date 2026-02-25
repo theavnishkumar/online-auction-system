@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { FiSend } from "react-icons/fi";
-import { useMutation } from "@tanstack/react-query";
-import { sendMessage } from "../api/contact";
+import { useSendMessage } from "../hooks/useContact";
 
 export const Contact = () => {
   const [formData, setFormData] = useState({
@@ -13,8 +12,7 @@ export const Contact = () => {
   const [submitted, setSubmitted] = useState(false);
   const [isError, setIsError] = useState("");
 
-  const { isPending, mutate } = useMutation({
-    mutationFn: () => sendMessage(formData),
+  const { isPending, mutate } = useSendMessage({
     onSuccess: () => {
       setFormData({
         name: "",

@@ -22,6 +22,7 @@ auctionRoutes
 
 auctionRoutes.get("/myauction", myAuction);
 
-auctionRoutes.route("/:id").get(auctionById).post(placeBid);
+auctionRoutes.get("/:id", auctionById);
+auctionRoutes.post("/:id/bid", placeBid);
 
 export default auctionRoutes;

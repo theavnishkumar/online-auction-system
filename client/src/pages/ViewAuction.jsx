@@ -1,49 +1,56 @@
-import { useRef } from "react";
-import { useParams, Link } from "react-router";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { placeBid, viewAuction } from "../api/auction.js";
+import { useRef, useState } from "react";
+import { useParams } from "react-router";
 import { useSelector } from "react-redux";
+import { useViewAuction, usePlaceBid } from "../hooks/useAuction.js";
+import { useSocket } from "../hooks/useSocket.js";
 import LoadingScreen from "../components/LoadingScreen.jsx";
+import toast from "react-hot-toast";
 
 export const ViewAuction = () => {
   const { id } = useParams();
   const { user } = useSelector((state) => state.auth);
-  const queryClient = useQueryClient();
   const inputRef = useRef();
+  const [bidding, setBidding] = useState(false);
 
-  const { data, isLoading } = useQuery({
-    queryKey: ["viewAuctions", id],
-    queryFn: () => viewAuction(id),
-    staleTime: 30 * 1000,
-    placeholderData: () => undefined,
-  });
+  const { data: fetchedData, isLoading } = useViewAuction(id);
 
-  const placeBidMutate = useMutation({
-    mutationFn: ({ bidAmount, id }) => placeBid({ bidAmount, id }),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["viewAuctions"] });
-      if (inputRef.current) inputRef.current.value = "";
-    },
-    onError: (error) => {
-      console.log("Error: ", error.message);
-    },
-  });
+  // REST mutation for placing bids (reliable)
+  const { mutateAsync: placeBidMutation } = usePlaceBid();
+
+  // Socket.io for live updates (active users, real-time bid notifications)
+  const { activeUsers, liveAuction, socketError, isConnected } = useSocket(id);
 
   if (isLoading) return <LoadingScreen />;
 
-  const handleBidSubmit = (e) => {
+  // Use live data from socket if available, else fallback to fetched data
+  const data = liveAuction || fetchedData;
+
+  const handleBidSubmit = async (e) => {
     e.preventDefault();
-    let bidAmount = e.target.bidAmount.value.trim();
-    placeBidMutate.mutate({ bidAmount, id });
+    const bidAmount = e.target.bidAmount.value.trim();
+    if (!bidAmount) return;
+
+    setBidding(true);
+    try {
+      await placeBidMutation({ bidAmount: Number(bidAmount), id });
+      toast.success("Bid placed successfully!");
+      if (inputRef.current) inputRef.current.value = "";
+    } catch (err) {
+      const msg = err.response?.data?.message || "Failed to place bid";
+      toast.error(msg);
+    } finally {
+      setBidding(false);
+    }
   };
 
   const daysLeft = Math.ceil(
-    Math.max(0, new Date(data.itemEndDate) - new Date()) / (1000 * 60 * 60 * 24)
+    Math.max(0, new Date(data.itemEndDate) - new Date()) /
+      (1000 * 60 * 60 * 24),
   );
   const isActive = Math.max(0, new Date(data.itemEndDate) - new Date()) > 0;
 
   return (
-    <div className="min-h-screen bg-gray-50  mx-auto container">
+    <div className="min-h-screen bg-gray-50 mx-auto container">
       <main className="max-w-7xl mx-auto px-4 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Image Section */}
@@ -81,6 +88,42 @@ export const ViewAuction = () => {
                 {data.itemDescription}
               </p>
             </div>
+
+            {/* Connection Status & Active Users */}
+            <div className="flex items-center gap-2">
+              <span
+                className={`inline-block w-2 h-2 rounded-full ${
+                  isConnected ? "bg-green-500" : "bg-red-500"
+                }`}
+              />
+              <span className="text-xs text-gray-500">
+                {isConnected ? "Live" : "Connecting..."}
+              </span>
+            </div>
+            {activeUsers.length > 0 && (
+              <div className="bg-blue-50 p-4 rounded-md border border-blue-200">
+                <h3 className="text-sm font-semibold text-blue-800 mb-2">
+                  Live Users ({activeUsers.length})
+                </h3>
+                <div className="flex flex-wrap gap-2">
+                  {activeUsers.map((u) => (
+                    <span
+                      key={u.userId}
+                      className="bg-blue-100 text-blue-700 px-2 py-1 rounded-md text-xs font-medium"
+                    >
+                      {u.userName}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Socket Error */}
+            {socketError && (
+              <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md text-sm">
+                {socketError}
+              </div>
+            )}
 
             {/* Pricing Info */}
             <div className="bg-white p-6 rounded-md shadow-md border border-gray-200">
@@ -146,9 +189,14 @@ export const ViewAuction = () => {
                   </div>
                   <button
                     type="submit"
-                    className="w-full bg-blue-600 text-white py-3 px-4 rounded-md hover:bg-blue-700 transition-colors font-medium"
+                    disabled={bidding}
+                    className={`w-full py-3 px-4 rounded-md transition-colors font-medium ${
+                      bidding
+                        ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                        : "bg-blue-600 text-white hover:bg-blue-700"
+                    }`}
                   >
-                    Place Bid
+                    {bidding ? "Placing Bid..." : "Place Bid"}
                   </button>
                 </form>
               </div>

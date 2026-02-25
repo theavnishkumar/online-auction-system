@@ -1,15 +1,10 @@
 import AuctionCard from "../components/AuctionCard.jsx";
 import { Link } from "react-router";
-import { useQuery } from "@tanstack/react-query";
-import { dashboardStats } from "../api/auction.js";
 import LoadingScreen from "../components/LoadingScreen.jsx";
+import { useDashboardStats } from "../hooks/useAuction.js";
 
 const Dashboard = () => {
-  const { data, isLoading } = useQuery({
-    queryKey: ["stats"],
-    queryFn: () => dashboardStats(),
-    staleTime: 30 * 1000,
-  });
+  const { data, isLoading } = useDashboardStats();
 
   if (isLoading) return <LoadingScreen />;
 
