@@ -9,14 +9,14 @@ import { Auction } from "../components/Landing/Auction";
 export const Landing = () => {
   const { user, loading } = useSelector((state) => state.auth);
 
-  if(loading) return <LoadingScreen/>
-  
+  if (loading) return <LoadingScreen />;
+
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen">
       {!user && (
         <>
           <Hero />
-          <Auction/>
+          <Auction />
           <Features />
           <CTA />
         </>

@@ -6,6 +6,7 @@ import {
   placeBid,
   dashboardData,
   myAuction,
+  myBids,
 } from "../controllers/auction.controller.js";
 import upload from "../middleware/multer.js";
 import { secureRoute } from "../middleware/auth.middleware.js";
@@ -21,6 +22,7 @@ auctionRoutes
   .post(upload.single("itemPhoto"), createAuction);
 
 auctionRoutes.get("/myauction", myAuction);
+auctionRoutes.get("/mybids", myBids);
 
 auctionRoutes.get("/:id", auctionById);
 auctionRoutes.post("/:id/bid", placeBid);

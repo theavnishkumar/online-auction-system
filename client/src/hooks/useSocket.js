@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from "react";
 import { connectSocket } from "../config/socket.js";
 import toast from "react-hot-toast";
 
-export const useSocket = (auctionId) => {
+export const useSocket = (auctionId, currentUserId) => {
   const [activeUsers, setActiveUsers] = useState([]);
   const [liveAuction, setLiveAuction] = useState(null);
   const [socketError, setSocketError] = useState(null);
@@ -15,7 +15,6 @@ export const useSocket = (auctionId) => {
     const socket = connectSocket();
 
     const handleConnect = () => {
-      console.log("Socket connected:", socket.id);
       setIsConnected(true);
       if (!joinedRef.current) {
         socket.emit("auction:join", { auctionId });
@@ -23,25 +22,26 @@ export const useSocket = (auctionId) => {
       }
     };
 
-    const handleUserJoined = ({ userName, activeUsers: users }) => {
-      console.log("User joined:", userName, "Active users:", users);
+    const handleUserJoined = ({ userName, userId, activeUsers: users }) => {
       setActiveUsers(users || []);
-      if (userName) {
+      // Only show toast for OTHER users joining, not yourself
+      if (userName && userId !== currentUserId) {
         toast(`${userName} joined the auction`, { icon: "\uD83D\uDC4B" });
       }
     };
 
-    const handleUserLeft = ({ userName, activeUsers: users }) => {
+    const handleUserLeft = ({ userName, userId, activeUsers: users }) => {
       setActiveUsers(users || []);
-      if (userName) {
+      // Only show toast for OTHER users leaving
+      if (userName && userId !== currentUserId) {
         toast(`${userName} left the auction`, { icon: "\uD83D\uDEAA" });
       }
     };
 
-    const handleBidPlaced = ({ auction, bidderName, bidAmount }) => {
-      console.log("Bid placed via socket:", bidderName, bidAmount);
+    const handleBidPlaced = ({ auction, bidderName, bidAmount, bidderId }) => {
       setLiveAuction(auction);
-      if (bidderName) {
+      // Only show "X placed a bid" for OTHER users, not yourself
+      if (bidderName && bidderId !== currentUserId) {
         toast.success(`${bidderName} placed a bid of Rs ${bidAmount}`);
       }
     };
@@ -52,8 +52,7 @@ export const useSocket = (auctionId) => {
       setTimeout(() => setSocketError(null), 5000);
     };
 
-    const handleDisconnect = (reason) => {
-      console.log("Socket disconnected:", reason);
+    const handleDisconnect = () => {
       setIsConnected(false);
       joinedRef.current = false;
     };
@@ -89,7 +88,7 @@ export const useSocket = (auctionId) => {
       socket.off("disconnect", handleDisconnect);
       joinedRef.current = false;
     };
-  }, [auctionId]);
+  }, [auctionId, currentUserId]);
 
   return { activeUsers, liveAuction, socketError, isConnected };
 };

@@ -37,7 +37,7 @@ export const handleSendMessage = async (req, res) => {
 
     await resend.batch.send([
       {
-        from: `Online Auction <onboarding@resend.dev>`,
+        from: `Online Auction <noreply@ihavetech.com>`,
         to: ["hi@ihavetech.com"],
         reply_to: email,
         subject: `${safeName} sent a message`,

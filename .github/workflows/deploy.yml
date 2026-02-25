@@ -1,4 +1,4 @@
-name: Deploy Backend to AWS EC2
+name: Deploy Backend
 
 on:
   push:
@@ -14,39 +14,23 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: "20"
-
-      - name: Install server dependencies
-        working-directory: ./server
-        run: npm ci --omit=dev
-
-      - name: Deploy to EC2 via SSH
+      - name: Deploy to EC2
         uses: appleboy/ssh-action@v1
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
-          port: ${{ secrets.EC2_SSH_PORT || 22 }}
           script: |
             set -e
 
-            # Navigate to project directory
-            cd ${{ secrets.EC2_PROJECT_PATH || '~/online-auction-system' }}
+            cd /home/ubuntu/online-auction-system
 
-            # Pull latest changes
-            git pull origin main
+            git fetch --all
+            git reset --hard origin/main
 
-            # Install dependencies
             cd server
             npm ci --omit=dev
 
-            # Set environment variables from secrets
             cat > .env << 'EOF'
             PORT=${{ secrets.PORT }}
             ORIGIN=${{ secrets.ORIGIN }}
@@ -62,9 +46,8 @@ jobs:
             RESEND_API_KEY=${{ secrets.RESEND_API_KEY }}
             EOF
 
-            # Restart server using PM2
             if pm2 describe auction-server > /dev/null 2>&1; then
-              pm2 restart auction-server
+              pm2 reload auction-server
             else
               pm2 start server.js --name auction-server
             fi

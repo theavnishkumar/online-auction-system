@@ -1,14 +1,20 @@
 import { api } from "../config/api.js";
 
 // getting list of all auction
-export const getAuctions = async () => {
-  const res = await api.get(`/auction`);
+export const getAuctions = async ({ page = 1, limit = 12 } = {}) => {
+  const res = await api.get(`/auction?page=${page}&limit=${limit}`);
   return res.data;
 };
 
 // getting list of my auctions
-export const getMyAuctions = async () => {
-  const res = await api.get(`/auction/myauction`);
+export const getMyAuctions = async ({ page = 1, limit = 12 } = {}) => {
+  const res = await api.get(`/auction/myauction?page=${page}&limit=${limit}`);
+  return res.data;
+};
+
+// getting list of auctions user has bid on
+export const getMyBids = async ({ page = 1, limit = 12 } = {}) => {
+  const res = await api.get(`/auction/mybids?page=${page}&limit=${limit}`);
   return res.data;
 };
 
