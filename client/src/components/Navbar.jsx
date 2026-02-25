@@ -394,6 +394,11 @@ const adminNavLink = [
     icon: <RiAuctionLine className="h-5 w-5" />,
   },
   {
+    name: "My Auctions",
+    link: "/myauction",
+    icon: <MdAttachMoney className="h-5 w-5" />,
+  },
+  {
     name: "My Bids",
     link: "/mybids",
     icon: <FiTarget className="h-5 w-5" />,

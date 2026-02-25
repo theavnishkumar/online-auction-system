@@ -1,616 +1,421 @@
-# 🛒 Online Auction System - MERN Stack Web App
+<div align="center">
 
-![Status](https://img.shields.io/badge/Status-Active-brightgreen)
-![License](https://img.shields.io/github/license/theavnishkumar/online-auction-system)
-![PRs Welcome](https://img.shields.io/badge/PRs-Welcome-blue)
-![Issues](https://img.shields.io/github/issues/theavnishkumar/online-auction-system)
-![Forks](https://img.shields.io/github/forks/theavnishkumar/online-auction-system?style=social)
-![Stars](https://img.shields.io/github/stars/theavnishkumar/online-auction-system?style=social)
+# Online Auction System
+
+### A full-stack real-time auction platform built with the MERN stack
+
+[![Live Demo](https://img.shields.io/badge/Live-auction.ihavetech.com-indigo?style=for-the-badge&logo=googlechrome&logoColor=white)](https://auction.ihavetech.com)
+
+![Status](https://img.shields.io/badge/Status-Active-brightgreen?style=flat-square)
+![License](https://img.shields.io/github/license/theavnishkumar/online-auction-system?style=flat-square)
+![PRs Welcome](https://img.shields.io/badge/PRs-Welcome-blue?style=flat-square)
+![Issues](https://img.shields.io/github/issues/theavnishkumar/online-auction-system?style=flat-square)
+![Forks](https://img.shields.io/github/forks/theavnishkumar/online-auction-system?style=flat-square)
+![Stars](https://img.shields.io/github/stars/theavnishkumar/online-auction-system?style=flat-square)
+![Last Commit](https://img.shields.io/github/last-commit/theavnishkumar/online-auction-system?style=flat-square)
+
+**Create auctions · Bid in real-time · Manage everything from an admin panel**
+
+[Live Demo](https://auction.ihavetech.com) · [Report Bug](https://github.com/theavnishkumar/online-auction-system/issues) · [Request Feature](https://github.com/theavnishkumar/online-auction-system/issues) · [Backend Docs](./server/README.md) · [Frontend Docs](./client/README.md)
+
+</div>
 
 ---
 
-An **Online Auction System** built with the **MERN stack (MongoDB, Express, React, Node.js)** that allows users to create auctions, upload images, and bid on products in real-time. Features include a comprehensive **Admin Dashboard** for managing auctions and users, secure authentication, and real-time device tracking.
+## Screenshots
 
-> 🎓 **Major project / Minor project** for Computer Science Engineering – built by **Avnish Kumar** for full-stack learning and portfolio development.
+> Click any image to view full size
 
-This system supports secure login via **httpOnly cookies**, tracks device & location on login, role-based access control with admin privileges, and is structured with clean code using modern tools like **Redux Toolkit**, **React Router v7**, and **Cloudinary**.
+<table>
+<tr>
+<td width="33%" align="center">
+<b>Landing Page</b><br><br>
+<a href="screenshots/landingpage.png"><img src="screenshots/landingpage.png" alt="Landing Page" /></a>
+</td>
+<td width="33%" align="center">
+<b>User Dashboard</b><br><br>
+<a href="screenshots/dashboard.png"><img src="screenshots/dashboard.png" alt="Dashboard" /></a>
+</td>
+<td width="33%" align="center">
+<b>Auction Page</b><br><br>
+<a href="screenshots/auctionpage.png"><img src="screenshots/auctionpage.png" alt="Auction Page" /></a>
+</td>
+</tr>
+<tr>
+<td width="33%" align="center">
+<b>Auction Winner</b><br><br>
+<a href="screenshots/auctionwinner.png"><img src="screenshots/auctionwinner.png" alt="Auction Winner" /></a>
+</td>
+<td width="33%" align="center">
+<b>My Bids</b><br><br>
+<a href="screenshots/mybids.png"><img src="screenshots/mybids.png" alt="My Bids" /></a>
+</td>
+<td width="33%" align="center">
+<b>Admin Dashboard</b><br><br>
+<a href="screenshots/admindashboard.png"><img src="screenshots/admindashboard.png" alt="Admin Dashboard" /></a>
+</td>
+</tr>
+</table>
 
-## Live Preview [Visit Website](https://auction.ihavetech.com)
+---
 
-![image](https://github.com/user-attachments/assets/719ec319-d1d3-4e17-9b0b-ae5db8cfd6b4)
+## Why This Project?
+
+Most auction system tutorials stop at basic CRUD. This project goes much further:
+
+- **Real-time bidding** — Socket.io rooms with atomic MongoDB updates prevent race conditions
+- **Production security** — httpOnly cookies, JWT auth, XSS-safe email templates, input sanitization
+- **Smart UX** — Hover prefetching, View Transitions API, live countdown timers, auto-winner detection
+- **Deployment-ready** — CI/CD pipeline, Vercel serverless support, AWS EC2 with PM2, graceful shutdown
+
+> Built as a **Major Project for Computer Science Engineering** by [Avnish Kumar](https://github.com/theavnishkumar), designed to be a real-world reference for full-stack MERN development.
+
+---
+
+## Features
+
+| Category              | Features                                                                                                                                                                       |
+| --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Authentication**    | JWT with httpOnly secure cookies · Auto-login on refresh · Role-based access (User/Admin) · Password change with validation                                                    |
+| **Auctions**          | Create with image upload (Cloudinary) · Browse with pagination · Category filtering · Live countdown timers · Auto-winner detection on expiry                                  |
+| **Real-time Bidding** | Socket.io room-based architecture · Atomic bid updates (no race conditions) · Live active user count · Instant bid broadcast to all viewers · Seller cannot bid on own auction |
+| **Dashboard**         | Personal stats (total/active auctions) · Recent auctions grid · Quick navigation to all sections                                                                               |
+| **Admin Panel**       | System-wide statistics · User management with search, sort, pagination · Recent signups tracking · Role-based route protection                                                 |
+| **Security**          | Login tracking (IP, geo-location, device, browser) · Login history per user · bcrypt password hashing · Environment variable validation at startup                             |
+| **Email**             | Contact form with Resend · Dual email (admin notification + user confirmation) · XSS-safe HTML templates                                                                       |
+| **Performance**       | React Query caching · Hover-based data prefetching · View Transitions API page animations · gzip compression · Optimized MongoDB indexes                                       |
+| **Deployment**        | GitHub Actions CI/CD → AWS EC2 · Vercel serverless support · PM2 process management · Graceful shutdown handling                                                               |
 
 ---
 
 ## Tech Stack
 
-### Frontend
+<table>
+<tr><td><b>Frontend</b></td><td><b>Backend</b></td><td><b>Infrastructure</b></td></tr>
+<tr><td>
 
-- React 19 (Vite + JSX)
-- Tailwind CSS
-- React Router v7+
-- Axios
-- TanStack Query (React Query)
-- Redux Toolkit (for global state)
+React 19 + Vite  
+Tailwind CSS v4  
+React Router v7  
+Redux Toolkit  
+TanStack React Query  
+Socket.io Client  
+React Hot Toast
 
-### Backend
+</td><td>
 
-- Node.js + Express.js
-- MongoDB + Mongoose
-- Socket.io (real-time live bidding)
-- Multer (image upload)
-- JWT Authentication (with `httpOnly` cookies)
-- Cloudinary (image hosting)
-- Device, Browser, IP, and Geo-location logging
+Node.js + Express 5  
+MongoDB + Mongoose  
+Socket.io  
+JWT + bcrypt  
+Cloudinary + Multer  
+Resend (email)  
+Compression
 
----
+</td><td>
 
-## Folder Structure
+AWS EC2  
+Vercel (frontend)  
+GitHub Actions CI/CD  
+PM2  
+Cloudinary CDN
 
-```
-online-auction-system/
-├── .github/
-│   └── workflows/           # GitHub Actions CI/CD
-│       └── deploy.yml       # AWS EC2 deployment workflow
-├── client/                    # React frontend
-│   ├── public/               # Static assets
-│   ├── src/
-│   │   ├── api/             # Legacy API service functions
-│   │   ├── assets/          # Images and media
-│   │   ├── components/      # Reusable React components
-│   │   ├── config/          # API and Socket configuration
-│   │   ├── hooks/           # Custom React Query hooks
-│   │   ├── init/            # Authentication initialization
-│   │   ├── layout/          # Layout components (Main, Admin, Open)
-│   │   ├── pages/           # Page components
-│   │   │   ├── Admin/       # Admin-specific pages
-│   │   │   └── legal/       # Legal pages (Privacy, Terms, etc.)
-│   │   ├── routers/         # Route configurations
-│   │   ├── services/        # API service layer (centralized axios)
-│   │   ├── store/           # Redux store and slices
-│   │   └── utils/           # Utility functions
-│   ├── package.json
-│   └── vite.config.js
-│
-└── server/                   # Express backend
-    ├── config/              # Environment and DB configuration
-    ├── controllers/         # Request handlers
-    ├── middleware/          # Custom middleware (auth, multer)
-    ├── models/             # MongoDB/Mongoose models
-    ├── routes/             # API route definitions
-    ├── services/           # External service integrations
-    ├── socket/             # Socket.io handlers
-    │   ├── index.js        # Socket initialization and setup
-    │   └── auction.handler.js # Auction room and bid handlers
-    ├── utils/              # Utility functions
-    ├── app.js              # Express app configuration
-    ├── server.js           # Server entry point with Socket.io
-    ├── index.js            # Vercel serverless export
-    └── package.json
-```
+</td></tr>
+</table>
 
 ---
 
-## Environment Variables
+## Quick Start
 
-### Backend `.env`
+### Prerequisites
+
+- **Node.js** 20+ and npm
+- **MongoDB** (local or [Atlas](https://www.mongodb.com/atlas))
+- **Cloudinary** account ([free tier](https://cloudinary.com/))
+
+### 1. Clone & Install
+
+```bash
+git clone https://github.com/theavnishkumar/online-auction-system.git
+cd online-auction-system
+
+# Install backend
+cd server && npm install
+
+# Install frontend
+cd ../client && npm install
+```
+
+### 2. Environment Variables
+
+**Server** (`server/.env`):
 
 ```env
 PORT=3000
 ORIGIN=http://localhost:5173
-MONGO_URL=<your-mongodb-url>
-JWT_SECRET=<your-jwt-secret>
-JWT_EXPIRES_IN=1d
-CLOUDINARY_CLOUD_NAME=<cloud-name>
-CLOUDINARY_API_KEY=<cloud-key>
-CLOUDINARY_API_SECRET=<cloud-secret>
-CLOUDINARY_URL=<cloudinary-url>
-RESEND_API_KEY=<resend-api-key>
+MONGO_URL=mongodb://localhost:27017/auction
+JWT_SECRET=your-secret-key-here
+JWT_EXPIRES_IN=7d
+CLOUDINARY_CLOUD_NAME=your-cloud-name
+CLOUDINARY_API_KEY=your-api-key
+CLOUDINARY_API_SECRET=your-api-secret
+CLOUDINARY_URL=cloudinary://...
+RESEND_API_KEY=re_xxxxxxxxxxxx
 ```
 
-### Frontend `.env`
+**Client** (`client/.env`):
 
 ```env
 VITE_API=http://localhost:3000
 VITE_AUCTION_API=http://localhost:3000/auction
 ```
 
----
-
-## Getting Started
-
-### 1. Clone the Repository
+### 3. Run
 
 ```bash
-git clone https://github.com/theavnishkumar/online-auction-system.git
-cd online-auction-system
+# Terminal 1 — Backend
+cd server && npm run dev
+
+# Terminal 2 — Frontend
+cd client && npm run dev
 ```
 
-### 2. Setup Backend
-
-```bash
-cd server
-npm install
-cp .env.example .env  # or manually create .env
-npm run dev
-```
-
-### 3. Setup Frontend
-
-```bash
-cd ../client
-npm install
-cp .env.example .env  # or manually create .env
-npm run dev
-```
-
-### 4. Access the Application
-
-- **Frontend**: http://localhost:5173
-- **Backend API**: http://localhost:3000
-- **Admin Panel**: http://localhost:5173/admin (Admin users only)
+Open **http://localhost:5173** — you're live!
 
 ---
 
-## Deployment
-
-### Frontend Deployment (Vercel)
-
-```bash
-cd client
-npm run build
-# Deploy to Vercel or your preferred hosting platform
-```
-
-### Backend Deployment (AWS EC2 via GitHub Actions)
-
-This project includes a CI/CD pipeline that automatically deploys the backend to AWS EC2 on push to `main`.
-
-#### GitHub Actions Setup
-
-1. **Add the following secrets** to your GitHub repository (`Settings > Secrets and variables > Actions`):
-
-   | Secret                  | Description                                                |
-   | ----------------------- | ---------------------------------------------------------- |
-   | `EC2_HOST`              | Public IP or hostname of your EC2 instance                 |
-   | `EC2_USERNAME`          | SSH username (e.g., `ubuntu`, `ec2-user`)                  |
-   | `EC2_SSH_KEY`           | Private SSH key for EC2 access                             |
-   | `EC2_SSH_PORT`          | SSH port (default: 22)                                     |
-   | `EC2_PROJECT_PATH`      | Project directory on EC2 (e.g., `~/online-auction-system`) |
-   | `PORT`                  | Server port                                                |
-   | `ORIGIN`                | Frontend URL for CORS                                      |
-   | `MONGO_URL`             | MongoDB connection string                                  |
-   | `JWT_SECRET`            | JWT signing secret                                         |
-   | `JWT_EXPIRES_IN`        | JWT token expiry (e.g., `7d`)                              |
-   | `COOKIE_DOMAIN`         | Cookie domain for production                               |
-   | `CLOUDINARY_CLOUD_NAME` | Cloudinary cloud name                                      |
-   | `CLOUDINARY_API_KEY`    | Cloudinary API key                                         |
-   | `CLOUDINARY_API_SECRET` | Cloudinary API secret                                      |
-   | `CLOUDINARY_URL`        | Cloudinary URL                                             |
-   | `RESEND_API_KEY`        | Resend email API key                                       |
-
-2. **EC2 Prerequisites**:
-   - Node.js 20+ installed
-   - PM2 installed globally (`npm install -g pm2`)
-   - Git installed and repo cloned
-   - SSH access configured with the key added to `~/.ssh/authorized_keys`
-
-3. **Deployment triggers** on:
-   - Push to `main` branch (only when `server/` files change)
-   - Manual trigger via `workflow_dispatch`
-
-4. **The workflow** will:
-   - Pull latest code on EC2
-   - Install production dependencies
-   - Write environment variables to `.env`
-   - Restart the server using PM2
-
-### Production Environment Variables
-
-Make sure to set all required environment variables in your production environment:
-
-- MongoDB connection string
-- JWT secret key
-- Cloudinary credentials
-- Email service API keys
-- CORS origins for security
-
----
-
-## Authentication (via `httpOnly` Secure Cookies)
-
-- Tokens stored in `httpOnly` cookies (not accessible from JS)
-- Auth is auto-validated on refresh via `/user` route
-- State managed via Redux Toolkit + cookies
-
----
-
-## Socket.io Live Bidding
-
-Real-time bidding is implemented using Socket.io with a room-based architecture.
-
-### Architecture
+## Project Structure
 
 ```
-Client (ViewAuction page)
-  │
-  ├── useSocket hook (manages lifecycle)
-  │     ├── Connects to server socket
-  │     ├── Joins auction room on mount
-  │     ├── Listens for live events
-  │     └── Cleans up on unmount/navigation
-  │
-Server (socket/index.js + auction.handler.js)
-  │
-  ├── initSocket() attaches to HTTP server
-  ├── registerAuctionHandlers() per connection
-  ├── Room-based: each auction ID = one room
-  └── auctionRooms Map tracks users per room
-```
-
-### Socket Events
-
-| Event                | Direction       | Description                                              |
-| -------------------- | --------------- | -------------------------------------------------------- |
-| `auction:join`       | Client → Server | Join auction room with `{ auctionId, userId, userName }` |
-| `auction:leave`      | Client → Server | Leave auction room                                       |
-| `auction:bid`        | Client → Server | Place bid with `{ auctionId, bidAmount, userId }`        |
-| `auction:userJoined` | Server → Room   | Broadcast when a user joins (includes active user list)  |
-| `auction:userLeft`   | Server → Room   | Broadcast when a user leaves                             |
-| `auction:bidPlaced`  | Server → Room   | Broadcast updated auction data after a bid               |
-| `auction:error`      | Server → Client | Send error message to the bidding client                 |
-
-### Cleanup & Memory Safety
-
-- Users are tracked in a `Map<auctionId, Map<socketId, userData>>` structure
-- On `disconnect`, all rooms the socket was in are cleaned up automatically
-- On `auction:leave` (navigation away), the specific room is cleaned
-- Empty rooms are automatically deleted from the map
-- No duplicate listeners: all events use named handler functions with proper `off()` cleanup
-- Socket reconnection is handled automatically via `socket.io-client` with 5 retry attempts
-
-### Client Integration
-
-The `useSocket` hook in `src/hooks/useSocket.js` manages the full socket lifecycle:
-
-- Connects on mount, joins room
-- Returns `{ activeUsers, liveAuction, socketError, placeBid }`
-- `liveAuction` overrides React Query data when a new bid arrives (instant UI update)
-- Properly disconnects and removes all listeners on unmount
-
-### Auth Routes (`/auth`)
-
-| Method | Endpoint       | Description              |
-| ------ | -------------- | ------------------------ |
-| POST   | `/auth/login`  | Login user (sets cookie) |
-| POST   | `/auth/signup` | Register new user        |
-| POST   | `/auth/logout` | Logout user              |
-
-### Auto Login Route
-
-| Method | Endpoint | Description                        |
-| ------ | -------- | ---------------------------------- |
-| GET    | `/user`  | Auto-login if valid cookie present |
-
----
-
-## Auction Routes (`/auction`)
-
-| Method | Endpoint         | Description                            | Access        |
-| ------ | ---------------- | -------------------------------------- | ------------- |
-| GET    | `/auction/stats` | Dashboard stats (active, total, user)  | Authenticated |
-| GET    | `/auction/`      | Get all auction items                  | Public        |
-| POST   | `/auction/`      | Create new auction (with image upload) | Authenticated |
-| GET    | `/auction/:id`   | Get single auction item by ID          | Public        |
-| POST   | `/auction/:id`   | Place a bid on auction item            | Authenticated |
-
----
-
-## User Management Routes (`/user`)
-
-| Method | Endpoint       | Description              | Access        |
-| ------ | -------------- | ------------------------ | ------------- |
-| GET    | `/user`        | Get current user profile | Authenticated |
-| PATCH  | `/user`        | Update user password     | Authenticated |
-| GET    | `/user/logins` | Get user login history   | Authenticated |
-
----
-
-## Contact Routes (`/contact`)
-
-| Method | Endpoint   | Description             | Access     |
-| ------ | ---------- | ----------------------- | ---------- |
-| POST   | `/contact` | Submit contact form     | Public     |
-| GET    | `/contact` | Get contact submissions | Admin Only |
-
----
-
-## Key Features
-
-- **User Authentication** with httpOnly cookies and Redux state management
-- **Live Auction Bidding** - Real-time bidding via Socket.io with room-based architecture
-- **Auction Management** - Create, view, and bid on auction items
-- **Image Upload** - Cloudinary integration for auction item photos
-- **Auto-login** from stored secure cookies
-- **User Dashboard** - Track personal auctions and bidding history
-- **Admin Dashboard** - Comprehensive admin panel for system management
-- **Security Logging** - Track user login activities (IP, location, device)
-- **Role-based Access** - User and Admin role management
-- **Responsive Design** - Mobile-friendly Tailwind CSS interface
-- **RESTful API** - Clean, documented API endpoints
-- **CI/CD Pipeline** - GitHub Actions for automatic AWS EC2 deployment
-
----
-
-## Admin Dashboard Features
-
-The admin dashboard provides comprehensive system management capabilities accessible only to users with admin privileges.
-
-### Dashboard Statistics
-
-- **Active Auctions Count** - Real-time count of ongoing auctions
-- **Total Auctions** - Complete auction history statistics
-- **Total Users** - System user count
-- **Recent Signups** - New user registrations in the last 7 days
-
-### Recent Active Auctions
-
-- Display of 10 most recent active auctions
-- Visual auction cards with seller information
-- Quick access to auction details
-- Link to view all auctions
-
-### User Management
-
-- **Recent Users Table** - 10 most recently registered users
-- **User Information Display**:
-  - Profile picture or initials
-  - Full name and email address
-  - User role (User/Admin) with color-coded badges
-  - Account creation date
-  - Account status (Active/Inactive)
-
-### Admin Access Control
-
-- **Protected Routes** - Admin-only access via middleware authentication
-- **Role Verification** - Server-side role checking for all admin endpoints
-- **Navigation Integration** - Admin panel link appears only for admin users
-- **Secure API Endpoints** - All admin APIs require proper authentication
-
-### Admin API Endpoints
-
-| Method | Endpoint           | Description                    | Access     |
-| ------ | ------------------ | ------------------------------ | ---------- |
-| GET    | `/admin/dashboard` | Get admin dashboard statistics | Admin Only |
-| GET    | `/admin/users`     | Get users with pagination      | Admin Only |
-
----
-
-## Login Security Logging
-
-- IP Address
-- Country and State (via GeoIP)
-- Device Type
-- Browser Type/Version
-- Used to detect abnormal behavior and prevent abuse
-
----
-
-## State Management
-
-- **Redux Toolkit** used for global auth state
-- Combined with **TanStack Query** for caching API responses
-- Ensures smooth sync between client and backend
-
----
-
-## Features Status
-
-### Completed Features
-
-- **User Authentication** - Login, signup, logout with secure cookies
-- **Auction Management** - Create, view, bid on auctions
-- **Live Bidding** - Real-time Socket.io integration with room-based architecture
-- **Image Upload** - Cloudinary integration for auction photos
-- **User Dashboard** - Personal auction and bidding management
-- **Admin Dashboard** - Complete admin panel with statistics and user management
-- **Security Logging** - Login tracking with device and location info
-- **Role-based Access** - User and admin role separation
-- **Contact System** - Contact form with admin management
-- **Responsive Design** - Mobile-friendly interface
-- **Error Handling** - Comprehensive error management
-- **API Documentation** - Well-documented RESTful endpoints
-- **CI/CD Pipeline** - GitHub Actions for AWS EC2 deployment
-
-### Upcoming Features
-
-- **Push Notifications** - Real-time notifications for bid updates
-- **Payment Integration** - Secure payment processing for winning bids
-- **Advanced Search** - Filter and search auctions by category, price, etc.
-- **User Ratings** - Rating system for buyers and sellers
-- **Email Notifications** - Automated email alerts for auction activities
-- **Advanced Admin Tools** - User management, auction moderation
-
----
-
-## Troubleshooting
-
-### Common Issues and Solutions
-
-#### Cookie Authentication Issues
-
-```bash
-# Make sure CORS is properly configured in server
-# Check that httpOnly cookies are enabled
-# Verify JWT_SECRET is set in environment variables
-```
-
-#### Image Upload Problems
-
-```bash
-# Verify Cloudinary credentials in .env
-# Check multer middleware configuration
-# Ensure proper file size limits
-```
-
-#### Database Connection Issues
-
-```bash
-# Verify MongoDB connection string
-# Check network connectivity
-# Ensure database user has proper permissions
-```
-
-#### Admin Access Problems
-
-```bash
-# Verify user role is set to 'admin' in database
-# Check admin middleware authentication
-# Ensure proper login credentials
+online-auction-system/
+├── client/                      # React frontend (see client/README.md)
+│   ├── src/
+│   │   ├── components/          # Reusable UI (Navbar, AuctionCard, Footer)
+│   │   ├── pages/               # Route pages (Dashboard, ViewAuction, etc.)
+│   │   ├── hooks/               # React Query hooks + Socket hook
+│   │   ├── services/            # API service layer (Axios)
+│   │   ├── store/               # Redux Toolkit (auth state)
+│   │   ├── layout/              # Layouts (Main, Admin, Open)
+│   │   └── routers/             # Route definitions
+│   └── package.json
+│
+├── server/                      # Express backend (see server/README.md)
+│   ├── controllers/             # Route handlers
+│   ├── models/                  # Mongoose schemas (User, Product, Login)
+│   ├── routes/                  # REST API routes
+│   ├── socket/                  # Socket.io initialization + auction handlers
+│   ├── middleware/               # Auth + file upload middleware
+│   ├── services/                # Cloudinary integration
+│   ├── utils/                   # JWT, cookies, geo-location
+│   ├── config/                  # DB + env configuration
+│   ├── app.js                   # Express app setup
+│   └── server.js                # HTTP server + Socket.io + graceful shutdown
+│
+├── .github/workflows/           # CI/CD pipeline
+└── README.md
 ```
 
 ---
 
-## Contribution Guide
+## Architecture
 
-We welcome contributions! Here's how you can help improve the project:
+### Real-time Bidding Flow
 
-### How to Contribute
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  Client (ViewAuction)                                           │
+│                                                                 │
+│  useSocket hook                    REST API                     │
+│  ┌──────────────┐                 ┌──────────────┐              │
+│  │ Connect      │                 │ POST /bid    │              │
+│  │ Join Room    │                 │ Atomic Update │              │
+│  │ Listen Bids  │                 │ Return Data  │              │
+│  │ Cleanup      │                 └──────┬───────┘              │
+│  └──────┬───────┘                        │                      │
+│         │                                │                      │
+└─────────┼────────────────────────────────┼──────────────────────┘
+          │ WebSocket                      │ HTTP
+          │                                │
+┌─────────┼────────────────────────────────┼──────────────────────┐
+│  Server │                                │                      │
+│         ▼                                ▼                      │
+│  ┌──────────────┐                 ┌──────────────┐              │
+│  │ Socket.io    │                 │ Express API  │              │
+│  │ Auth via JWT │                 │ secureRoute  │              │
+│  │ Room: {id}   │◄────Broadcast───│ placeBid()   │              │
+│  │ Track Users  │                 │ Atomic update│              │
+│  └──────────────┘                 └──────────────┘              │
+│                                          │                      │
+│                                   ┌──────▼───────┐              │
+│                                   │   MongoDB    │              │
+│                                   │ findOneAndUp │              │
+│                                   │ date + price │              │
+│                                   │  condition   │              │
+│                                   └──────────────┘              │
+└─────────────────────────────────────────────────────────────────┘
+```
 
-1. **Fork the repository**
+**Race condition prevention**: Bids use `findOneAndUpdate` with a price condition — if two users bid simultaneously, only the first succeeds; the second gets a retry prompt.
 
-   ```bash
-   git clone https://github.com/your-username/online-auction-system.git
-   ```
+### Authentication Flow
 
-2. **Create a feature branch**
-
-   ```bash
-   git checkout -b feature/amazing-feature
-   ```
-
-3. **Install dependencies**
-
-   ```bash
-   # Backend
-   cd server && npm install
-
-   # Frontend
-   cd ../client && npm install
-   ```
-
-4. **Make your changes**
-   - Follow existing code style and conventions
-   - Add comments for complex logic
-   - Update documentation if needed
-
-5. **Test your changes**
-
-   ```bash
-   # Test backend
-   cd server && npm test
-
-   # Test frontend
-   cd client && npm run test
-   ```
-
-6. **Commit and push**
-
-   ```bash
-   git add .
-   git commit -m "feat: add amazing feature"
-   git push origin feature/amazing-feature
-   ```
-
-7. **Open a Pull Request**
-   - Provide a clear description of changes
-   - Reference any related issues
-   - Include screenshots for UI changes
-
-### Areas for Contribution
-
-- **Bug Fixes** - Help identify and fix issues
-- **New Features** - Implement upcoming features
-- **Documentation** - Improve README and code comments
-- **UI/UX** - Enhance user interface and experience
-- **Security** - Strengthen security measures
-- **Performance** - Optimize application performance
-- **Testing** - Add unit and integration tests
-
-### Development Guidelines
-
-- Use meaningful commit messages (conventional commits preferred)
-- Keep functions small and focused
-- Follow existing naming conventions
-- Add proper error handling
-- Update README for new features
+```
+Login/Signup → Server sets httpOnly cookie (auth_token)
+     │
+Page Refresh → InitAuth dispatches checkAuth()
+     │              │
+     │         GET /user (cookie sent automatically)
+     │              │
+     │         Returns { user } or 401
+     │              │
+     ▼         Redux updates auth state
+App renders (protected routes check auth.user)
+```
 
 ---
 
 ## API Reference
 
-### Authentication Responses
+> Full backend documentation with request/response examples: **[server/README.md](./server/README.md)**
 
-```json
-{
-  "success": true,
-  "message": "Login successful",
-  "user": {
-    "id": "user_id",
-    "name": "User Name",
-    "email": "user@example.com",
-    "role": "user"
-  }
-}
+### Authentication
+
+| Method | Endpoint       | Description                  |
+| ------ | -------------- | ---------------------------- |
+| `POST` | `/auth/signup` | Register new user            |
+| `POST` | `/auth/login`  | Login (sets httpOnly cookie) |
+| `POST` | `/auth/logout` | Logout (clears cookie)       |
+
+### User
+
+| Method  | Endpoint       | Description              | Auth     |
+| ------- | -------------- | ------------------------ | -------- |
+| `GET`   | `/user`        | Get current user profile | Required |
+| `PATCH` | `/user`        | Change password          | Required |
+| `GET`   | `/user/logins` | Login history (last 10)  | Required |
+
+### Auctions
+
+| Method | Endpoint             | Description                | Auth     |
+| ------ | -------------------- | -------------------------- | -------- |
+| `GET`  | `/auction`           | List auctions (paginated)  | Required |
+| `POST` | `/auction`           | Create auction (multipart) | Required |
+| `GET`  | `/auction/stats`     | Dashboard statistics       | Required |
+| `GET`  | `/auction/myauction` | User's own auctions        | Required |
+| `GET`  | `/auction/mybids`    | Auctions user has bid on   | Required |
+| `GET`  | `/auction/:id`       | Single auction detail      | Required |
+| `POST` | `/auction/:id/bid`   | Place a bid                | Required |
+
+### Admin
+
+| Method | Endpoint           | Description                        | Auth  |
+| ------ | ------------------ | ---------------------------------- | ----- |
+| `GET`  | `/admin/dashboard` | Admin statistics                   | Admin |
+| `GET`  | `/admin/users`     | List users (paginated, searchable) | Admin |
+
+### Contact
+
+| Method | Endpoint   | Description         | Auth   |
+| ------ | ---------- | ------------------- | ------ |
+| `POST` | `/contact` | Submit contact form | Public |
+
+---
+
+## Socket.io Events
+
+| Event                | Direction       | Payload                               |
+| -------------------- | --------------- | ------------------------------------- |
+| `auction:join`       | Client → Server | `{ auctionId }`                       |
+| `auction:leave`      | Client → Server | `{ auctionId }`                       |
+| `auction:bid`        | Client → Server | `{ auctionId, bidAmount }`            |
+| `auction:userJoined` | Server → Room   | `{ userName, userId, activeUsers[] }` |
+| `auction:userLeft`   | Server → Room   | `{ userName, userId, activeUsers[] }` |
+| `auction:bidPlaced`  | Server → Room   | `{ auction, bidderName, bidAmount }`  |
+| `auction:error`      | Server → Client | `{ message }`                         |
+
+Socket connections are authenticated via JWT from cookies. Users are tracked per room with automatic cleanup on disconnect.
+
+---
+
+## Deployment
+
+### Frontend → Vercel
+
+```bash
+cd client && npm run build
+# Deploy via Vercel CLI or GitHub integration
 ```
 
-### Auction Data Structure
+### Backend → AWS EC2 (Automated)
 
-```json
-{
-  "id": "auction_id",
-  "itemName": "Product Name",
-  "description": "Product description",
-  "startingBid": 100,
-  "currentBid": 150,
-  "itemEndDate": "2025-12-31T23:59:59.000Z",
-  "seller": {
-    "id": "seller_id",
-    "name": "Seller Name"
-  },
-  "image": "cloudinary_url",
-  "bids": [
-    {
-      "bidder": "bidder_id",
-      "amount": 150,
-      "timestamp": "2025-08-16T10:30:00.000Z"
-    }
-  ]
-}
-```
+The included GitHub Actions workflow (`.github/workflows/deploy.yml`) auto-deploys on push to `main`:
 
-### Admin Dashboard Response
+1. **Add GitHub Secrets**: `EC2_HOST`, `EC2_USERNAME`, `EC2_SSH_KEY`, `EC2_SSH_PORT`, `EC2_PROJECT_PATH`, and all `.env` variables
+2. **EC2 Setup**: Node.js 20+, PM2 (`npm i -g pm2`), Git, SSH keys
+3. **Push to main** → workflow SSHs into EC2, pulls code, installs deps, writes `.env`, restarts PM2
 
-```json
-{
-  "stats": {
-    "activeAuctions": 25,
-    "totalAuctions": 100,
-    "totalUsers": 500,
-    "recentUsers": 15
-  },
-  "recentAuctions": [...],
-  "recentUsersList": [...]
-}
-```
+<details>
+<summary>Full list of required GitHub Secrets</summary>
+
+| Secret                  | Description                  |
+| ----------------------- | ---------------------------- |
+| `EC2_HOST`              | EC2 public IP                |
+| `EC2_USERNAME`          | SSH user (e.g., `ubuntu`)    |
+| `EC2_SSH_KEY`           | Private SSH key              |
+| `EC2_SSH_PORT`          | SSH port (default: 22)       |
+| `EC2_PROJECT_PATH`      | Project directory on EC2     |
+| `PORT`                  | Server port                  |
+| `ORIGIN`                | Frontend URL for CORS        |
+| `MONGO_URL`             | MongoDB connection string    |
+| `JWT_SECRET`            | JWT signing secret           |
+| `JWT_EXPIRES_IN`        | Token expiry (e.g., `7d`)    |
+| `COOKIE_DOMAIN`         | Cookie domain for production |
+| `CLOUDINARY_CLOUD_NAME` | Cloudinary cloud name        |
+| `CLOUDINARY_API_KEY`    | Cloudinary API key           |
+| `CLOUDINARY_API_SECRET` | Cloudinary API secret        |
+| `CLOUDINARY_URL`        | Cloudinary URL               |
+| `RESEND_API_KEY`        | Resend email API key         |
+
+</details>
+
+---
+
+## Contributing
+
+Contributions are what make the open source community amazing. Any contributions you make are **greatly appreciated**.
+
+1. **Fork** the repository
+2. **Create** a feature branch (`git checkout -b feature/amazing-feature`)
+3. **Install** dependencies (`cd server && npm i && cd ../client && npm i`)
+4. **Make** your changes following existing code style
+5. **Commit** using [conventional commits](https://www.conventionalcommits.org/) (`git commit -m "feat: add amazing feature"`)
+6. **Push** to your branch (`git push origin feature/amazing-feature`)
+7. **Open** a Pull Request
+
+### Ideas for contribution
+
+- **Payment integration** — Stripe/Razorpay for winning bids
+- **Push notifications** — Real-time bid alerts via WebPush
+- **Advanced search** — Full-text search with filters
+- **User ratings** — Buyer/seller reputation system
+- **Email notifications** — Automated auction activity emails
+- **Testing** — Unit and integration test coverage
+- **Accessibility** — WCAG compliance improvements
 
 ---
 
 ## License
 
-This project is licensed under the **[MIT](LICENSE)**.
+Distributed under the **MIT License**. See [LICENSE](LICENSE) for more information.
 
 ---
 
-## Author
+<div align="center">
 
-Developed by [Avnish Kumar](https://github.com/theavnishkumar). Built for educational, security-focused, and full-stack learning purposes.
+**Built by [Avnish Kumar](https://github.com/theavnishkumar)**
+
+If this project helped you, consider giving it a ⭐
+
+[⬆ Back to Top](#online-auction-system)
+
+</div>
