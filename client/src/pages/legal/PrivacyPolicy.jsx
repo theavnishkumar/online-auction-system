@@ -1,6 +1,8 @@
 import { Link } from "react-router";
+import { useDocumentTitle } from "../../hooks/useDocumentTitle";
 
 export default function PrivacyPolicy() {
+  useDocumentTitle("Privacy Policy");
   return (
     <div className="min-h-screen px-4 sm:px-6 lg:px-6">
       <div className="max-w-7xl mx-auto">
@@ -108,7 +110,11 @@ export default function PrivacyPolicy() {
             </h2>
             <p className="text-gray-700 leading-relaxed">
               If you have any questions about this Privacy Policy, please
-              contact us using <Link to={"/contact"} className="text-blue-600">contact page</Link>.
+              contact us using{" "}
+              <Link to={"/contact"} className="text-blue-600">
+                contact page
+              </Link>
+              .
             </p>
           </section>
         </div>

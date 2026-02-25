@@ -2,6 +2,7 @@ import AuctionCard from "../components/AuctionCard.jsx";
 import { Link } from "react-router";
 import LoadingScreen from "../components/LoadingScreen.jsx";
 import { useDashboardStats } from "../hooks/useAuction.js";
+import { useDocumentTitle } from "../hooks/useDocumentTitle.js";
 
 const statConfig = [
   {
@@ -70,6 +71,7 @@ const statConfig = [
 ];
 
 const Dashboard = () => {
+  useDocumentTitle("Dashboard");
   const { data, isLoading } = useDashboardStats();
 
   if (isLoading) return <LoadingScreen />;

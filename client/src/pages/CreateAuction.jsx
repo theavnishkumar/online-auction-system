@@ -1,8 +1,10 @@
 import { useState, useRef } from "react";
 import { useNavigate } from "react-router";
 import { useCreateAuction } from "../hooks/useAuction.js";
+import { useDocumentTitle } from "../hooks/useDocumentTitle.js";
 
 export const CreateAuction = () => {
+  useDocumentTitle("Create Auction");
   const fileInputRef = useRef();
   const navigate = useNavigate();
   const [error, setError] = useState("");

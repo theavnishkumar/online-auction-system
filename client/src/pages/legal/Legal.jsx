@@ -1,6 +1,8 @@
 import { Link } from "react-router";
+import { useDocumentTitle } from "../../hooks/useDocumentTitle";
 
 export default function Legal() {
+  useDocumentTitle("Legal");
   const legalPages = [
     {
       title: "Privacy Policy",
@@ -65,7 +67,11 @@ export default function Legal() {
             </h2>
             <p className="text-gray-700 leading-relaxed">
               If you have any questions about our legal policies, please contact
-              us using <Link to={"/contact"} className="text-blue-600">contact page</Link>.
+              us using{" "}
+              <Link to={"/contact"} className="text-blue-600">
+                contact page
+              </Link>
+              .
             </p>
           </div>
         </div>

@@ -3,14 +3,30 @@
 
   <url>
     <loc>https://auction.ihavetech.com/</loc>
-    <lastmod>2025-06-25</lastmod>
+    <lastmod>2026-02-26</lastmod>
+    <changefreq>daily</changefreq>
     <priority>1.00</priority>
   </url>
 
   <url>
     <loc>https://auction.ihavetech.com/about</loc>
-    <lastmod>2025-06-25</lastmod>
+    <lastmod>2026-02-26</lastmod>
+    <changefreq>monthly</changefreq>
     <priority>0.80</priority>
+  </url>
+
+  <url>
+    <loc>https://auction.ihavetech.com/login</loc>
+    <lastmod>2026-02-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.60</priority>
+  </url>
+
+  <url>
+    <loc>https://auction.ihavetech.com/signup</loc>
+    <lastmod>2026-02-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.60</priority>
   </url>
 
 </urlset>

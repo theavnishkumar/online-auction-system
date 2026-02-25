@@ -5,6 +5,7 @@ import { useViewAuction, usePlaceBid } from "../hooks/useAuction.js";
 import { useSocket } from "../hooks/useSocket.js";
 import LoadingScreen from "../components/LoadingScreen.jsx";
 import toast from "react-hot-toast";
+import { useDocumentTitle } from "../hooks/useDocumentTitle.js";
 
 export const ViewAuction = () => {
   const { id } = useParams();
@@ -13,7 +14,12 @@ export const ViewAuction = () => {
   const currentUserId = user?.user?._id;
   const inputRef = useRef();
   const [bidding, setBidding] = useState(false);
-  const [countdown, setCountdown] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+  const [countdown, setCountdown] = useState({
+    days: 0,
+    hours: 0,
+    minutes: 0,
+    seconds: 0,
+  });
 
   const { data: fetchedData, isLoading } = useViewAuction(id);
   const { mutateAsync: placeBidMutation } = usePlaceBid();
@@ -23,6 +29,7 @@ export const ViewAuction = () => {
   );
 
   const data = liveAuction || fetchedData;
+  useDocumentTitle(data?.itemName ? data.itemName : "Auction Details");
 
   // Live countdown timer — must be called before any early return to satisfy Rules of Hooks
   useEffect(() => {
@@ -77,7 +84,9 @@ export const ViewAuction = () => {
     "bg-sky-100 text-sky-600",
   ];
   const getAvatarColor = (name) => {
-    const hash = (name || "").split("").reduce((a, c) => a + c.charCodeAt(0), 0);
+    const hash = (name || "")
+      .split("")
+      .reduce((a, c) => a + c.charCodeAt(0), 0);
     return avatarColors[hash % avatarColors.length];
   };
 
@@ -85,7 +94,9 @@ export const ViewAuction = () => {
     data.bids.length === 0 ? (
       <div className="py-10 text-center">
         <p className="text-gray-400 text-sm">No bids yet</p>
-        <p className="text-gray-300 text-xs mt-1">Be the first to place a bid!</p>
+        <p className="text-gray-300 text-xs mt-1">
+          Be the first to place a bid!
+        </p>
       </div>
     ) : (
       <div className="space-y-2">
@@ -140,8 +151,18 @@ export const ViewAuction = () => {
           }}
           className="inline-flex items-center gap-2 text-sm font-medium text-gray-500 hover:text-indigo-600 transition mb-6 group"
         >
-          <svg className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+          <svg
+            className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M15 19l-7-7 7-7"
+            />
           </svg>
           Back
         </button>
@@ -226,8 +247,18 @@ export const ViewAuction = () => {
                   </div>
                   <div className="text-right">
                     <div className="inline-flex items-center gap-1 text-xs font-medium text-gray-500 bg-gray-100 px-2.5 py-1 rounded-full">
-                      <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
+                      <svg
+                        className="w-3 h-3"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"
+                        />
                       </svg>
                       {data.bids.length} bid{data.bids.length !== 1 && "s"}
                     </div>
@@ -240,10 +271,22 @@ export const ViewAuction = () => {
                 <div className="bg-red-50 border-t border-red-100 px-6 py-4">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                      <svg className="w-4 h-4 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      <svg
+                        className="w-4 h-4 text-red-500"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                        />
                       </svg>
-                      <span className="text-sm text-red-600 font-medium">Time remaining</span>
+                      <span className="text-sm text-red-600 font-medium">
+                        Time remaining
+                      </span>
                     </div>
                     <div className="flex items-center gap-1.5">
                       {countdown.days > 0 && (
@@ -277,18 +320,38 @@ export const ViewAuction = () => {
               <div className="bg-gradient-to-r from-amber-50 to-yellow-50 rounded-2xl border border-amber-200 shadow-sm p-6">
                 <div className="flex items-center gap-3 mb-3">
                   <div className="bg-amber-100 p-2 rounded-xl">
-                    <svg className="w-5 h-5 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3l3.057-3L12 3.943 15.943 0 19 3l-7 7-7-7z" />
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 10v4m0 0l-3 6h6l-3-6z" />
+                    <svg
+                      className="w-5 h-5 text-amber-600"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M5 3l3.057-3L12 3.943 15.943 0 19 3l-7 7-7-7z"
+                      />
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={1.5}
+                        d="M12 10v4m0 0l-3 6h6l-3-6z"
+                      />
                     </svg>
                   </div>
                   <div>
-                    <p className="text-xs font-semibold text-amber-600 uppercase tracking-wider">Winner</p>
-                    <p className="text-lg font-bold text-gray-900">{winnerData.name}</p>
+                    <p className="text-xs font-semibold text-amber-600 uppercase tracking-wider">
+                      Winner
+                    </p>
+                    <p className="text-lg font-bold text-gray-900">
+                      {winnerData.name}
+                    </p>
                   </div>
                 </div>
                 <p className="text-sm text-amber-700">
-                  Won with a bid of <span className="font-bold">Rs {data.currentPrice}</span>
+                  Won with a bid of{" "}
+                  <span className="font-bold">Rs {data.currentPrice}</span>
                 </p>
                 {winnerData._id === currentUserId && (
                   <div className="mt-3 bg-amber-100 text-amber-800 text-sm font-medium px-4 py-2 rounded-xl">
@@ -300,7 +363,9 @@ export const ViewAuction = () => {
 
             {!isActive && !winnerData && data.bids.length === 0 && (
               <div className="bg-gray-100 rounded-2xl border border-gray-200 p-6 text-center">
-                <p className="text-sm text-gray-500">This auction ended with no bids.</p>
+                <p className="text-sm text-gray-500">
+                  This auction ended with no bids.
+                </p>
               </div>
             )}
 

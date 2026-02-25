@@ -3,6 +3,7 @@ import { Link } from "react-router";
 import AuctionCard from "../../components/AuctionCard";
 import LoadingScreen from "../../components/LoadingScreen";
 import { getAdminDashboard, getAllUsers } from "../../api/admin";
+import { useDocumentTitle } from "../../hooks/useDocumentTitle";
 
 const statConfig = [
   {
@@ -92,6 +93,7 @@ const statConfig = [
 ];
 
 export const AdminDashboard = () => {
+  useDocumentTitle("Admin Dashboard");
   const [dashboardData, setDashboardData] = useState(null);
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);

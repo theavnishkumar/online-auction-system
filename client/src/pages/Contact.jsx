@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { FiSend } from "react-icons/fi";
 import { useSendMessage } from "../hooks/useContact";
+import { useDocumentTitle } from "../hooks/useDocumentTitle";
 
 export const Contact = () => {
+  useDocumentTitle("Contact Us");
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -90,9 +92,7 @@ export const Contact = () => {
                   <h3 className="text-sm font-semibold text-gray-900">
                     Email Us
                   </h3>
-                  <p className="text-sm text-gray-500 mt-1">
-                    hi@ihavetech.com
-                  </p>
+                  <p className="text-sm text-gray-500 mt-1">hi@ihavetech.com</p>
                 </div>
               </div>
             </div>

@@ -9,8 +9,10 @@ import {
 } from "react-icons/ci";
 import LoadingScreen from "../components/LoadingScreen";
 import { useLoginHistory } from "../hooks/useUser";
+import { useDocumentTitle } from "../hooks/useDocumentTitle";
 
 export default function Privacy() {
+  useDocumentTitle("Security & Login History");
   const { data, isLoading } = useLoginHistory();
 
   if (isLoading) return <LoadingScreen />;

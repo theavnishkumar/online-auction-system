@@ -1,4 +1,7 @@
+import { useDocumentTitle } from "../../hooks/useDocumentTitle";
+
 export default function CodeOfConduct() {
+  useDocumentTitle("Code of Conduct");
   return (
     <div className="min-h-screen px-4 sm:px-6 lg:px-6">
       <div className="max-w-7xl mx-auto">

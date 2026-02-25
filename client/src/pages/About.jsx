@@ -1,8 +1,10 @@
 import { Link } from "react-router";
 // import { AdsComponent } from "../components/AdsComponent";
 import { useSelector } from "react-redux";
+import { useDocumentTitle } from "../hooks/useDocumentTitle";
 
 export const About = () => {
+  useDocumentTitle("About");
   const { user } = useSelector((state) => state.auth);
   return (
     <div className="min-h-screen bg-gray-50">

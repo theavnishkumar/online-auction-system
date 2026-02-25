@@ -1,6 +1,8 @@
 import { Link } from "react-router";
+import { useDocumentTitle } from "../../hooks/useDocumentTitle";
 
 export default function AcceptableUsePolicy() {
+  useDocumentTitle("Acceptable Use Policy");
   return (
     <div className="min-h-screen px-4 sm:px-6 lg:px-6">
       <div className="max-w-7xl mx-auto">
@@ -118,7 +120,11 @@ export default function AcceptableUsePolicy() {
             </h2>
             <p className="text-gray-700 leading-relaxed">
               If you have questions about this Acceptable Use Policy or need to
-              report a violation, please contact us using <Link to={"/contact"} className="text-blue-600">contact page</Link>.
+              report a violation, please contact us using{" "}
+              <Link to={"/contact"} className="text-blue-600">
+                contact page
+              </Link>
+              .
             </p>
           </section>
         </div>

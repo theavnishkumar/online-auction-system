@@ -2,8 +2,10 @@ import { useState } from "react";
 import { CiMail, CiUser, CiLock, CiCamera } from "react-icons/ci";
 import { useSelector } from "react-redux";
 import { useChangePassword } from "../hooks/useUser";
+import { useDocumentTitle } from "../hooks/useDocumentTitle";
 
 export default function Profile() {
+  useDocumentTitle("Profile");
   const { user } = useSelector((state) => state.auth);
   const [isError, setIsError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");

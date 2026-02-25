@@ -4,8 +4,10 @@ import { useSelector, useDispatch } from "react-redux";
 import { login } from "../store/auth/authSlice";
 import { Link } from "react-router";
 import LoadingScreen from "../components/LoadingScreen";
+import { useDocumentTitle } from "../hooks/useDocumentTitle";
 
 const Login = () => {
+  useDocumentTitle("Log In");
   const dispatch = useDispatch();
   const navigate = useNavigate();
 

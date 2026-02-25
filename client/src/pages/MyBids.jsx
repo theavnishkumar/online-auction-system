@@ -3,8 +3,10 @@ import { Link, useNavigate } from "react-router";
 import AuctionCard from "../components/AuctionCard";
 import LoadingScreen from "../components/LoadingScreen";
 import { useGetMyBids } from "../hooks/useAuction";
+import { useDocumentTitle } from "../hooks/useDocumentTitle";
 
 export const MyBids = () => {
+  useDocumentTitle("My Bids");
   const [page, setPage] = useState(1);
   const [filter, setFilter] = useState("all");
   const navigate = useNavigate();
