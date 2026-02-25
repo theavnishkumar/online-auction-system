@@ -4,6 +4,7 @@ import { MainLayout } from "../layout/MainLayout";
 import { AuctionList } from "../pages/AuctionList";
 import { CreateAuction } from "../pages/CreateAuction";
 import { MyAuction } from "../pages/MyAuction";
+import { MyBids } from "../pages/MyBids";
 import Profile from "../pages/Profile";
 import Privacy from "../pages/Privacy";
 
@@ -21,6 +22,11 @@ export const protectedRoutes = [
       {
         path: "myauction",
         element: <MyAuction />,
+        errorElement: <Error />,
+      },
+      {
+        path: "mybids",
+        element: <MyBids />,
         errorElement: <Error />,
       },
       {

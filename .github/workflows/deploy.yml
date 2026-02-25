@@ -1,0 +1,57 @@
+name: Deploy Backend
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "server/**"
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    name: Deploy to EC2
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            set -e
+
+            cd /home/ubuntu/online-auction-system
+
+            git fetch --all
+            git reset --hard origin/main
+
+            cd server
+            npm ci --omit=dev
+
+            cat > .env << 'EOF'
+            PORT=${{ secrets.PORT }}
+            ORIGIN=${{ secrets.ORIGIN }}
+            NODE_ENV=production
+            MONGO_URL=${{ secrets.MONGO_URL }}
+            JWT_SECRET=${{ secrets.JWT_SECRET }}
+            JWT_EXPIRES_IN=${{ secrets.JWT_EXPIRES_IN }}
+            COOKIE_DOMAIN=${{ secrets.COOKIE_DOMAIN }}
+            CLOUDINARY_CLOUD_NAME=${{ secrets.CLOUDINARY_CLOUD_NAME }}
+            CLOUDINARY_API_KEY=${{ secrets.CLOUDINARY_API_KEY }}
+            CLOUDINARY_API_SECRET=${{ secrets.CLOUDINARY_API_SECRET }}
+            CLOUDINARY_URL=${{ secrets.CLOUDINARY_URL }}
+            RESEND_API_KEY=${{ secrets.RESEND_API_KEY }}
+            EOF
+
+            if pm2 describe auction-server > /dev/null 2>&1; then
+              pm2 reload auction-server
+            else
+              pm2 start server.js --name auction-server
+            fi
+
+            pm2 save
+
+            echo "Deployment completed successfully"

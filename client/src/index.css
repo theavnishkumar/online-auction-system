@@ -1,1 +1,14 @@
 @import "tailwindcss";
+
+@layer base {
+    body {
+        @apply bg-stone-50 text-gray-900 antialiased;
+    }
+}
+
+/* View Transitions — page cross-fade */
+::view-transition-old(root),
+::view-transition-new(root) {
+    animation-duration: 0.25s;
+    animation-timing-function: ease;
+}

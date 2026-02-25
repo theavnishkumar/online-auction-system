@@ -3,18 +3,54 @@
 Hi there!
 Thanks for showing interest in contributing to the **Online Auction System**. We welcome all kinds of contributions — code, design, documentation, or suggestions.
 
+Please also read our [Code of Conduct](CODE_OF_CONDUCT.md) before contributing.
+
 ## Project Tech Stack
 
-* Frontend: React + Redux Toolkit + Tailwind CSS
-* Backend: Node.js + Express + MongoDB
-* State Management: Redux Toolkit
-* Routing: React Router v7+
-* API Handling: Axios + TanStack Query
-* Authentication: JWT + Session checks
+- Frontend: React 19 + Redux Toolkit + Tailwind CSS v4
+- Backend: Node.js + Express 5 + MongoDB
+- Real-time: Socket.io (live bidding)
+- State Management: Redux Toolkit (auth) + TanStack React Query (server state)
+- Routing: React Router v7+
+- API Handling: Centralized Axios instance (`src/services/`) + Custom hooks (`src/hooks/`)
+- Authentication: JWT with `httpOnly` cookies
+- Deployment: GitHub Actions CI/CD → AWS EC2
 
 ---
 
-## 🛠 How to Contribute
+## Architecture Overview
+
+### Backend Pattern
+
+```
+Route → Controller → Service/Model → Response
+```
+
+- **Routes** (`server/routes/`): Define endpoints, apply middleware
+- **Controllers** (`server/controllers/`): Handle request/response logic
+- **Models** (`server/models/`): Mongoose schemas
+- **Middleware** (`server/middleware/`): Auth guards, file upload
+- **Services** (`server/services/`): External service integrations (Cloudinary)
+- **Socket** (`server/socket/`): Real-time event handlers
+- **Utils** (`server/utils/`): Reusable utility functions
+
+### Frontend Pattern
+
+```
+Page → Hook (useQuery/useMutation) → Service (axios) → API
+```
+
+- **Services** (`client/src/services/`): Centralized API calls using shared axios instance
+- **Hooks** (`client/src/hooks/`): React Query wrappers for data fetching and mutations
+- **Pages** (`client/src/pages/`): Page components that consume hooks
+- **Components** (`client/src/components/`): Reusable UI components
+- **Store** (`client/src/store/`): Redux slices for global state (auth)
+
+> **Important**: New API calls should use services (`src/services/`) with the centralized `api` instance, NOT direct axios imports. Wrap them with React Query hooks in `src/hooks/`.
+
+---
+
+## How to Contribute
 
 ### 1. Fork the Repository
 
@@ -29,7 +65,7 @@ cd online-auction-system
 
 ### 3. Setup Project Locally
 
-* Install frontend and backend dependencies:
+- Install frontend and backend dependencies:
 
 ```bash
 # Frontend
@@ -41,7 +77,7 @@ cd ../server
 npm install
 ```
 
-* Setup `.env` file (see `.env.example` if provided)
+- Setup `.env` files (refer to the README for required environment variables)
 
 ### 4. Create a New Branch
 
@@ -51,14 +87,23 @@ git checkout -b feature/your-feature-name
 
 ### 5. Make Your Changes
 
-Follow existing code structure (MVC pattern, ES Modules). Use clear variable names and write clean, readable code.
+Follow existing code structure and patterns:
+
+- **ES Modules** (`import`/`export`) everywhere
+- **Controller pattern** for API handlers: `async (req, res) => { try {} catch {} }`
+- **Service + Hook pattern** for frontend API calls
+- **Socket handlers** in `server/socket/` for real-time features
 
 ### 6. Commit Your Changes
 
+Use conventional commit messages:
+
 ```bash
 git add .
-git commit -m "Added: Short description of your change"
+git commit -m "feat: add live notification for bid updates"
 ```
+
+Common prefixes: `feat:`, `fix:`, `docs:`, `refactor:`, `style:`, `test:`, `chore:`
 
 ### 7. Push and Create Pull Request
 
@@ -72,18 +117,34 @@ Then go to GitHub and open a Pull Request with a clear explanation.
 
 ## Code Style Guidelines
 
-* Use **ESLint** rules if defined
-* Use **ES Modules** (`import`/`export`)
-* Use consistent indentation (2 or 4 spaces)
-* Write clear commit messages (e.g. `Fix: login bug in auth middleware`)
+- Use **ES Modules** (`import`/`export`) — no `require()`
+- Use consistent 2-space indentation
+- Use `const` by default, `let` when reassignment is needed
+- Async/await for all asynchronous code
+- Proper error handling in every controller and service
+- Descriptive variable and function names
+- Clear commit messages using conventional commits
+
+---
+
+## Areas for Contribution
+
+- **Bug Fixes** - Help identify and fix issues
+- **New Features** - Implement upcoming features from the roadmap
+- **Documentation** - Improve README, code comments, JSDoc
+- **UI/UX** - Enhance user interface and experience
+- **Security** - Strengthen security measures
+- **Performance** - Optimize queries, reduce bundle size
+- **Testing** - Add unit and integration tests
+- **Accessibility** - Improve WCAG compliance
 
 ---
 
 ## Need Help?
 
 Feel free to open an issue for doubts, questions, or suggestions.
-Let's make this project better together
+Let's make this project better together!
 
 ---
 
-Made with ❤️ by [@theavnishkumar](https://github.com/theavnishkumar)
+Made with love by [@theavnishkumar](https://github.com/theavnishkumar)

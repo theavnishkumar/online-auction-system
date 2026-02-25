@@ -1,14 +1,14 @@
 import { useState } from "react";
-import { useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router";
 import AuctionCard from "../components/AuctionCard";
-import { useGetAuctions } from "../hooks/useAuction";
 import LoadingScreen from "../components/LoadingScreen";
+import { useGetMyBids } from "../hooks/useAuction";
 
-export const AuctionList = () => {
-  const [filter, setFilter] = useState("all");
+export const MyBids = () => {
   const [page, setPage] = useState(1);
+  const [filter, setFilter] = useState("all");
   const navigate = useNavigate();
-  const { data, isLoading } = useGetAuctions(page);
+  const { data, isLoading } = useGetMyBids(page);
 
   if (isLoading) return <LoadingScreen />;
 
@@ -16,14 +16,12 @@ export const AuctionList = () => {
   const auctions = Array.isArray(rawData) ? rawData : rawData.auctions || [];
   const pagination = Array.isArray(rawData) ? {} : rawData.pagination || {};
 
-  const categories = [
-    "all",
-    ...new Set(auctions?.map((auction) => auction.itemCategory)),
-  ];
   const filteredAuctions =
     filter === "all"
       ? auctions
-      : auctions?.filter((auction) => auction.itemCategory === filter);
+      : filter === "active"
+        ? auctions.filter((a) => !a.isExpired)
+        : auctions.filter((a) => a.isExpired);
 
   return (
     <div className="min-h-screen bg-gray-50/80">
@@ -51,40 +49,40 @@ export const AuctionList = () => {
 
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-2xl font-bold text-gray-900">Auctions</h1>
+          <h1 className="text-2xl font-bold text-gray-900">My Bids</h1>
           <p className="text-sm text-gray-400 mt-1">
-            Browse {pagination.total || 0} active listings
+            Auctions you&apos;ve participated in
           </p>
         </div>
 
         {/* Filters */}
         <div className="mb-8">
           <div className="flex flex-wrap gap-2">
-            {categories.map((category) => (
+            {["all", "active", "ended"].map((f) => (
               <button
-                key={category}
-                onClick={() => setFilter(category)}
+                key={f}
+                onClick={() => setFilter(f)}
                 className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
-                  filter === category
+                  filter === f
                     ? "bg-indigo-600 text-white shadow-sm"
                     : "bg-white text-gray-600 border border-gray-200 hover:border-gray-300 hover:text-gray-900"
                 }`}
               >
-                {category.charAt(0).toUpperCase() + category.slice(1)}
+                {f.charAt(0).toUpperCase() + f.slice(1)}
               </button>
             ))}
           </div>
         </div>
 
         {/* Results count */}
-        <div className="mb-5">
-          <p className="text-sm text-gray-400">
-            {filter === "all" ? "All auctions" : filter}
+        {filteredAuctions.length > 0 && (
+          <p className="text-sm text-gray-400 mb-5">
+            {filter === "all" ? "All bids" : filter}
             <span className="ml-1 text-gray-300">
               ({filteredAuctions.length})
             </span>
           </p>
-        </div>
+        )}
 
         {filteredAuctions.length === 0 ? (
           <div className="text-center py-20 bg-white rounded-2xl border border-gray-200/80 shadow-sm">
@@ -101,7 +99,19 @@ export const AuctionList = () => {
                 d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"
               />
             </svg>
-            <p className="text-gray-400">No auctions found in this category</p>
+            <p className="text-gray-400 mb-4">
+              {filter === "all"
+                ? "You haven't placed any bids yet"
+                : `No ${filter} auctions`}
+            </p>
+            {filter === "all" && (
+              <Link
+                to="/auction"
+                className="inline-flex items-center gap-2 bg-indigo-600 text-white text-sm font-semibold px-5 py-2.5 rounded-xl hover:bg-indigo-700 transition-all shadow-sm shadow-indigo-200"
+              >
+                Browse auctions
+              </Link>
+            )}
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">

@@ -51,27 +51,45 @@ export const getAllUsers = async (req, res) => {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
     const search = req.query.search || "";
-    const sortBy = req.query.sortBy || "createdAt";
+    const role = req.query.role || "";
+
+    // Whitelist sortable fields to prevent sorting by sensitive fields like password
+    const allowedSortFields = [
+      "createdAt",
+      "name",
+      "email",
+      "role",
+      "lastLogin",
+    ];
+    const sortBy = allowedSortFields.includes(req.query.sortBy)
+      ? req.query.sortBy
+      : "createdAt";
     const sortOrder = req.query.sortOrder === "asc" ? 1 : -1;
 
     // Calculate skip value for pagination
     const skip = (page - 1) * limit;
 
-    // Build search query
-    const searchQuery = search
+    // Build search query — escape regex special chars to prevent ReDoS
+    const escapedSearch = search.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const searchQuery = escapedSearch
       ? {
           $or: [
-            { name: { $regex: search, $options: "i" } },
-            { email: { $regex: search, $options: "i" } },
+            { name: { $regex: escapedSearch, $options: "i" } },
+            { email: { $regex: escapedSearch, $options: "i" } },
           ],
         }
       : {};
 
+    // Apply role filter if provided
+    const roleFilter = role && ["user", "admin"].includes(role) ? { role } : {};
+
+    const query = { ...searchQuery, ...roleFilter };
+
     // Get total count for pagination info
-    const totalUsers = await User.countDocuments(searchQuery);
+    const totalUsers = await User.countDocuments(query);
 
     // Get users with pagination, search, and sorting
-    const users = await User.find(searchQuery)
+    const users = await User.find(query)
       .select("name email role createdAt signupAt lastLogin location avatar")
       .sort({ [sortBy]: sortOrder })
       .skip(skip)
