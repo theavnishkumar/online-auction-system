@@ -16,7 +16,7 @@
 
 **Create auctions · Bid in real-time · Manage everything from an admin panel**
 
-[Live Demo](https://auction.ihavetech.com) · [Report Bug](https://github.com/theavnishkumar/online-auction-system/issues) · [Request Feature](https://github.com/theavnishkumar/online-auction-system/issues) · [Backend Docs](./server/README.md) · [Frontend Docs](./client/README.md)
+[Live Demo](https://auction.ihavetech.com) · [Report Bug](https://github.com/theavnishkumar/online-auction-system/issues) · [Request Feature](https://github.com/theavnishkumar/online-auction-system/issues) · [Architecture](./ARCHITECTURE.md) · [Learning Guide](./LEARNING_GUIDE.md) · [Backend Docs](./server/README.md) · [Frontend Docs](./client/README.md)
 
 </div>
 
@@ -69,6 +69,8 @@ Most auction system tutorials stop at basic CRUD. This project goes much further
 - **Deployment-ready** — CI/CD pipeline, Vercel serverless support, AWS EC2 with PM2, graceful shutdown
 
 > Built as a **Major Project for Computer Science Engineering** by [Avnish Kumar](https://github.com/theavnishkumar), designed to be a real-world reference for full-stack MERN development.
+>
+> 📖 **New here?** Read the [Architecture Guide](./ARCHITECTURE.md) to understand how the system works, and the [Learning Guide](./LEARNING_GUIDE.md) to see what's implemented, why, and what you can build next.
 
 ---
 
@@ -228,7 +230,7 @@ online-auction-system/
 │  useSocket hook                    REST API                     │
 │  ┌──────────────┐                 ┌──────────────┐              │
 │  │ Connect      │                 │ POST /bid    │              │
-│  │ Join Room    │                 │ Atomic Update │              │
+│  │ Join Room    │                 │ Atomic Update│              │
 │  │ Listen Bids  │                 │ Return Data  │              │
 │  │ Cleanup      │                 └──────┬───────┘              │
 │  └──────┬───────┘                        │                      │
